@@ -9,4 +9,4 @@ resources:
 extends:
   template: pipelines/templates/dotnetclient.yml@build
   parameters:
-    withCmdlet: true
+    withCmdlet: false
