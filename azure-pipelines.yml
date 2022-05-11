@@ -1,0 +1,12 @@
+resources:
+  repositories:
+  - repository: build
+    type: github
+    name: eryph-org/build
+    endpoint: eryph-org
+
+
+extends:
+  template: pipelines/templates/dotnetclient.yml@build
+  parameters:
+    withCmdlet: true
