@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Eryph.ConfigModel.Abstractions\Eryph.ConfigModel.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

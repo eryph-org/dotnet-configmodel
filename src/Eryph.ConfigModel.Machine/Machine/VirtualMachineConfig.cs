@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace Eryph.ConfigModel.Machine.V1
+namespace Eryph.ConfigModel.Machine
 {
     [PublicAPI]
     public class VirtualMachineConfig
@@ -15,8 +15,8 @@ namespace Eryph.ConfigModel.Machine.V1
 
         public VirtualMachineMemoryConfig Memory { get; set; }
 
-        public List<VirtualMachineDriveConfig> Drives { get; set; }
+        public VirtualMachineDriveConfig[] Drives { get; set; }
 
-        public List<VirtualMachineNetworkAdapterConfig> NetworkAdapters { get; set; }
+        public VirtualMachineNetworkAdapterConfig[] NetworkAdapters { get; set; }
     }
 }

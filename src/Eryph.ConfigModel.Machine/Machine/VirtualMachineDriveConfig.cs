@@ -1,12 +1,12 @@
 ﻿using JetBrains.Annotations;
 
-namespace Eryph.ConfigModel.Machine.V1
+namespace Eryph.ConfigModel.Machine
 {
     [PublicAPI]
     public class VirtualMachineDriveConfig
     {
         public string Name { get; set; }
-        public string ShareSlug { get; set; }
+        public string Slug { get; set; }
         public string DataStore { get; set; }
 
         public string Template { get; set; }

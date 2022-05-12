@@ -5,6 +5,14 @@ VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.Machine", "src\Eryph.ConfigModel.Machine\Eryph.ConfigModel.Machine.csproj", "{C71E688F-5BB5-4350-BD76-0CF0E2EC9473}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eryph.ConfigModel.Machine.Tests", "test\Eryph.ConfigModel.Machine.Tests\Eryph.ConfigModel.Machine.Tests.csproj", "{623F96D9-863D-4B21-9B88-9C76850B5996}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.System.Json", "src\Eryph.ConfigModel.System.Json\Eryph.ConfigModel.System.Json.csproj", "{36BEDF84-9E74-4A6A-A8B3-5D0FF7D2CCF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.Abstractions", "src\Eryph.ConfigModel.Abstractions\Eryph.ConfigModel.Abstractions.csproj", "{1A16AF8E-9F3F-4F11-89D4-22EDFF62FCC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.Core", "src\Eryph.ConfigModel.Core\Eryph.ConfigModel.Core.csproj", "{17C56C7B-6D72-4A97-9071-05914C2B8434}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +23,22 @@ Global
 		{C71E688F-5BB5-4350-BD76-0CF0E2EC9473}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C71E688F-5BB5-4350-BD76-0CF0E2EC9473}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C71E688F-5BB5-4350-BD76-0CF0E2EC9473}.Release|Any CPU.Build.0 = Release|Any CPU
+		{623F96D9-863D-4B21-9B88-9C76850B5996}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{623F96D9-863D-4B21-9B88-9C76850B5996}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{623F96D9-863D-4B21-9B88-9C76850B5996}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{623F96D9-863D-4B21-9B88-9C76850B5996}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36BEDF84-9E74-4A6A-A8B3-5D0FF7D2CCF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36BEDF84-9E74-4A6A-A8B3-5D0FF7D2CCF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36BEDF84-9E74-4A6A-A8B3-5D0FF7D2CCF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36BEDF84-9E74-4A6A-A8B3-5D0FF7D2CCF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A16AF8E-9F3F-4F11-89D4-22EDFF62FCC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A16AF8E-9F3F-4F11-89D4-22EDFF62FCC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A16AF8E-9F3F-4F11-89D4-22EDFF62FCC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A16AF8E-9F3F-4F11-89D4-22EDFF62FCC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17C56C7B-6D72-4A97-9071-05914C2B8434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17C56C7B-6D72-4A97-9071-05914C2B8434}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17C56C7B-6D72-4A97-9071-05914C2B8434}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17C56C7B-6D72-4A97-9071-05914C2B8434}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

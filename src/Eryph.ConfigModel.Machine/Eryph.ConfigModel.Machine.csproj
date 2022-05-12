@@ -1,20 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Eryph.ConfigModel</RootNamespace>
-    <Authors>dbosoft GmbH and Eryph contributors</Authors>
-    <Company>dbosoft GmbH</Company>
-    <Product>Eryph</Product>
-    <Description>Eryph .NET library for eryph machine config model.</Description>
-    <Copyright>dbosoft GmbH. All rights reserved.</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/eryph-org/dotnet-configmodel</RepositoryUrl>
-
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+    <ProjectReference Include="..\Eryph.ConfigModel.Core\Eryph.ConfigModel.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 
 using JetBrains.Annotations;
 
-namespace Eryph.ConfigModel.Machine.V1
+namespace Eryph.ConfigModel.Machine
 {
     [PublicAPI]
     public class CloudInitConfig
