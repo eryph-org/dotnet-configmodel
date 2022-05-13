@@ -1,7 +1,6 @@
 
 <Project>
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/eryph-org/dotnet-configmodel</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/eryph-org/dotnet-configmodel/releases</PackageReleaseNotes>
