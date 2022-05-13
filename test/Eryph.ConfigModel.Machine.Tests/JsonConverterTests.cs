@@ -60,7 +60,7 @@ public class JsonConverterTests: ConverterTestBase
     [Fact]
     public void Converts_from_json()
     {
-        var dictionary = JsonToDictionary.Deserialize(SampleJson1);
+        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
         var config = MachineConfigDictionaryConverter.Convert(dictionary);
         AssertSample1(config);
     }
