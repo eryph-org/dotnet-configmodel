@@ -47,7 +47,7 @@ namespace Eryph.ConfigModel.Converters
 
         protected static string GetStringProperty(IDictionary<string, object> dictionary, params string[] propertyNames)
         {
-            return GetValueCaseInvariant(dictionary, propertyNames)?.ToString();
+            return GetValueCaseInvariant(dictionary, propertyNames)?.ToString().TrimEnd(char.MinValue);
         }
 
         protected static int GetIntProperty(IDictionary<string, object> dictionary, params string[] propertyNames)
