@@ -47,5 +47,6 @@ public class ConverterTestBase
         config.Provisioning.Config[0].FileName.Should().Be("filename");
         config.Provisioning.Config[0].Sensitive.Should().Be(true);
         config.Provisioning.Config[0].Content.Should().Contain("- name: Admin");
+        config.Provisioning.Config[0].Content.Should().NotEndWith("\0");
     }
 }
