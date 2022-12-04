@@ -27,7 +27,7 @@ namespace Eryph.ConfigModel.Converters
 
             return dictionaryCandidate;
         }
-        
+
         protected static object GetValueCaseInvariant(IDictionary<object, object> dictionary, params string[] propertyNames)
         {
             var dictionaryKeys = dictionary.Keys.ToArray();
@@ -54,6 +54,13 @@ namespace Eryph.ConfigModel.Converters
         protected static string GetStringProperty(IDictionary<object, object> dictionary, params string[] propertyNames)
         {
             return GetValueCaseInvariant(dictionary, propertyNames)?.ToString().TrimEnd(char.MinValue);
+        }
+        
+        protected static T[] GetListProperty<T>(IDictionary<object, object> dictionary, 
+            params string[] propertyNames)
+        {
+            if (!(GetValueCaseInvariant(dictionary, propertyNames) is List<object> value)) return null;
+            return value.Cast<T>().ToArray();
         }
 
         protected static int GetIntProperty(IDictionary<object, object> dictionary, params string[] propertyNames)

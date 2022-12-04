@@ -42,10 +42,11 @@ networks:
  - name: default
    adapter_name: eth0
    subnet_v4:
-   - name: other
+     name: other
      ip_pool: other_pool
    subnet_v6:
-   - name: otherv6   
+     name: otherv6
+   
  - name: backup
    adapter_name: eth1
 
@@ -74,7 +75,6 @@ vcatlet:
         public void Converts_from_yaml()
         {
           var serializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
           
             var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml1);
@@ -86,7 +86,6 @@ vcatlet:
         public void Convert_from_minimal_yaml()
         {
           var serializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
           
             var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml2);
@@ -101,7 +100,6 @@ vcatlet:
         public void Convert_from_short_cpu_yaml()
         {
           var serializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
             var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml3);
             var config = CatletConfigDictionaryConverter.Convert(dictionary, true);

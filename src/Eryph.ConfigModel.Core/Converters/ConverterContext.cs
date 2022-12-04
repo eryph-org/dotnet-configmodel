@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Eryph.ConfigModel.Converters
@@ -28,4 +29,5 @@ namespace Eryph.ConfigModel.Converters
             return ConverterProvider.GetConverter(arrayType).ConvertFromDictionary(this, dictionary, data) as TRes[];
         }
     }
+    
 }

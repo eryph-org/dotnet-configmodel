@@ -19,9 +19,6 @@ namespace Eryph.ConfigModel.Catlets.Converters
 
         protected virtual CatletSubnetConfig ConvertSubnetConfig(object configObject)
         {
-            // in yaml a list may be in between
-            if (configObject is IList<object> list) configObject = list.FirstOrDefault();
-            
             if (configObject is IDictionary<object, object> dictionary)
             {
                 return new CatletSubnetConfig
