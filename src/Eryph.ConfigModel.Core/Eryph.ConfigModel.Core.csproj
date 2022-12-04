@@ -5,5 +5,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Eryph.ConfigModel.Abstractions\Eryph.ConfigModel.Abstractions.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="GitVersion.MsBuild" Version="5.11.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>

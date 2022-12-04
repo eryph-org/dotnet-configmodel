@@ -107,6 +107,6 @@ namespace Eryph.ConfigModel.Json
             }
         }
 
-        private IDictionary<string, object> CreateDictionary() => new Dictionary<string, object>();
+        private IDictionary<object, object> CreateDictionary() => new Dictionary<object, object>();
     }
 }

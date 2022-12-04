@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Eryph.ConfigModel.Converters
 {
@@ -20,6 +21,8 @@ namespace Eryph.ConfigModel.Converters
                 _converters.Add(converter.CanConvert, converter);
             }
         }
+        
+        [ExcludeFromCodeCoverage]
         private class PlaceHolderConverter : IDictionaryConverter<TTarget>
         {
             private readonly Type _type;
@@ -30,7 +33,8 @@ namespace Eryph.ConfigModel.Converters
             }
 
             public Type CanConvert => _type;
-            public object ConvertFromDictionary(IConverterContext<TTarget> context, IDictionary<string, object> dictionary)
+            public object ConvertFromDictionary(IConverterContext<TTarget> context, IDictionary<object, object> dictionary, 
+                object data= null)
             {
                 return default;
             }

@@ -7,28 +7,34 @@ namespace Eryph.ConfigModel.Converters
     public abstract class DictionaryConverterBase<TConv, TTarget> : IDictionaryConverter<TConv,TTarget>
     {
         public abstract TConv ConvertFromDictionary(IConverterContext<TTarget> context,
-            IDictionary<string, object> dictionary);
+            IDictionary<object, object> dictionary, object data = default);
 
         public Type CanConvert => typeof(TConv);
-        object IDictionaryConverter<TTarget>.ConvertFromDictionary(IConverterContext<TTarget> context, IDictionary<string, object> dictionary)
+        object IDictionaryConverter<TTarget>.ConvertFromDictionary(
+            IConverterContext<TTarget> context, 
+            IDictionary<object, object> dictionary, object data)
         {
-            return ConvertFromDictionary(context, dictionary);
+            return ConvertFromDictionary(context, dictionary, data);
         }
 
         protected static object ConvertDictionary(object dictionaryCandidate)
         {
             if (dictionaryCandidate is IDictionary<object, object> dictionary)
             {
-                return dictionary.ToDictionary(kv => kv.Key.ToString(), kv => kv.Value);
+                return dictionary.ToDictionary(kv => 
+                    (object) kv.Key.ToString(), kv => kv.Value);
             }
 
             return dictionaryCandidate;
         }
         
-        protected static object GetValueCaseInvariant(IDictionary<string, object> dictionary, params string[] propertyNames)
+        protected static object GetValueCaseInvariant(IDictionary<object, object> dictionary, params string[] propertyNames)
         {
             var dictionaryKeys = dictionary.Keys.ToArray();
-            var lowerCaseKeys = dictionaryKeys.Select(x => x.ToLowerInvariant()).ToArray();
+            var lowerCaseKeys = dictionaryKeys
+                .Where(k => k is string)
+                .Cast<string>()
+                .Select(x => x.ToLowerInvariant().Replace("_", "")).ToArray();
 
             foreach (var propertyName in propertyNames)
             {
@@ -45,12 +51,12 @@ namespace Eryph.ConfigModel.Converters
             return null;
         }
 
-        protected static string GetStringProperty(IDictionary<string, object> dictionary, params string[] propertyNames)
+        protected static string GetStringProperty(IDictionary<object, object> dictionary, params string[] propertyNames)
         {
             return GetValueCaseInvariant(dictionary, propertyNames)?.ToString().TrimEnd(char.MinValue);
         }
 
-        protected static int GetIntProperty(IDictionary<string, object> dictionary, params string[] propertyNames)
+        protected static int GetIntProperty(IDictionary<object, object> dictionary, params string[] propertyNames)
         {
             return Convert.ToInt32(GetValueCaseInvariant(dictionary, propertyNames));
         }

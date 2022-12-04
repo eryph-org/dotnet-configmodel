@@ -5,9 +5,9 @@ namespace Eryph.ConfigModel.Converters
     public interface IConverterContext<T>
     {
         T Target { get; set; }
-        IDictionary<string, object> Input { get; }
+        IDictionary<object, object> Input { get; }
         IDictionaryConverterProvider<T> ConverterProvider { get; }
-        TRes Convert<TRes>(IDictionary<string, object> dictionary) where TRes : class;
-        TRes[] ConvertList<TRes>(IDictionary<string, object> dictionary) where TRes : class;
+        TRes Convert<TRes>(IDictionary<object, object> dictionary, object data = null) where TRes : class;
+        TRes[] ConvertList<TRes>(IDictionary<object, object> dictionary, object data = null) where TRes : class;
     }
 }

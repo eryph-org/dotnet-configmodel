@@ -16,7 +16,9 @@ namespace Eryph.ConfigModel.Converters
             _listNames = listNames;
         }
 
-        public override TConv ConvertFromDictionary(IConverterContext<TTarget> context, IDictionary<string, object> dictionary)
+        public override TConv ConvertFromDictionary(
+            IConverterContext<TTarget> context, IDictionary<object, object> dictionary, 
+            object data = null)
         {
             object list = null;
             foreach (var listName in _listNames)
@@ -57,7 +59,7 @@ namespace Eryph.ConfigModel.Converters
                         foreach (var entry in enumerable)
                         {
                             var dictionaryCandidate = ConvertDictionary(entry);
-                            if (!(dictionaryCandidate is IDictionary<string, object> entryDictionary)) continue;
+                            if (!(dictionaryCandidate is IDictionary<object, object> entryDictionary)) continue;
 
                             var convertedEntry = context.ConverterProvider.GetConverter(typeof(T))
                                 .ConvertFromDictionary(context, entryDictionary);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 namespace Eryph.ConfigModel.Json
@@ -11,11 +12,13 @@ namespace Eryph.ConfigModel.Json
                 new JsonSerializerOptions{PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
         }
 
-        public static IDictionary<string, object> DeserializeToDictionary(string jsonString)
+        public static IDictionary<object, object> DeserializeToDictionary(string jsonString)
         {
             var options = new JsonSerializerOptions();
             options.Converters.Add(new ObjectAsPrimitiveConverter());
-            return JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString, options);
+            return JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString, options)?
+                .ToDictionary(kv => (object)kv.Key, kv => kv.Value);
+
 
         }
     }
