@@ -1,25 +1,51 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Eryph.ConfigModel.Json
 {
     public static class ConfigModelJsonSerializer
     {
-        public static string Serialize<T>(T config)
+        private static JsonSerializerOptions _options = null;
+
+        public static JsonSerializerOptions DefaultOptions
         {
-            return JsonSerializer.Serialize(config,
-                new JsonSerializerOptions{PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            get
+            {
+                if (_options != null) return _options;
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+                };
+                options.Converters.Add(new ObjectAsPrimitiveConverter());
+                _options = options;
+
+                return _options;
+            }
         }
 
-        public static IDictionary<object, object> DeserializeToDictionary(string jsonString)
+
+        public static string Serialize<T>(T config, JsonSerializerOptions options = default)
         {
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new ObjectAsPrimitiveConverter());
-            return JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString, options)?
+            return JsonSerializer.Serialize(config, options ?? DefaultOptions);
+        }
+
+        public static IDictionary<object, object> DeserializeToDictionary(string jsonString, JsonSerializerOptions options = default)
+        {
+
+            return JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString, options ?? DefaultOptions)?
                 .ToDictionary(kv => (object)kv.Key, kv => kv.Value);
-
-
+            
+        }
+        
+        public static IDictionary<object, object> DeserializeToDictionary(JsonElement element, JsonSerializerOptions options = default)
+        {
+            return element.Deserialize<Dictionary<string, object>>(options ?? DefaultOptions)?
+                .ToDictionary(kv => (object)kv.Key, kv => kv.Value);
+            
         }
     }
 }

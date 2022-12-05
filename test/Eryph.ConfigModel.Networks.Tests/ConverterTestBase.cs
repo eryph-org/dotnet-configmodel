@@ -22,6 +22,12 @@ public class ConverterTestBase
         config.Networks[0].Subnets[0].DnsServers.Should().NotBeNull();
         config.Networks[0].Subnets[0].DnsServers.Should().HaveCount(2);
         config.Networks[0].Subnets[0].MTU.Should().Be(1300);
+
+        config.Networks[0].Subnets[0].IpPools.Should().NotBeNull();
+        config.Networks[0].Subnets[0].IpPools.Should().HaveCount(1);
+        config.Networks[0].Subnets[0].IpPools[0].Name.Should().Be("pool_name");
+        config.Networks[0].Subnets[0].IpPools[0].FirstIp.Should().Be("192.168.2.10");
+        config.Networks[0].Subnets[0].IpPools[0].LastIp.Should().Be("192.168.2.100");
         
         config.Networks[0].Provider.Should().NotBeNull();
         config.Networks[0].Provider.Name.Should().Be("default");

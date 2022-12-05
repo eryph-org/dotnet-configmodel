@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Eryph.ConfigModel.Json
 {
-    internal sealed class ObjectAsPrimitiveConverter : JsonConverter<object>
+    public sealed class ObjectAsPrimitiveConverter : JsonConverter<object>
     {
         public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {

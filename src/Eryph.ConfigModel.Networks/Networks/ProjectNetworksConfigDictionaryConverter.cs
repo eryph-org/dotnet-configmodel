@@ -18,7 +18,10 @@ namespace Eryph.ConfigModel.Catlets
                 new NetworkSubnetConfigConverter.List(),
                 looseMode 
                     ? new LooseProviderConfigConverter() 
-                    :  new StrictProviderConfigConverter()
+                    :  new StrictProviderConfigConverter(),
+                
+                new IpPoolConfigConverter(), 
+                new IpPoolConfigConverter.List()
             };
 
             var context = new ConverterContext<ProjectNetworksConfig>(dictionary,
