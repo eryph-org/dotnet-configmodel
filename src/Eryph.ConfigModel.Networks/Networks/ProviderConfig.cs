@@ -7,7 +7,7 @@ namespace Eryph.ConfigModel.Catlets
     {
 
         public string Name { get; set; }
-        public string SubnetName { get; set; }
-        public string IpPoolName { get; set; }
+        public string Subnet { get; set; }
+        public string IpPool { get; set; }
     }
 }

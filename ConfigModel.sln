@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.Networks"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.Networks.Tests", "test\Eryph.ConfigModel.Networks.Tests\Eryph.ConfigModel.Networks.Tests.csproj", "{A84B3397-1572-4F17-AE73-ADE42AE61DA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.Catlets.Yaml", "src\Eryph.ConfigModel.Catlets.Yaml\Eryph.ConfigModel.Catlets.Yaml.csproj", "{5B8E1D21-50D9-4EC7-9775-D831A4E65664}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.Networks.Yaml", "src\Eryph.ConfigModel.Networks.Yaml\Eryph.ConfigModel.Networks.Yaml.csproj", "{B58D8917-6B08-4B4E-90FB-CD58DC0DFBEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{A84B3397-1572-4F17-AE73-ADE42AE61DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A84B3397-1572-4F17-AE73-ADE42AE61DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A84B3397-1572-4F17-AE73-ADE42AE61DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B8E1D21-50D9-4EC7-9775-D831A4E65664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B8E1D21-50D9-4EC7-9775-D831A4E65664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B8E1D21-50D9-4EC7-9775-D831A4E65664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B8E1D21-50D9-4EC7-9775-D831A4E65664}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B58D8917-6B08-4B4E-90FB-CD58DC0DFBEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B58D8917-6B08-4B4E-90FB-CD58DC0DFBEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B58D8917-6B08-4B4E-90FB-CD58DC0DFBEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B58D8917-6B08-4B4E-90FB-CD58DC0DFBEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

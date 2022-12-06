@@ -45,7 +45,7 @@ public class ConverterTestBase
         config.Networks[0].AdapterName.Should().Be("eth0");
         config.Networks[0].SubnetV4.Should().NotBeNull();
         config.Networks[0].SubnetV4.Name.Should().Be("other");
-        config.Networks[0].SubnetV4.PoolName.Should().Be("other_pool");
+        config.Networks[0].SubnetV4.IpPool.Should().Be("other_pool");
         config.Networks[1].Name.Should().Be("backup");
         config.Networks[1].AdapterName.Should().Be("eth1");
         config.Networks[1].SubnetV4.Should().BeNull();

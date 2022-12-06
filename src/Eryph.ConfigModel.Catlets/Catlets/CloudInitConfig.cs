@@ -9,6 +9,8 @@ namespace Eryph.ConfigModel.Catlets
     {
         public string Name { get; set; }
         public string Type { get; set; }
+        
+        [PrivateIdentifier(Critical = true)]
         public string Content { get; set; }
         public string FileName { get; set; }
 

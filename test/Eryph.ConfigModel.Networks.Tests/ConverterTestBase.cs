@@ -8,6 +8,7 @@ public class ConverterTestBase
     protected static void AssertSample1(ProjectNetworksConfig config)
     {
         config.Should().NotBeNull();
+        config.Version.Should().Be("1.0");
         config.Project.Should().Be("cinc");
         config.Networks.Should().NotBeNull();
         config.Networks.Should().HaveCount(2);
@@ -21,7 +22,7 @@ public class ConverterTestBase
         config.Networks[0].Subnets[0].Address.Should().Be("192.168.2.0/23");
         config.Networks[0].Subnets[0].DnsServers.Should().NotBeNull();
         config.Networks[0].Subnets[0].DnsServers.Should().HaveCount(2);
-        config.Networks[0].Subnets[0].MTU.Should().Be(1300);
+        config.Networks[0].Subnets[0].Mtu.Should().Be(1300);
 
         config.Networks[0].Subnets[0].IpPools.Should().NotBeNull();
         config.Networks[0].Subnets[0].IpPools.Should().HaveCount(1);
@@ -31,8 +32,8 @@ public class ConverterTestBase
         
         config.Networks[0].Provider.Should().NotBeNull();
         config.Networks[0].Provider.Name.Should().Be("default");
-        config.Networks[0].Provider.SubnetName.Should().Be("provider_subnet");
-        config.Networks[0].Provider.IpPoolName.Should().Be("other_pool");
+        config.Networks[0].Provider.Subnet.Should().Be("provider_subnet");
+        config.Networks[0].Provider.IpPool.Should().Be("other_pool");
 
         config.Networks[1].Environment.Should().Be("dev");
         config.Networks[1].Provider.Should().NotBeNull();

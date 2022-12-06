@@ -25,8 +25,8 @@ namespace Eryph.ConfigModel.Catlets.Converters
                 return new ProviderConfig
                 {
                     Name = GetStringProperty(dictionary, nameof(ProviderConfig.Name)),
-                    SubnetName = GetStringProperty(dictionary, "subnet", nameof(ProviderConfig.SubnetName)),
-                    IpPoolName = GetStringProperty(dictionary, "ipPool", nameof(ProviderConfig.IpPoolName)),
+                    Subnet = GetStringProperty(dictionary, "subnet", nameof(ProviderConfig.Subnet)),
+                    IpPool = GetStringProperty(dictionary, "ipPool", nameof(ProviderConfig.IpPool)),
                 };
             throw new InvalidConfigModelException();
         }

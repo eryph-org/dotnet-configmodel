@@ -9,6 +9,8 @@ namespace Eryph.ConfigModel.Catlets
 
         public string Name { get; set; }
         public string Environment { get; set; }
+        
+        [PrivateIdentifier]
         public string Address { get; set; }
         
         public ProviderConfig Provider { get; set; }

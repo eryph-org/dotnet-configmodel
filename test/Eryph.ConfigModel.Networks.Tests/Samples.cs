@@ -3,6 +3,7 @@ namespace Eryph.ConfigModel.Catlet.Tests;
 public static class Samples
 {
   public const string Json1 = @"{
+  ""version"": ""1.0"",
   ""project"": ""cinc"",
   ""networks"": [
     {
@@ -10,8 +11,8 @@ public static class Samples
       ""address"": ""192.168.2.0/24"",
       ""provider"": {
         ""name"": ""default"",
-        ""subnetName"": ""provider_subnet"",
-        ""ipPoolName"": ""other_pool""
+        ""subnet"": ""provider_subnet"",
+        ""ipPool"": ""other_pool""
       },
       ""subnets"": [
         {
@@ -43,32 +44,30 @@ public static class Samples
   ]
 }";
 
-  public const string Yaml1 = @"project: cinc
+  public const string Yaml1 = @"version: 1.0
+project: cinc
 networks:
 - name: default
-  address: 192.168.2.0/24      
+  address: 192.168.2.0/24
   provider:
     name: default
     subnet: provider_subnet
     ip_pool: other_pool
-
-  subnets: 
+  subnets:
   - name: subnet_name
     address: 192.168.2.0/23
+    ip_pools:
+    - name: pool_name
+      first_ip: 192.168.2.10
+      last_ip: 192.168.2.100
     dns_servers:
     - 1.2.3.4
     - 5.6.7.8
     mtu: 1300
-        
-    ip_pools: 
-    - name: pool_name
-      first_ip: 192.168.2.10
-      last_ip: 192.168.2.100
-
 - name: default
   environment: dev
-  provider: default
-  address: 192.168.3.0/24  
-    
+  address: 192.168.3.0/24
+  provider:
+    name: default
 ";
 }

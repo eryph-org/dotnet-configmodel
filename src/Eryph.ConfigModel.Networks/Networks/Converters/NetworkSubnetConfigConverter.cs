@@ -23,7 +23,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
                 Address = GetStringProperty(dictionary, nameof(NetworkSubnetConfig.Address)),
                 DnsServers = GetListProperty<string>(dictionary, nameof(NetworkSubnetConfig.DnsServers)),
                 IpPools = context.ConvertList<IpPoolConfig>(dictionary),
-                MTU = GetIntProperty(dictionary,nameof(NetworkSubnetConfig.MTU) )
+                Mtu = GetIntProperty(dictionary,nameof(NetworkSubnetConfig.Mtu) )
             };
         }
     }

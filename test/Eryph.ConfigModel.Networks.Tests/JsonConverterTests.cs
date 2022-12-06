@@ -18,10 +18,11 @@ public class JsonConverterTests: ConverterTestBase
   
     }
 
-    [Fact]
-    public void Converts_to_json()
+    [Theory]
+    [InlineData(Samples.Json1, Samples.Json1)]
+    public void Converts_to_json(string input, string expected)
     {
-      var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(Samples.Json1);
+      var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(input);
       var config = ProjectNetworksConfigDictionaryConverter.Convert(dictionary, false);
 
       var copyOptions = new JsonSerializerOptions(ConfigModelJsonSerializer.DefaultOptions)
@@ -30,7 +31,7 @@ public class JsonConverterTests: ConverterTestBase
       };
       var act = ConfigModelJsonSerializer.Serialize(config,copyOptions );
 
-      act.Should().Be(Samples.Json1);
+      act.Should().Be(expected);
 
     }
 }

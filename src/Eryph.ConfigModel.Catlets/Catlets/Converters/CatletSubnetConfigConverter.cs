@@ -24,7 +24,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
                 return new CatletSubnetConfig
                 {
                     Name = GetStringProperty(dictionary, nameof(CatletSubnetConfig.Name)),
-                    PoolName = GetStringProperty(dictionary, "ipPool")
+                    IpPool = GetStringProperty(dictionary, nameof(CatletSubnetConfig.IpPool))
                 };
 
             }

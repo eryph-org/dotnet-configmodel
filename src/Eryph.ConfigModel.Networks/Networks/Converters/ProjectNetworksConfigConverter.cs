@@ -14,6 +14,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
             // target should be initialized
             context.Target = new ProjectNetworksConfig
             {
+                Version = GetStringProperty(dictionary, nameof(ProjectNetworksConfig.Version)),
                 Project = GetStringProperty(dictionary, nameof(ProjectNetworksConfig.Project)),
                 Networks = context.ConvertList<NetworkConfig>(dictionary)
             };

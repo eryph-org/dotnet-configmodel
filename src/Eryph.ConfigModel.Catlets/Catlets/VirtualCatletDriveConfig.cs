@@ -9,6 +9,7 @@ namespace Eryph.ConfigModel.Catlets
         public string Slug { get; set; }
         public string DataStore { get; set; }
 
+        [PrivateIdentifier]
         public string Template { get; set; }
 
         public int? Size { get; set; }

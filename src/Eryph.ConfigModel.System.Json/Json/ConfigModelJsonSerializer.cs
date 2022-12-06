@@ -21,13 +21,13 @@ namespace Eryph.ConfigModel.Json
                     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
                 };
                 options.Converters.Add(new ObjectAsPrimitiveConverter());
+                options.Converters.Add(new JsonStringEnumConverter());
                 _options = options;
 
                 return _options;
             }
         }
-
-
+        
         public static string Serialize<T>(T config, JsonSerializerOptions options = default)
         {
             return JsonSerializer.Serialize(config, options ?? DefaultOptions);

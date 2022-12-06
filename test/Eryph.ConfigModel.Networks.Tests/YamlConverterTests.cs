@@ -1,11 +1,7 @@
-using System.Collections.Generic;
-using System.Text.Json;
-using Eryph.ConfigModel.Catlets;
-using Eryph.ConfigModel.Json;
+using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
 using Xunit;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
+
 
 namespace Eryph.ConfigModel.Catlet.Tests
 {
@@ -15,27 +11,19 @@ namespace Eryph.ConfigModel.Catlet.Tests
         [Fact]
         public void Converts_from_yaml()
         {
-          var serializer = new DeserializerBuilder()
-              .Build();
-          
-            var dictionary = serializer.Deserialize<Dictionary<object, object>>(Samples.Yaml1);
-            var config = ProjectNetworksConfigDictionaryConverter.Convert(dictionary, true);
+            var config = ProjectNetworkConfigYamlSerializer.Deserialize(Samples.Yaml1);
             AssertSample1(config);
         }
 
-        [Fact]
-        public void Converts_To_yaml()
+        [Theory()]
+        [InlineData(Samples.Yaml1, Samples.Yaml1)]
+        public void Converts_To_yaml(string input, string expected)
         {
-          
-          // we always convert over json to yaml, so use json as input
-          var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(Samples.Json1);
+            
+            var config = ProjectNetworkConfigYamlSerializer.Deserialize(input);
+            var act = ProjectNetworkConfigYamlSerializer.Serialize(config);
 
-          var serializer = new SerializerBuilder()
-              .Build();
-
-          var act = serializer.Serialize(dictionary);
-
-          act.Should().Be(Samples.Yaml1);
+            act.Should().Be(expected);
 
         }
     }
