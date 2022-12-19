@@ -6,7 +6,7 @@
       <ProjectReference Include="..\Eryph.ConfigModel.Catlets\Eryph.ConfigModel.Catlets.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="YamlDotNet" Version="12.1.0" />
+      <PackageReference Include="YamlDotNet" Version="12.3.1" />
     </ItemGroup>
 
 </Project>
