@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Eryph.ConfigModel.Converters;
 
 namespace Eryph.ConfigModel.Catlets.Converters
@@ -30,6 +31,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
                     Memory = context.Convert<VirtualCatletMemoryConfig>(dictionary),
                     Drives = context.ConvertList<VirtualCatletDriveConfig>(dictionary),
                     NetworkAdapters = context.ConvertList<VirtualCatletNetworkAdapterConfig>(dictionary),
+                    Features = context.ConvertList<VirtualCatletFeatureConfig>(dictionary)
                 };
 
             }

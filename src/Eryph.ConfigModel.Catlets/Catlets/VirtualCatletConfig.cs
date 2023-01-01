@@ -17,5 +17,7 @@ namespace Eryph.ConfigModel.Catlets
         public VirtualCatletDriveConfig[] Drives { get; set; }
 
         public VirtualCatletNetworkAdapterConfig[] NetworkAdapters { get; set; }
+        
+        public VirtualCatletFeatureConfig[] Features { get; set; }
     }
 }

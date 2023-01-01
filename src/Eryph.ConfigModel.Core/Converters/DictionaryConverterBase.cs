@@ -17,6 +17,12 @@ namespace Eryph.ConfigModel.Converters
             return ConvertFromDictionary(context, dictionary, data);
         }
 
+        public virtual object ConvertFromObject(IConverterContext<TTarget> context,
+            object unConvertedObject, object data = default)
+        {
+            return default;
+        }
+
         protected static object ConvertDictionary(object dictionaryCandidate)
         {
             if (dictionaryCandidate is IDictionary<object, object> dictionary)

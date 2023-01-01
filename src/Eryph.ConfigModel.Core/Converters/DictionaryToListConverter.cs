@@ -59,10 +59,14 @@ namespace Eryph.ConfigModel.Converters
                         foreach (var entry in enumerable)
                         {
                             var dictionaryCandidate = ConvertDictionary(entry);
-                            if (!(dictionaryCandidate is IDictionary<object, object> entryDictionary)) continue;
 
-                            var convertedEntry = context.ConverterProvider.GetConverter(typeof(T))
-                                .ConvertFromDictionary(context, entryDictionary);
+                            object convertedEntry = null;
+                            var converter = context.ConverterProvider.GetConverter(typeof(T));
+                            if (!(dictionaryCandidate is IDictionary<object, object> entryDictionary))
+                                convertedEntry = converter.ConvertFromObject(context, dictionaryCandidate);
+                            else
+                                convertedEntry = converter.ConvertFromDictionary(context, entryDictionary);
+
                             if (convertedEntry != null)
                                 result.Add(convertedEntry);
                         }

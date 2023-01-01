@@ -30,7 +30,11 @@ namespace Eryph.ConfigModel.Catlets
                 new CatletSubnetConfigConverter(),
                 new CatletRaisingConfigConverter(),
                 new CloudInitConfigConverter(),
-                new CloudInitConfigConverter.List()
+                new CloudInitConfigConverter.List(),
+                looseMode
+                    ? new LooseVirtualCatletFeatureConfigConverter()
+                    : new StrictVirtualCatletFeatureConfigConverter(),
+                new StrictVirtualCatletFeatureConfigConverter.List()
             };
 
             var context = new ConverterContext<CatletConfig>(dictionary,
