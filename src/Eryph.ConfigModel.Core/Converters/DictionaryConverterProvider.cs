@@ -38,6 +38,11 @@ namespace Eryph.ConfigModel.Converters
             {
                 return default;
             }
+
+            public object ConvertFromObject(IConverterContext<TTarget> context, object unConvertedObject, object data = default)
+            {
+                return default;
+            }
         }
 
         public IDictionaryConverter<TTarget> GetConverter(Type type)

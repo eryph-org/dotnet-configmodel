@@ -4,7 +4,6 @@ using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
 using Xunit;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace Eryph.ConfigModel.Catlet.Tests
 {
@@ -36,6 +35,12 @@ vcatlet:
     mac_address: 4711
   - name: eth1
     mac_address: 4712
+  features:
+  - name: nested_virtualization
+  - name: secure_boot
+    settings:
+    - tpm
+    - shielded
 networks:
 - name: default
   adapter_name: eth0
@@ -67,6 +72,12 @@ vcatlet:
   image: dbosoft/winsrv2019-standard/20220324  
   cpu: 4
 ";      
+      
+      private const string SampleYaml4 = @"
+vcatlet:
+  features:
+  - nested_virtualization
+";           
       
         [Fact]
         public void Converts_from_yaml()
@@ -107,6 +118,18 @@ vcatlet:
             config.VCatlet.Should().NotBeNull();
             config.VCatlet.Cpu.Should().NotBeNull();
             config.VCatlet.Cpu.Count.Should().Be(4);
+
+        }
+        
+        [Fact]
+        public void Convert_from_short_features_yaml()
+        {
+          var config = CatletConfigYamlSerializer.Deserialize(SampleYaml4);
+
+          config.VCatlet.Should().NotBeNull();
+          config.VCatlet.Features.Should().NotBeNull();
+          config.VCatlet.Features.Should().HaveCount(1);
+          config.VCatlet.Features[0].Name.Should().Be("nested_virtualization");
 
         }
     }

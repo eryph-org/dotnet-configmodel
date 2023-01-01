@@ -31,12 +31,20 @@ public class ConverterTestBase
         config.VCatlet.NetworkAdapters[0].MacAddress.Should().Be("4711");
         config.VCatlet.NetworkAdapters[1].Name.Should().Be("eth1");
         config.VCatlet.NetworkAdapters[1].MacAddress.Should().Be("4712");
-        
-        config.VCatlet.Memory.Should().NotBe(null);
+
+        config.VCatlet.Memory.Should().NotBeNull();
         config.VCatlet.Memory.Startup.Should().Be(1024);
         config.VCatlet.Memory.Minimum.Should().Be(512);
         config.VCatlet.Memory.Maximum.Should().Be(4096);
 
+        config.VCatlet.Features.Should().NotBeNull();
+        config.VCatlet.Features.Should().HaveCount(2);
+        config.VCatlet.Features[0].Name.Should().Be("nested_virtualization");
+        config.VCatlet.Features[1].Name.Should().Be("secure_boot");
+        config.VCatlet.Features[1].Settings.Should().NotBeNull();
+        config.VCatlet.Features[1].Settings.Should().HaveCount(2);
+        config.VCatlet.Features[1].Settings[0].Should().Be("tpm");
+        config.VCatlet.Features[1].Settings[1].Should().Be("shielded");
 
         config.Networks.Should().HaveCount(2);
         config.Networks[0].Name.Should().Be("default");
