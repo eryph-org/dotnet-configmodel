@@ -16,12 +16,13 @@ namespace Eryph.ConfigModel.Catlets.Converters
             {
                 Name = GetStringProperty(dictionary, nameof(CatletConfig.Name)),
                 Environment = GetStringProperty(dictionary, nameof(CatletConfig.Environment)),
-                Project = GetStringProperty(dictionary, nameof(CatletConfig.Project)),
+                Society = GetStringProperty(dictionary, nameof(CatletConfig.Society)),
+                SocialName = GetStringProperty(dictionary, nameof(CatletConfig.SocialName), "hostname"),
             };
 
             context.Target.VCatlet = context.Convert<VirtualCatletConfig>(dictionary);
             context.Target.Networks = context.ConvertList<CatletNetworkConfig>(dictionary);
-            context.Target.Raising = context.Convert<CatletRaisingConfig>(dictionary);
+            context.Target.Fodder = context.ConvertList<FodderConfig>(dictionary);
 
             return context.Target;
         }

@@ -7,19 +7,19 @@ namespace Eryph.ConfigModel.Catlets.Converters
         public override object ConvertFromObject(IConverterContext<CatletConfig> context, object unConvertedObject, object data = default)
         {
             return unConvertedObject is string 
-                ? ConvertFeatureConfig(unConvertedObject) 
+                ? ConvertCapabilityConfigConfig(unConvertedObject) 
                 : null;
         }
         
-        protected override VirtualCatletFeatureConfig ConvertFeatureConfig(object configObject)
+        protected override VirtualCatletCapabilityConfig ConvertCapabilityConfigConfig(object configObject)
         {
             if (configObject is string name)
-                return new VirtualCatletFeatureConfig
+                return new VirtualCatletCapabilityConfig
                 {
                     Name = name
                 };
                 
-            return base.ConvertFeatureConfig(configObject);
+            return base.ConvertCapabilityConfigConfig(configObject);
         }
         
     }

@@ -24,14 +24,14 @@ namespace Eryph.ConfigModel.Catlets.Converters
             {
                 return new VirtualCatletConfig
                 {
-                    Image = GetStringProperty(dictionary, nameof(VirtualCatletConfig.Image)),
+                    Parent = GetStringProperty(dictionary, nameof(VirtualCatletConfig.Parent)),
                     Slug = GetStringProperty(dictionary, nameof(VirtualCatletConfig.Slug)),
-                    DataStore = GetStringProperty(dictionary, nameof(VirtualCatletConfig.DataStore)),
+                    Shelter = GetStringProperty(dictionary, nameof(VirtualCatletConfig.Shelter)),
                     Cpu = context.Convert<VirtualCatletCpuConfig>(dictionary),
                     Memory = context.Convert<VirtualCatletMemoryConfig>(dictionary),
                     Drives = context.ConvertList<VirtualCatletDriveConfig>(dictionary),
                     NetworkAdapters = context.ConvertList<VirtualCatletNetworkAdapterConfig>(dictionary),
-                    Features = context.ConvertList<VirtualCatletFeatureConfig>(dictionary)
+                    Capabilities = context.ConvertList<VirtualCatletCapabilityConfig>(dictionary)
                 };
 
             }

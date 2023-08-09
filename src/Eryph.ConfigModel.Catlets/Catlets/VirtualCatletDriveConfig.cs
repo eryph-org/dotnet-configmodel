@@ -7,10 +7,10 @@ namespace Eryph.ConfigModel.Catlets
     {
         public string Name { get; set; }
         public string Slug { get; set; }
-        public string DataStore { get; set; }
+        public string Shelter { get; set; }
 
         [PrivateIdentifier]
-        public string Template { get; set; }
+        public string Parent { get; set; }
 
         public int? Size { get; set; }
         public VirtualCatletDriveType? Type { get; set; }

@@ -6,10 +6,9 @@ namespace Eryph.ConfigModel.Catlets
     public class VirtualCatletConfig
     {
         public string Slug { get; set; }
-        public string DataStore { get; set; }
-        public string Image { get; set; }
-
-
+        public string Shelter { get; set; }
+        public string Parent { get; set; }
+        
         public VirtualCatletCpuConfig Cpu { get; set; }
 
         public VirtualCatletMemoryConfig Memory { get; set; }
@@ -18,6 +17,6 @@ namespace Eryph.ConfigModel.Catlets
 
         public VirtualCatletNetworkAdapterConfig[] NetworkAdapters { get; set; }
         
-        public VirtualCatletFeatureConfig[] Features { get; set; }
+        public VirtualCatletCapabilityConfig[] Capabilities  { get; set; }
     }
 }

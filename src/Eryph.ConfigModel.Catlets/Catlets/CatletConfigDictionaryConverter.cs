@@ -28,7 +28,6 @@ namespace Eryph.ConfigModel.Catlets
                 new CatletNetworkConfigConverter(),
                 new CatletNetworkConfigConverter.List(),
                 new CatletSubnetConfigConverter(),
-                new CatletRaisingConfigConverter(),
                 new CloudInitConfigConverter(),
                 new CloudInitConfigConverter.List(),
                 looseMode

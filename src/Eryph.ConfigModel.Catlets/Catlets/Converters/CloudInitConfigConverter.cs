@@ -5,25 +5,25 @@ using Eryph.ConfigModel.Converters;
 
 namespace Eryph.ConfigModel.Catlets.Converters
 {
-    public class CloudInitConfigConverter : DictionaryConverterBase<CloudInitConfig, CatletConfig>
+    public class CloudInitConfigConverter : DictionaryConverterBase<FodderConfig, CatletConfig>
     {
-        public class List : DictionaryToListConverter<CloudInitConfig[], CatletConfig>
+        public class List : DictionaryToListConverter<FodderConfig[], CatletConfig>
         {
-            public List() : base(nameof(CatletRaisingConfig.Config))
+            public List() : base(nameof(CatletConfig.Fodder))
             {
             }
         }
 
-        public override CloudInitConfig ConvertFromDictionary(IConverterContext<CatletConfig> context, 
+        public override FodderConfig ConvertFromDictionary(IConverterContext<CatletConfig> context, 
             IDictionary<object, object> dictionary, object data = null)
         {
-            return new CloudInitConfig
+            return new FodderConfig
             {
-                Name = GetStringProperty(dictionary, nameof(CloudInitConfig.Name)),
-                Type = GetStringProperty(dictionary, nameof(CloudInitConfig.Type)),
-                Content = GetStringProperty(dictionary, nameof(CloudInitConfig.Content)),
-                FileName = GetStringProperty(dictionary, nameof(CloudInitConfig.FileName)),
-                Sensitive = Convert.ToBoolean(GetStringProperty(dictionary, nameof(CloudInitConfig.Sensitive)), CultureInfo.InvariantCulture)
+                Name = GetStringProperty(dictionary, nameof(FodderConfig.Name)),
+                Type = GetStringProperty(dictionary, nameof(FodderConfig.Type)),
+                Content = GetStringProperty(dictionary, nameof(FodderConfig.Content)),
+                FileName = GetStringProperty(dictionary, nameof(FodderConfig.FileName)),
+                Secret = Convert.ToBoolean(GetStringProperty(dictionary, nameof(FodderConfig.Secret)), CultureInfo.InvariantCulture)
             };
         }
 

@@ -8,7 +8,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
         public override VirtualCatletConfig ConvertVCatletConfig(object vCatletConfigObject, IConverterContext<CatletConfig> context)
         {
             if (vCatletConfigObject is string vCatletImageName)
-                return new VirtualCatletConfig { Image = vCatletImageName };
+                return new VirtualCatletConfig { Parent = vCatletImageName };
 
             return base.ConvertVCatletConfig(vCatletConfigObject, context);
         }

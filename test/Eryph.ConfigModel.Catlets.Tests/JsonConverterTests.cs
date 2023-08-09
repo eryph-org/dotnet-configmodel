@@ -12,11 +12,12 @@ public class JsonConverterTests: ConverterTestBase
     private const string SampleJson1 = $@"{{
   ""name"": ""cinc-windows"",
   ""environment"": ""env1"",
-  ""project"": ""cinc"",
+  ""society"": ""cinc"",
+  ""socialName"": ""cinc-host"",
   ""vCatlet"": {{
     ""slug"": ""cinc-slug"",
-    ""dataStore"": ""ds1"",
-    ""image"": ""dbosoft/winsrv2019-standard/20220324"",
+    ""shelter"": ""ds1"",
+    ""parent"": ""dbosoft/winsrv2019-standard/20220324"",
     ""cpu"": {{
       ""count"": 4
     }},
@@ -29,8 +30,8 @@ public class JsonConverterTests: ConverterTestBase
       {{
         ""name"": ""data"",
         ""slug"": ""cinc-shared"",
-        ""dataStore"": ""ds2"",
-        ""template"": ""some_template"",
+        ""shelter"": ""ds2"",
+        ""parent"": ""some_template"",
         ""size"": 1,
         ""type"": ""SharedVHD""
       }}
@@ -45,13 +46,13 @@ public class JsonConverterTests: ConverterTestBase
         ""macAddress"": ""4712""
       }}
     ],
-    ""features"": [
+    ""capabilities"": [
       {{
         ""name"": ""nested_virtualization""
       }},
       {{
         ""name"": ""secure_boot"",
-        ""settings"": [
+        ""details"": [
           ""tpm"",
           ""shielded""
         ]
@@ -75,18 +76,15 @@ public class JsonConverterTests: ConverterTestBase
       ""adapterName"": ""eth1""
     }}
   ],
-  ""raising"": {{
-    ""hostname"": ""cinc-host"",
-    ""config"": [
-      {{
-        ""name"": ""admin-windows"",
-        ""type"": ""cloud-config"",
-        ""content"": ""users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd"",
-        ""fileName"": ""filename"",
-        ""sensitive"": true
-      }}
-    ]
-  }}
+  ""fodder"": [
+    {{
+      ""name"": ""admin-windows"",
+      ""type"": ""cloud-config"",
+      ""content"": ""users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd"",
+      ""fileName"": ""filename"",
+      ""secret"": true
+    }}
+  ]
 }}";
     [Fact]
     public void Converts_from_json()

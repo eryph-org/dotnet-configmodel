@@ -3,29 +3,29 @@ using Eryph.ConfigModel.Converters;
 
 namespace Eryph.ConfigModel.Catlets.Converters
 {
-    public class StrictVirtualCatletFeatureConfigConverter : DictionaryConverterBase<VirtualCatletFeatureConfig, CatletConfig>
+    public class StrictVirtualCatletFeatureConfigConverter : DictionaryConverterBase<VirtualCatletCapabilityConfig, CatletConfig>
     {
-        public class List : DictionaryToListConverter<VirtualCatletFeatureConfig[], CatletConfig>
+        public class List : DictionaryToListConverter<VirtualCatletCapabilityConfig[], CatletConfig>
         {
-            public List() : base(nameof(VirtualCatletConfig.Features))
+            public List() : base(nameof(VirtualCatletConfig.Capabilities))
             {
             }
         }
         
-        public override VirtualCatletFeatureConfig ConvertFromDictionary(IConverterContext<CatletConfig> context, 
+        public override VirtualCatletCapabilityConfig ConvertFromDictionary(IConverterContext<CatletConfig> context, 
             IDictionary<object, object> dictionary, object data = null)
         {
-            return ConvertFeatureConfig(dictionary);
+            return ConvertCapabilityConfigConfig(dictionary);
         }
         
-        protected virtual VirtualCatletFeatureConfig ConvertFeatureConfig(object configObject)
+        protected virtual VirtualCatletCapabilityConfig ConvertCapabilityConfigConfig(object configObject)
         {
             if (configObject is IDictionary<object, object> dictionary)
             {
-                return new VirtualCatletFeatureConfig
+                return new VirtualCatletCapabilityConfig
                 {
-                    Name = GetStringProperty(dictionary, nameof(VirtualCatletFeatureConfig.Name)),
-                    Settings = GetListProperty<string>(dictionary, nameof(VirtualCatletFeatureConfig.Settings))
+                    Name = GetStringProperty(dictionary, nameof(VirtualCatletCapabilityConfig.Name)),
+                    Details = GetListProperty<string>(dictionary, nameof(VirtualCatletCapabilityConfig.Details))
                 };
 
             }

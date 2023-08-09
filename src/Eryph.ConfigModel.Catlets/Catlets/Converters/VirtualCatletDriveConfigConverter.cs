@@ -28,9 +28,9 @@ namespace Eryph.ConfigModel.Catlets.Converters
             {
                 Name = GetStringProperty(dictionary, nameof(VirtualCatletDriveConfig.Name)),
                 Size = GetIntProperty(dictionary, nameof(VirtualCatletDriveConfig.Size)),
-                DataStore = GetStringProperty(dictionary, nameof(VirtualCatletDriveConfig.DataStore)),
+                Shelter = GetStringProperty(dictionary, nameof(VirtualCatletDriveConfig.Shelter)),
                 Slug = GetStringProperty(dictionary, nameof(VirtualCatletDriveConfig.Slug)),
-                Template = GetStringProperty(dictionary, nameof(VirtualCatletDriveConfig.Template)),
+                Parent = GetStringProperty(dictionary, nameof(VirtualCatletDriveConfig.Parent)),
                 Type = type
             };
         }
