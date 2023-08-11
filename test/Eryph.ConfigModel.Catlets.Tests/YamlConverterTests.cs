@@ -10,12 +10,12 @@ namespace Eryph.ConfigModel.Catlet.Tests
     public class YamlConverterTests : ConverterTestBase
     {
 
-      private const string SampleYaml1 = @"society: homeland
+      private const string SampleYaml1 = @"project: homeland
 name: cinc-windows
 label: cinc
-social_name: cinc-host
+hostname: cinc-host
 environment: world
-lair: home
+datastore: home
 parent: dbosoft/winsrv2019-standard/20220324
 cpu:
   count: 4
@@ -27,7 +27,7 @@ drives:
 - name: data
   mutation: Overwrite
   label: cinc-shared
-  lair: ds2
+  datastore: ds2
   source: some_template
   size: 1
   type: SharedVHD

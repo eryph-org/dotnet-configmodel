@@ -8,20 +8,20 @@ public class ConverterTestBase
     protected static void AssertSample1(CatletConfig config)
     {
         config.Name.Should().Be("cinc-windows");
-        config.Society.Should().Be("homeland");
+        config.Project.Should().Be("homeland");
         config.Environment.Should().Be("world");
 
         config.Should().NotBeNull();
         config.Parent.Should().Be("dbosoft/winsrv2019-standard/20220324");
         config.Label.Should().Be("cinc");
-        config.Lair.Should().Be("home");
+        config.Datastore.Should().Be("home");
         config.Cpu.Should().NotBeNull();
         config.Cpu?.Count.Should().Be(4);
 
         config.Drives.Should().HaveCount(1);
         config.Drives?[0].Name.Should().Be("data");
         config.Drives?[0].Size.Should().Be(1);
-        config.Drives?[0].Lair.Should().Be("ds2");
+        config.Drives?[0].Datastore.Should().Be("ds2");
         config.Drives?[0].Label.Should().Be("cinc-shared");
         config.Drives?[0].Source.Should().Be("some_template");
         config.Drives?[0].Type.Should().Be(CatletDriveType.SharedVHD);
@@ -61,7 +61,7 @@ public class ConverterTestBase
         config.Networks?[1].SubnetV4.Should().BeNull();
         config.Networks?[1].SubnetV6.Should().BeNull();
 
-        config.SocialName.Should().Be("cinc-host");
+        config.Hostname.Should().Be("cinc-host");
         config.Fodder.Should().NotBeNull();
         config.Fodder.Should().HaveCount(1);
         config.Fodder?[0].Name.Should().Be("admin-windows");

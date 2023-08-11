@@ -10,12 +10,12 @@ public class JsonConverterTests: ConverterTestBase
 {
     
     private const string SampleJson1 = $@"{{
-  ""society"": ""homeland"",
+  ""project"": ""homeland"",
   ""name"": ""cinc-windows"",
   ""label"": ""cinc"",
-  ""socialName"": ""cinc-host"",
+  ""hostname"": ""cinc-host"",
   ""environment"": ""world"",
-  ""lair"": ""home"",
+  ""datastore"": ""home"",
   ""parent"": ""dbosoft/winsrv2019-standard/20220324"",
   ""cpu"": {{
     ""count"": 4
@@ -30,7 +30,7 @@ public class JsonConverterTests: ConverterTestBase
       ""name"": ""data"",
       ""mutation"": ""Overwrite"",
       ""label"": ""cinc-shared"",
-      ""lair"": ""ds2"",
+      ""datastore"": ""ds2"",
       ""source"": ""some_template"",
       ""size"": 1,
       ""type"": ""SharedVHD""

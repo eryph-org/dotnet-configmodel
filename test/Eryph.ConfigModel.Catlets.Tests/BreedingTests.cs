@@ -27,7 +27,7 @@ public class BreedingTests
                 {
                     Name = "sda", 
                     Type = CatletDriveType.VHD,
-                    Lair = "lair",
+                    Datastore = "lair",
                     Size = 100
                 }
             },
@@ -55,7 +55,7 @@ public class BreedingTests
         };
 
         var child = new CatletConfig { Name = "child", 
-            Society = "social",
+            Project = "social",
             Environment = "env1",
             Drives = Array.Empty<CatletDriveConfig>(),
             Networks = new []{new CatletNetworkConfig
@@ -71,7 +71,7 @@ public class BreedingTests
         var breedChild = parent.Breed(child, "reference");
 
         breedChild.Parent.Should().Be("reference");
-        breedChild.Society.Should().Be("social");
+        breedChild.Project.Should().Be("social");
         breedChild.Environment.Should().Be("env1");
         
         breedChild.Capabilities.Should().NotBeNull();
@@ -158,13 +158,13 @@ public class BreedingTests
                 new CatletDriveConfig
                 {
                     Name = "sda",
-                    Lair = "none",
+                    Datastore = "none",
                 },
                 new CatletDriveConfig
                 {
                     Name = "sdb",
                     Type = CatletDriveType.PHD,
-                    Lair = "none",
+                    Datastore = "none",
                     Label = "peng"
                 }
             }};
@@ -175,10 +175,10 @@ public class BreedingTests
         breedChild.Drives.Should().NotBeEquivalentTo(parent.Drives);
         breedChild.Drives.Should().HaveCount(2);
         breedChild.Drives?[0].Type.Should().Be(CatletDriveType.VHD);
-        breedChild.Drives?[0].Lair.Should().Be("none");
+        breedChild.Drives?[0].Datastore.Should().Be("none");
         breedChild.Drives?[0].Source.Should().Be("gene:reference:sda");
         breedChild.Drives?[1].Type.Should().Be(CatletDriveType.PHD);
-        breedChild.Drives?[1].Lair.Should().Be("none");
+        breedChild.Drives?[1].Datastore.Should().Be("none");
         breedChild.Drives?[1].Source.Should().BeNull();
         breedChild.Drives?[1].Label.Should().Be("peng");
     }

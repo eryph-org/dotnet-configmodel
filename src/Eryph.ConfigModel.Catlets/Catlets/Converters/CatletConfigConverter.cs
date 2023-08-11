@@ -16,11 +16,11 @@ namespace Eryph.ConfigModel.Catlets.Converters
             {
                 Name = GetStringProperty(dictionary, nameof(CatletConfig.Name)),
                 Environment = GetStringProperty(dictionary, nameof(CatletConfig.Environment)),
-                Society = GetStringProperty(dictionary, nameof(CatletConfig.Society)),
-                SocialName = GetStringProperty(dictionary, nameof(CatletConfig.SocialName), "hostname"),
+                Project = GetStringProperty(dictionary, nameof(CatletConfig.Project)),
+                Hostname = GetStringProperty(dictionary, nameof(CatletConfig.Hostname), "hostname"),
                 Parent = GetStringProperty(dictionary, nameof(CatletConfig.Parent)),
                 Label = GetStringProperty(dictionary, nameof(CatletConfig.Label)),
-                Lair = GetStringProperty(dictionary, nameof(CatletConfig.Lair)),
+                Datastore = GetStringProperty(dictionary, nameof(CatletConfig.Datastore)),
             };
 
             context.Target.Cpu = context.Convert<CatletCpuConfig>(dictionary);
