@@ -12,12 +12,14 @@ namespace Eryph.ConfigModel.Catlets
     {
         public string? Name { get; set; }
         public bool? Remove { get; set; }
+        
+        public string? Source { get; set; }
         public string? Type { get; set; }
         
         [PrivateIdentifier(Critical = true)]
         public string? Content { get; set; }
         public string? FileName { get; set; }
-
+        
         public bool? Secret { get; set; }
 
         public FodderConfig Clone()
@@ -26,6 +28,7 @@ namespace Eryph.ConfigModel.Catlets
             {
                 Name = Name,
                 Remove = Remove,
+                Source = Source,
                 Type = Type,
                 Content = Content,
                 FileName = FileName,
@@ -38,7 +41,8 @@ namespace Eryph.ConfigModel.Catlets
             return Clone();
         }
 
-        internal static FodderConfig[]? Breed(CatletConfig parentConfig, CatletConfig childConfig)
+        internal static FodderConfig[]? Breed(CatletConfig parentConfig, 
+            CatletConfig childConfig, string? parentReference)
         {
             if (parentConfig.Fodder == null && childConfig.Fodder == null)
                 return default;
@@ -54,6 +58,11 @@ namespace Eryph.ConfigModel.Catlets
                 
                 foreach (var fodder in newConfigs)
                 {
+                    if(string.IsNullOrWhiteSpace(fodder.Source))
+                    {
+                        fodder.Source = $"gene:{parentReference}:{fodder.Name}";
+                    }
+                    
                     if (fodder.Remove.GetValueOrDefault())
                         mergedConfig.Remove(fodder);
 
@@ -68,7 +77,10 @@ namespace Eryph.ConfigModel.Catlets
                         mergedConfig.Remove(fodder);
                         continue;
                     }
-
+                    
+                    if (!string.IsNullOrWhiteSpace(childFodder.Content))
+                        fodder.Source = null;
+                    
                     fodder.Secret = childFodder.Secret ?? fodder.Secret;
                     fodder.Content = childFodder.Content ?? fodder.Content;
                     fodder.Type = childFodder.Type ?? fodder.Type;

@@ -63,7 +63,7 @@ namespace Eryph.ConfigModel.Catlets
                 {
                     if(string.IsNullOrWhiteSpace(drive.Source))
                     {
-                        drive.Source = $"{parentReference}:{drive.Name}";
+                        drive.Source = $"gene:{parentReference}:{drive.Name}";
                     }
                 }
             );

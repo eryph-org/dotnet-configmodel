@@ -81,7 +81,7 @@ public class BreedingTests
         breedChild.Drives.Should().NotBeNull();
         breedChild.Drives.Should().HaveCount(1);
         breedChild.Drives.Should().NotBeEquivalentTo(parent.Drives);
-        breedChild.Drives?[0].Source.Should().Be("reference:sda");
+        breedChild.Drives?[0].Source.Should().Be("gene:reference:sda");
         breedChild.Drives.Should().NotBeSameAs(parent.Drives);
         
         breedChild.NetworkAdapters.Should().NotBeNull();
@@ -176,7 +176,7 @@ public class BreedingTests
         breedChild.Drives.Should().HaveCount(2);
         breedChild.Drives?[0].Type.Should().Be(CatletDriveType.VHD);
         breedChild.Drives?[0].Lair.Should().Be("none");
-        breedChild.Drives?[0].Source.Should().Be("reference:sda");
+        breedChild.Drives?[0].Source.Should().Be("gene:reference:sda");
         breedChild.Drives?[1].Type.Should().Be(CatletDriveType.PHD);
         breedChild.Drives?[1].Lair.Should().Be("none");
         breedChild.Drives?[1].Source.Should().BeNull();

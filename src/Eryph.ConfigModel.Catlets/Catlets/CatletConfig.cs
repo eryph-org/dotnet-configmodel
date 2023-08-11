@@ -49,7 +49,7 @@ namespace Eryph.ConfigModel.Catlets
             newConfig.NetworkAdapters = CatletNetworkAdapterConfig.Breed(this, child);
             newConfig.Capabilities = CatletCapabilityConfig.Breed(this, child);
             newConfig.Networks = CatletNetworkConfig.Breed(this, child);
-            newConfig.Fodder = FodderConfig.Breed(this, child);
+            newConfig.Fodder = FodderConfig.Breed(this, child, parentReference);
 
             return newConfig;
         }
