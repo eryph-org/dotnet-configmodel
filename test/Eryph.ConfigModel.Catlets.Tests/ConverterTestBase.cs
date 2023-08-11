@@ -23,7 +23,7 @@ public class ConverterTestBase
         config.Drives?[0].Size.Should().Be(1);
         config.Drives?[0].Lair.Should().Be("ds2");
         config.Drives?[0].Label.Should().Be("cinc-shared");
-        config.Drives?[0].Parent.Should().Be("some_template");
+        config.Drives?[0].Source.Should().Be("some_template");
         config.Drives?[0].Type.Should().Be(CatletDriveType.SharedVHD);
         config.Drives?[0].Mutation.Should().Be(MutationType.Overwrite);
         

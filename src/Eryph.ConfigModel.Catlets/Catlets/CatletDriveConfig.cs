@@ -16,7 +16,7 @@ namespace Eryph.ConfigModel.Catlets
         public string? Lair { get; set; }
 
         [PrivateIdentifier]
-        public string? Parent { get; set; }
+        public string? Source { get; set; }
 
         public int? Size { get; set; }
         public CatletDriveType? Type { get; set; }
@@ -29,7 +29,7 @@ namespace Eryph.ConfigModel.Catlets
                 Mutation = Mutation,
                 Label = Label,
                 Lair = Lair,
-                Parent = Parent,
+                Source = Source,
                 Size = Size,
                 Type = Type
             };
@@ -48,10 +48,10 @@ namespace Eryph.ConfigModel.Catlets
                 {
 
                     if (childDrive.Type.HasValue && drive.Type != childDrive.Type)
-                        drive.Parent = null;
+                        drive.Source = null;
                     
                     drive.Type = childDrive.Type ?? drive.Type;
-                    drive.Parent = childDrive.Parent ?? drive.Parent;
+                    drive.Source = childDrive.Source ?? drive.Source;
                     
                     if (childDrive.Size != 0) drive.Size = childDrive.Size;
                     if (!string.IsNullOrWhiteSpace(childDrive.Label))
@@ -61,9 +61,9 @@ namespace Eryph.ConfigModel.Catlets
                 },
                 (drive) =>
                 {
-                    if(string.IsNullOrWhiteSpace(drive.Parent))
+                    if(string.IsNullOrWhiteSpace(drive.Source))
                     {
-                        drive.Parent = $"{parentReference}:{drive.Name}";
+                        drive.Source = $"{parentReference}:{drive.Name}";
                     }
                 }
             );

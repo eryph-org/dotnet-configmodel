@@ -38,7 +38,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
                 Size = GetIntProperty(dictionary, nameof(CatletDriveConfig.Size)),
                 Lair = GetStringProperty(dictionary, nameof(CatletDriveConfig.Lair)),
                 Label = GetStringProperty(dictionary, nameof(CatletDriveConfig.Label)),
-                Parent = GetStringProperty(dictionary, nameof(CatletDriveConfig.Parent)),
+                Source = GetStringProperty(dictionary, nameof(CatletDriveConfig.Source)),
                 Mutation = mutation,
                 Type = type
             };

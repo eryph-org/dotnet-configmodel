@@ -28,7 +28,7 @@ drives:
   mutation: Overwrite
   label: cinc-shared
   lair: ds2
-  parent: some_template
+  source: some_template
   size: 1
   type: SharedVHD
 network_adapters:

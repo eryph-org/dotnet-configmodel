@@ -31,7 +31,7 @@ public class JsonConverterTests: ConverterTestBase
       ""mutation"": ""Overwrite"",
       ""label"": ""cinc-shared"",
       ""lair"": ""ds2"",
-      ""parent"": ""some_template"",
+      ""source"": ""some_template"",
       ""size"": 1,
       ""type"": ""SharedVHD""
     }}
