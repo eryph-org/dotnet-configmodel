@@ -7,7 +7,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
     {
 
         public override CatletConfig ConvertFromDictionary(
-            IConverterContext<CatletConfig> context, IDictionary<object, object> dictionary, object data = null)
+            IConverterContext<CatletConfig> context, IDictionary<object, object> dictionary, object? data = null)
         {
             
             // ReSharper disable once UseObjectOrCollectionInitializer
@@ -18,9 +18,16 @@ namespace Eryph.ConfigModel.Catlets.Converters
                 Environment = GetStringProperty(dictionary, nameof(CatletConfig.Environment)),
                 Society = GetStringProperty(dictionary, nameof(CatletConfig.Society)),
                 SocialName = GetStringProperty(dictionary, nameof(CatletConfig.SocialName), "hostname"),
+                Parent = GetStringProperty(dictionary, nameof(CatletConfig.Parent)),
+                Label = GetStringProperty(dictionary, nameof(CatletConfig.Label)),
+                Lair = GetStringProperty(dictionary, nameof(CatletConfig.Lair)),
             };
 
-            context.Target.VCatlet = context.Convert<VirtualCatletConfig>(dictionary);
+            context.Target.Cpu = context.Convert<CatletCpuConfig>(dictionary);
+            context.Target.Memory = context.Convert<CatletMemoryConfig>(dictionary);
+            context.Target.Drives = context.ConvertList<CatletDriveConfig>(dictionary);
+            context.Target.NetworkAdapters = context.ConvertList<CatletNetworkAdapterConfig>(dictionary);
+            context.Target.Capabilities = context.ConvertList<CatletCapabilityConfig>(dictionary);
             context.Target.Networks = context.ConvertList<CatletNetworkConfig>(dictionary);
             context.Target.Fodder = context.ConvertList<FodderConfig>(dictionary);
 

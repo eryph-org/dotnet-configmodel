@@ -12,18 +12,18 @@ namespace Eryph.ConfigModel.Converters
             ConverterProvider = converterProvider;
         }
 
-        public T Target { get; set; }
+        public T? Target { get; set; }
 
         public IDictionary<object, object> Input { get; }
 
         public IDictionaryConverterProvider<T> ConverterProvider { get;  }
 
-        public TRes Convert<TRes>(IDictionary<object, object> dictionary, object data = null) where TRes : class
+        public TRes? Convert<TRes>(IDictionary<object, object> dictionary, object? data = null) where TRes : class
         {
             return ConverterProvider.GetConverter(typeof(TRes)).ConvertFromDictionary(this, dictionary, data) as TRes;
         }
 
-        public TRes[] ConvertList<TRes>(IDictionary<object, object> dictionary, object data = null) where TRes : class
+        public TRes[]? ConvertList<TRes>(IDictionary<object, object> dictionary, object? data = null) where TRes : class
         {
             var arrayType = typeof(TRes).MakeArrayType();
             return ConverterProvider.GetConverter(arrayType).ConvertFromDictionary(this, dictionary, data) as TRes[];

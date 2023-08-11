@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Eryph.ConfigModel.Converters;
 
-namespace Eryph.ConfigModel.Catlets.Converters
+namespace Eryph.ConfigModel.Networks.Converters
 {
     public class NetworkConfigConverter : DictionaryConverterBase<NetworkConfig, ProjectNetworksConfig>
     {
@@ -14,7 +14,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
 
         public override NetworkConfig ConvertFromDictionary(
             IConverterContext<ProjectNetworksConfig> context, IDictionary<object, object> dictionary,
-            object data = default)
+            object? data = default)
         {
             return new NetworkConfig
             {

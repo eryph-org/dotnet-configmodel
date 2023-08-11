@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using System.Text.Json;
-using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
+using Eryph.ConfigModel.Networks;
 using FluentAssertions;
 using Xunit;
 
@@ -12,7 +13,8 @@ public class JsonConverterTests: ConverterTestBase
     [Fact]
     public void Converts_from_json()
     {
-        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(Samples.Json1);
+        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(Samples.Json1) ??
+                         new Dictionary<object, object>();
         var config = ProjectNetworksConfigDictionaryConverter.Convert(dictionary, false);
         AssertSample1(config);
   
@@ -22,7 +24,8 @@ public class JsonConverterTests: ConverterTestBase
     [InlineData(Samples.Json1, Samples.Json1)]
     public void Converts_to_json(string input, string expected)
     {
-      var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(input);
+      var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(input) ??
+                       new Dictionary<object, object>();
       var config = ProjectNetworksConfigDictionaryConverter.Convert(dictionary, false);
 
       var copyOptions = new JsonSerializerOptions(ConfigModelJsonSerializer.DefaultOptions)

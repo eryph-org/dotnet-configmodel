@@ -10,55 +10,56 @@ public class JsonConverterTests: ConverterTestBase
 {
     
     private const string SampleJson1 = $@"{{
+  ""society"": ""homeland"",
   ""name"": ""cinc-windows"",
-  ""environment"": ""env1"",
-  ""society"": ""cinc"",
+  ""label"": ""cinc"",
   ""socialName"": ""cinc-host"",
-  ""vCatlet"": {{
-    ""slug"": ""cinc-slug"",
-    ""shelter"": ""ds1"",
-    ""parent"": ""dbosoft/winsrv2019-standard/20220324"",
-    ""cpu"": {{
-      ""count"": 4
-    }},
-    ""memory"": {{
-      ""startup"": 1024,
-      ""minimum"": 512,
-      ""maximum"": 4096
-    }},
-    ""drives"": [
-      {{
-        ""name"": ""data"",
-        ""slug"": ""cinc-shared"",
-        ""shelter"": ""ds2"",
-        ""parent"": ""some_template"",
-        ""size"": 1,
-        ""type"": ""SharedVHD""
-      }}
-    ],
-    ""networkAdapters"": [
-      {{
-        ""name"": ""eth0"",
-        ""macAddress"": ""4711""
-      }},
-      {{
-        ""name"": ""eth1"",
-        ""macAddress"": ""4712""
-      }}
-    ],
-    ""capabilities"": [
-      {{
-        ""name"": ""nested_virtualization""
-      }},
-      {{
-        ""name"": ""secure_boot"",
-        ""details"": [
-          ""tpm"",
-          ""shielded""
-        ]
-      }}
-    ]
+  ""environment"": ""world"",
+  ""lair"": ""home"",
+  ""parent"": ""dbosoft/winsrv2019-standard/20220324"",
+  ""cpu"": {{
+    ""count"": 4
   }},
+  ""memory"": {{
+    ""startup"": 1024,
+    ""minimum"": 512,
+    ""maximum"": 4096
+  }},
+  ""drives"": [
+    {{
+      ""name"": ""data"",
+      ""mutation"": ""Overwrite"",
+      ""label"": ""cinc-shared"",
+      ""lair"": ""ds2"",
+      ""parent"": ""some_template"",
+      ""size"": 1,
+      ""type"": ""SharedVHD""
+    }}
+  ],
+  ""networkAdapters"": [
+    {{
+      ""name"": ""eth0"",
+      ""macAddress"": ""4711""
+    }},
+    {{
+      ""name"": ""eth1"",
+      ""mutation"": ""Remove"",
+      ""macAddress"": ""4712""
+    }}
+  ],
+  ""capabilities"": [
+    {{
+      ""name"": ""nested_virtualization""
+    }},
+    {{
+      ""name"": ""secure_boot"",
+      ""mutation"": ""Remove"",
+      ""details"": [
+        ""tpm"",
+        ""shielded""
+      ]
+    }}
+  ],
   ""networks"": [
     {{
       ""name"": ""default"",

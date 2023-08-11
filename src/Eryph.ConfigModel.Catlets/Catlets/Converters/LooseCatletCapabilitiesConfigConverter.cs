@@ -2,19 +2,20 @@
 
 namespace Eryph.ConfigModel.Catlets.Converters
 {
-    public class LooseVirtualCatletFeatureConfigConverter : StrictVirtualCatletFeatureConfigConverter
+    public class LooseCatletCapabilitiesConfigConverter : StrictCatletCapabilityConfigConverter
     {
-        public override object ConvertFromObject(IConverterContext<CatletConfig> context, object unConvertedObject, object data = default)
+        public override object? ConvertFromObject(IConverterContext<CatletConfig> context, 
+            object? unConvertedObject, object? data = default)
         {
             return unConvertedObject is string 
                 ? ConvertCapabilityConfigConfig(unConvertedObject) 
                 : null;
         }
         
-        protected override VirtualCatletCapabilityConfig ConvertCapabilityConfigConfig(object configObject)
+        protected override CatletCapabilityConfig? ConvertCapabilityConfigConfig(object configObject)
         {
             if (configObject is string name)
-                return new VirtualCatletCapabilityConfig
+                return new CatletCapabilityConfig
                 {
                     Name = name
                 };

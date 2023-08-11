@@ -1,6 +1,6 @@
 ﻿using Eryph.ConfigModel.Converters;
 
-namespace Eryph.ConfigModel.Catlets.Converters
+namespace Eryph.ConfigModel.Networks.Converters
 {
     public class LooseProviderConfigConverter : StrictProviderConfigConverter
     {

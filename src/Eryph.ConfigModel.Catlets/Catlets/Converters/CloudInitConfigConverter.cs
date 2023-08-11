@@ -15,7 +15,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
         }
 
         public override FodderConfig ConvertFromDictionary(IConverterContext<CatletConfig> context, 
-            IDictionary<object, object> dictionary, object data = null)
+            IDictionary<object, object> dictionary, object? data = null)
         {
             return new FodderConfig
             {

@@ -7,7 +7,7 @@ namespace Eryph.ConfigModel.Json
 {
     public static class ConfigModelJsonSerializer
     {
-        private static JsonSerializerOptions _options = null;
+        private static JsonSerializerOptions? _options;
 
         public static JsonSerializerOptions DefaultOptions
         {
@@ -28,12 +28,12 @@ namespace Eryph.ConfigModel.Json
             }
         }
         
-        public static string Serialize<T>(T config, JsonSerializerOptions options = default)
+        public static string Serialize<T>(T config, JsonSerializerOptions? options = default)
         {
             return JsonSerializer.Serialize(config, options ?? DefaultOptions);
         }
 
-        public static IDictionary<object, object> DeserializeToDictionary(string jsonString, JsonSerializerOptions options = default)
+        public static IDictionary<object, object>? DeserializeToDictionary(string jsonString, JsonSerializerOptions? options = default)
         {
 
             return JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString, options ?? DefaultOptions)?
@@ -41,7 +41,7 @@ namespace Eryph.ConfigModel.Json
             
         }
         
-        public static IDictionary<object, object> DeserializeToDictionary(JsonElement element, JsonSerializerOptions options = default)
+        public static IDictionary<object, object>? DeserializeToDictionary(JsonElement element, JsonSerializerOptions? options = default)
         {
             return element.Deserialize<Dictionary<string, object>>(options ?? DefaultOptions)?
                 .ToDictionary(kv => (object)kv.Key, kv => kv.Value);

@@ -7,39 +7,39 @@ namespace Eryph.ConfigModel.Catlets
     public static class CatletConfigDictionaryConverter 
     {
 
-        public static CatletConfig Convert(IDictionary<object, object> dictionary, bool looseMode = false)
+        public static CatletConfig Convert(IDictionary<object, object>? dictionary, bool looseMode = false)
         {
+            if (dictionary == null)
+                return new CatletConfig();
+            
             var converters = new IDictionaryConverter<CatletConfig>[]
             {
                 new CatletConfigConverter(),
                 looseMode
-                    ? new LooseVirtualCatletConfigConverter()
-                    : new StrictVirtualCatletConfigConverter(),
+                    ? new LooseCatletCpuConfigConverter()
+                    : new StrictCatletCpuConfigConverter(),
                 looseMode
-                    ? new LooseVirtualCatletCpuConfigConverter()
-                    : new StrictVirtualCatletCpuConfigConverter(),
-                looseMode
-                    ? new LooseVirtualCatletMemoryConfigConverter()
-                    : new StrictVirtualCatletMemoryConfigConverter(),
-                new VirtualCatletDriveConfigConverter(),
-                new VirtualCatletDriveConfigConverter.List(),
-                new VirtualCatletNetworkAdapterConfigConverter(),
-                new VirtualCatletNetworkAdapterConfigConverter.List(),
+                    ? new LooseCatletMemoryConfigConverter()
+                    : new StrictCatletMemoryConfigConverter(),
+                new CatletDriveConfigConverter(),
+                new CatletDriveConfigConverter.List(),
+                new CatletNetworkAdapterConfigConverter(),
+                new CatletNetworkAdapterConfigConverter.List(),
                 new CatletNetworkConfigConverter(),
                 new CatletNetworkConfigConverter.List(),
                 new CatletSubnetConfigConverter(),
                 new CloudInitConfigConverter(),
                 new CloudInitConfigConverter.List(),
                 looseMode
-                    ? new LooseVirtualCatletFeatureConfigConverter()
-                    : new StrictVirtualCatletFeatureConfigConverter(),
-                new StrictVirtualCatletFeatureConfigConverter.List()
+                    ? new LooseCatletCapabilitiesConfigConverter()
+                    : new StrictCatletCapabilityConfigConverter(),
+                new StrictCatletCapabilityConfigConverter.List()
             };
 
             var context = new ConverterContext<CatletConfig>(dictionary,
                 new DictionaryConverterProvider<CatletConfig>(converters));
 
-            return context.Convert<CatletConfig>(dictionary);
+            return context.Convert<CatletConfig>(dictionary) ?? new CatletConfig();
         }
 
 

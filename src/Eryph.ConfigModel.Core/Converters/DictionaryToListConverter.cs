@@ -16,11 +16,11 @@ namespace Eryph.ConfigModel.Converters
             _listNames = listNames;
         }
 
-        public override TConv ConvertFromDictionary(
+        public override TConv? ConvertFromDictionary(
             IConverterContext<TTarget> context, IDictionary<object, object> dictionary, 
-            object data = null)
+            object? data = null)
         {
-            object list = null;
+            object? list = null;
             foreach (var listName in _listNames)
             {
                 list = GetValueCaseInvariant(dictionary, listName);
@@ -41,13 +41,13 @@ namespace Eryph.ConfigModel.Converters
 
         private interface IListConvert
         {
-            object ConvertFromDictionary(IConverterContext<TTarget> context, object list);
+            object? ConvertFromDictionary(IConverterContext<TTarget> context, object list);
         }
 
         private class ListConverter<T> : IListConvert
 
         {
-            public object ConvertFromDictionary(IConverterContext<TTarget> context, object list)
+            public object? ConvertFromDictionary(IConverterContext<TTarget> context, object list)
             {
                 switch (list)
                 {
@@ -60,12 +60,10 @@ namespace Eryph.ConfigModel.Converters
                         {
                             var dictionaryCandidate = ConvertDictionary(entry);
 
-                            object convertedEntry = null;
                             var converter = context.ConverterProvider.GetConverter(typeof(T));
-                            if (!(dictionaryCandidate is IDictionary<object, object> entryDictionary))
-                                convertedEntry = converter.ConvertFromObject(context, dictionaryCandidate);
-                            else
-                                convertedEntry = converter.ConvertFromDictionary(context, entryDictionary);
+                            var convertedEntry = dictionaryCandidate is not IDictionary<object, object> entryDictionary 
+                                ? converter.ConvertFromObject(context, dictionaryCandidate) 
+                                : converter.ConvertFromDictionary(context, entryDictionary);
 
                             if (convertedEntry != null)
                                 result.Add(convertedEntry);

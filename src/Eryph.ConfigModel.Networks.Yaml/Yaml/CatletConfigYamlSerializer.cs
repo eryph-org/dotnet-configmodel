@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Networks;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Eryph.ConfigModel.Converters;
 
-namespace Eryph.ConfigModel.Catlets.Converters
+namespace Eryph.ConfigModel.Networks.Converters
 {
     public class ProjectNetworksConfigConverter : DictionaryConverterBase<ProjectNetworksConfig, ProjectNetworksConfig>
     {
 
         public override ProjectNetworksConfig ConvertFromDictionary(
-            IConverterContext<ProjectNetworksConfig> context, IDictionary<object, object> dictionary, object data = null)
+            IConverterContext<ProjectNetworksConfig> context, IDictionary<object, object> dictionary, object? data = null)
         {
             
             // ReSharper disable once UseObjectOrCollectionInitializer

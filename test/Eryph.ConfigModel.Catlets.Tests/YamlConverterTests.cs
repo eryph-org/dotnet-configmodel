@@ -10,38 +10,40 @@ namespace Eryph.ConfigModel.Catlet.Tests
     public class YamlConverterTests : ConverterTestBase
     {
 
-      private const string SampleYaml1 = @"name: cinc-windows
-environment: env1
-society: cinc
+      private const string SampleYaml1 = @"society: homeland
+name: cinc-windows
+label: cinc
 social_name: cinc-host
-vcatlet:
-  slug: cinc-slug
-  shelter: ds1
-  parent: dbosoft/winsrv2019-standard/20220324
-  cpu:
-    count: 4
-  memory:
-    startup: 1024
-    minimum: 512
-    maximum: 4096
-  drives:
-  - name: data
-    slug: cinc-shared
-    shelter: ds2
-    parent: some_template
-    size: 1
-    type: SharedVHD
-  network_adapters:
-  - name: eth0
-    mac_address: 4711
-  - name: eth1
-    mac_address: 4712
-  capabilities:
-  - name: nested_virtualization
-  - name: secure_boot
-    details:
-    - tpm
-    - shielded
+environment: world
+lair: home
+parent: dbosoft/winsrv2019-standard/20220324
+cpu:
+  count: 4
+memory:
+  startup: 1024
+  minimum: 512
+  maximum: 4096
+drives:
+- name: data
+  mutation: Overwrite
+  label: cinc-shared
+  lair: ds2
+  parent: some_template
+  size: 1
+  type: SharedVHD
+network_adapters:
+- name: eth0
+  mac_address: 4711
+- name: eth1
+  mutation: Remove
+  mac_address: 4712
+capabilities:
+- name: nested_virtualization
+- name: secure_boot
+  mutation: Remove
+  details:
+  - tpm
+  - shielded
 networks:
 - name: default
   adapter_name: eth0
@@ -64,17 +66,15 @@ fodder:
   secret: true
 ";
       
-      private const string SampleYaml2 = @"vCatlet: dbosoft/winsrv2019-standard/20220324";
+      private const string SampleYaml2 = @"parent: dbosoft/winsrv2019-standard/20220324";
 
       private const string SampleYaml3 = @"
-vcatlet:
-  parent: dbosoft/winsrv2019-standard/20220324  
-  cpu: 4
+parent: dbosoft/winsrv2019-standard/20220324  
+cpu: 4
 ";      
       
       private const string SampleYaml4 = @"
-vcatlet:
-  capabilities:
+capabilities:
   - nested_virtualization
 ";           
       
@@ -104,8 +104,8 @@ vcatlet:
         {
             var config = CatletConfigYamlSerializer.Deserialize(SampleYaml2);
 
-            config.VCatlet.Should().NotBeNull();
-            config.VCatlet.Parent.Should().Be("dbosoft/winsrv2019-standard/20220324");
+            config.Should().NotBeNull();
+            config.Parent.Should().Be("dbosoft/winsrv2019-standard/20220324");
 
         }
 
@@ -114,9 +114,9 @@ vcatlet:
         {
             var config = CatletConfigYamlSerializer.Deserialize(SampleYaml3);
 
-            config.VCatlet.Should().NotBeNull();
-            config.VCatlet.Cpu.Should().NotBeNull();
-            config.VCatlet.Cpu.Count.Should().Be(4);
+            config.Should().NotBeNull();
+            config.Cpu.Should().NotBeNull();
+            config.Cpu?.Count.Should().Be(4);
 
         }
         
@@ -125,10 +125,10 @@ vcatlet:
         {
           var config = CatletConfigYamlSerializer.Deserialize(SampleYaml4);
 
-          config.VCatlet.Should().NotBeNull();
-          config.VCatlet.Capabilities.Should().NotBeNull();
-          config.VCatlet.Capabilities.Should().HaveCount(1);
-          config.VCatlet.Capabilities[0].Name.Should().Be("nested_virtualization");
+          config.Should().NotBeNull();
+          config.Capabilities.Should().NotBeNull();
+          config.Capabilities.Should().HaveCount(1);
+          config.Capabilities?[0].Name.Should().Be("nested_virtualization");
 
         }
     }
