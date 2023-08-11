@@ -1,3 +1,4 @@
+using System;
 using Eryph.ConfigModel.Catlets;
 using FluentAssertions;
 using Xunit;
@@ -24,7 +25,8 @@ public class BreedingTests
             {
                 new CatletDriveConfig
                 {
-                    Name = "sda", Type = CatletDriveType.VHD,
+                    Name = "sda", 
+                    Type = CatletDriveType.VHD,
                     Lair = "lair",
                     Size = 100
                 }
@@ -54,7 +56,18 @@ public class BreedingTests
 
         var child = new CatletConfig { Name = "child", 
             Society = "social",
-            Environment = "env1"};
+            Environment = "env1",
+            Drives = Array.Empty<CatletDriveConfig>(),
+            Networks = new []{new CatletNetworkConfig
+            {
+                Name = "default",
+                AdapterName = "eth0"
+            }},
+            Fodder = new []{new FodderConfig
+            {
+                Name = "food"
+            }}
+        };
         var breedChild = parent.Breed(child, "reference");
 
         breedChild.Parent.Should().Be("reference");
@@ -66,17 +79,23 @@ public class BreedingTests
         breedChild.Capabilities.Should().NotBeSameAs(parent.Capabilities);
         
         breedChild.Drives.Should().NotBeNull();
+        breedChild.Drives.Should().HaveCount(1);
         breedChild.Drives.Should().NotBeEquivalentTo(parent.Drives);
         breedChild.Drives?[0].Source.Should().Be("reference:sda");
         breedChild.Drives.Should().NotBeSameAs(parent.Drives);
         
         breedChild.NetworkAdapters.Should().NotBeNull();
+        breedChild.NetworkAdapters.Should().HaveCount(1);
         breedChild.NetworkAdapters.Should().BeEquivalentTo(parent.NetworkAdapters);
         breedChild.NetworkAdapters.Should().NotBeSameAs(parent.NetworkAdapters);
         
         breedChild.Networks.Should().NotBeNull();
+        breedChild.Networks.Should().HaveCount(1);
         breedChild.Networks.Should().BeEquivalentTo(parent.Networks);
         breedChild.Networks.Should().NotBeSameAs(parent.Networks);
+
+        breedChild.Fodder.Should().NotBeNull();
+        breedChild.Fodder.Should().HaveCount(1);
     }
 
     [Fact]

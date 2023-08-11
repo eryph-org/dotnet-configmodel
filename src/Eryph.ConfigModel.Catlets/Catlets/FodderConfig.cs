@@ -46,39 +46,41 @@ namespace Eryph.ConfigModel.Catlets
             var newConfigs = parentConfig.Fodder?
                 .Select(a=>a.Clone()).ToArray();
             
-            if (childConfig.Fodder == null || newConfigs == null)
-                return newConfigs;
-            
             var mergedConfig = new List<FodderConfig>();
-            mergedConfig.AddRange(newConfigs);
-            
-            foreach (var fodder in newConfigs)
+
+            if (newConfigs != null)
             {
-                if(fodder.Remove.GetValueOrDefault())
-                    mergedConfig.Remove(fodder);
+                mergedConfig.AddRange(newConfigs);
                 
-                var childFodder = childConfig.Fodder
-                    .FirstOrDefault(x => x.Name == fodder.Name);
-
-                if(childFodder == null)
-                    continue;
-
-                if (childFodder.Remove.GetValueOrDefault())
+                foreach (var fodder in newConfigs)
                 {
-                    mergedConfig.Remove(fodder);
-                    continue;
-                }
+                    if (fodder.Remove.GetValueOrDefault())
+                        mergedConfig.Remove(fodder);
 
-                fodder.Secret = childFodder.Secret ?? fodder.Secret;
-                fodder.Content = childFodder.Content ?? fodder.Content;
-                fodder.Type = childFodder.Type ?? fodder.Type;
-                fodder.FileName = childFodder.FileName ?? fodder.FileName;
+                    var childFodder = childConfig.Fodder?
+                        .FirstOrDefault(x => x.Name == fodder.Name);
+
+                    if (childFodder == null)
+                        continue;
+
+                    if (childFodder.Remove.GetValueOrDefault())
+                    {
+                        mergedConfig.Remove(fodder);
+                        continue;
+                    }
+
+                    fodder.Secret = childFodder.Secret ?? fodder.Secret;
+                    fodder.Content = childFodder.Content ?? fodder.Content;
+                    fodder.Type = childFodder.Type ?? fodder.Type;
+                    fodder.FileName = childFodder.FileName ?? fodder.FileName;
+                }
             }
-            
-            var childNames = childConfig.Fodder.Select(x => x.Name);
-            mergedConfig.AddRange(parentConfig.Fodder?.Where(cfg =>
+
+            var parentNames = parentConfig.Fodder
+                ?.Select(x => x.Name) ?? Array.Empty<string>();
+            mergedConfig.AddRange(childConfig.Fodder?.Where(cfg =>
                                       !cfg.Remove.GetValueOrDefault() &&                      
-                                      !childNames.Any(x =>
+                                      !parentNames.Any(x =>
                                           string.Equals(x, cfg.Name, StringComparison.InvariantCultureIgnoreCase))) 
                                   ?? Array.Empty<FodderConfig>());
 

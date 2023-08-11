@@ -22,55 +22,55 @@ internal static class Breeding
             return default;
             
         var newConfigs = parentList?.Select(a=>a.Clone()).ToArray();
-        if (childList == null || newConfigs == null)
-            return newConfigs?
-                .Select(c =>
-                {
-                    adoptAction?.Invoke(c);
-                    return c;
-                }).ToArray();
-            
-        //merge settings configured both on parent and child
         var mergedConfig = new List<TSubConfig>();
-        mergedConfig.AddRange(newConfigs);
-            
-        foreach (var parentSubConfig in newConfigs)
-        {
-            if(parentSubConfig.Mutation.GetValueOrDefault() == MutationType.Remove)
-                mergedConfig.Remove(parentSubConfig);
-            
-            adoptAction?.Invoke(parentSubConfig);
-            
-            var childSubConfig = childList
-                .FirstOrDefault(x => x.Name == parentSubConfig.Name);
 
-            if (childSubConfig == null)
-                continue;
-                
-            switch (childSubConfig.Mutation)
+        if (newConfigs != null)
+        {
+            //merge settings configured both on parent and child
+            mergedConfig.AddRange(newConfigs);
+
+            foreach (var parentSubConfig in newConfigs)
             {
-                case MutationType.Overwrite:
+                if (parentSubConfig.Mutation.GetValueOrDefault() == MutationType.Remove)
                     mergedConfig.Remove(parentSubConfig);
-                    mergedConfig.Add(childSubConfig);
-                    break;
-                case MutationType.Remove:
-                    mergedConfig.Remove(parentSubConfig);
-                    break;
-                case MutationType.Merge:
-                    goto default;
-                case null:
-                    goto default;
-                default:
-                    mergeAction(parentSubConfig, childSubConfig);
-                    break;
+
+                adoptAction?.Invoke(parentSubConfig);
+
+                if (childList == null)
+                    continue;
+                
+                var childSubConfig = childList.FirstOrDefault(x => x.Name == parentSubConfig.Name);
+
+                if (childSubConfig == null)
+                    continue;
+
+                switch (childSubConfig.Mutation)
+                {
+                    case MutationType.Overwrite:
+                        mergedConfig.Remove(parentSubConfig);
+                        mergedConfig.Add(childSubConfig);
+                        break;
+                    case MutationType.Remove:
+                        mergedConfig.Remove(parentSubConfig);
+                        break;
+                    case MutationType.Merge:
+                        goto default;
+                    case null:
+                        goto default;
+                    default:
+                        mergeAction(parentSubConfig, childSubConfig);
+                        break;
+                }
+                
             }
         }
-            
+
         //add adapters configured only on child
-        var childNames = childList.Select(x => x.Name);
-        mergedConfig.AddRange(parentList?.Where(vmHd =>
-                                  vmHd.Mutation != MutationType.Remove &&                      
-                                  !childNames.Any(x =>
+        var parentNames = parentList?.Select(x => x.Name) 
+                          ?? Array.Empty<string>();
+        mergedConfig.AddRange(childList?.Where(vmHd =>
+                                  vmHd.Mutation == null &&                  
+                                  !parentNames.Any(x =>
                                       string.Equals(x, vmHd.Name, StringComparison.InvariantCultureIgnoreCase))) 
                               ?? Array.Empty<TSubConfig>());
 
