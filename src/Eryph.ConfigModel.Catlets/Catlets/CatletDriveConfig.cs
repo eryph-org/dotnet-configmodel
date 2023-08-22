@@ -12,8 +12,8 @@ namespace Eryph.ConfigModel.Catlets
         
         public MutationType? Mutation { get; set; }
         
-        public string? Label { get; set; }
-        public string? Datastore { get; set; }
+        public string? Location { get; set; }
+        public string? Store { get; set; }
 
         [PrivateIdentifier]
         public string? Source { get; set; }
@@ -27,8 +27,8 @@ namespace Eryph.ConfigModel.Catlets
             {
                 Name = Name,
                 Mutation = Mutation,
-                Label = Label,
-                Datastore = Datastore,
+                Location = Location,
+                Store = Store,
                 Source = Source,
                 Size = Size,
                 Type = Type
@@ -54,10 +54,10 @@ namespace Eryph.ConfigModel.Catlets
                     drive.Source = childDrive.Source ?? drive.Source;
                     
                     if (childDrive.Size != 0) drive.Size = childDrive.Size;
-                    if (!string.IsNullOrWhiteSpace(childDrive.Label))
-                        drive.Label = childDrive.Label;
-                    if (!string.IsNullOrWhiteSpace(childDrive.Datastore))
-                        drive.Datastore = childDrive.Datastore;               
+                    if (!string.IsNullOrWhiteSpace(childDrive.Location))
+                        drive.Location = childDrive.Location;
+                    if (!string.IsNullOrWhiteSpace(childDrive.Store))
+                        drive.Store = childDrive.Store;               
                 },
                 (drive) =>
                 {

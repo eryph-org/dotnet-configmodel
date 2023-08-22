@@ -19,8 +19,8 @@ namespace Eryph.ConfigModel.Catlets.Converters
                 Project = GetStringProperty(dictionary, nameof(CatletConfig.Project)),
                 Hostname = GetStringProperty(dictionary, nameof(CatletConfig.Hostname), "hostname"),
                 Parent = GetStringProperty(dictionary, nameof(CatletConfig.Parent)),
-                Label = GetStringProperty(dictionary, nameof(CatletConfig.Label)),
-                Datastore = GetStringProperty(dictionary, nameof(CatletConfig.Datastore)),
+                Location = GetStringProperty(dictionary, nameof(CatletConfig.Location)),
+                Store = GetStringProperty(dictionary, nameof(CatletConfig.Store)),
             };
 
             context.Target.Cpu = context.Convert<CatletCpuConfig>(dictionary);

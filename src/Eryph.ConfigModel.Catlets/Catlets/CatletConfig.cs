@@ -10,10 +10,10 @@ namespace Eryph.ConfigModel.Catlets
         public string? Version { get; set; }
         public string? Project { get; set; }
         public string? Name { get; set; }
-        public string? Label { get; set; }
+        public string? Location { get; set; }
         public string? Hostname { get; set; }
         public string? Environment { get; set; }
-        public string? Datastore { get; set; }
+        public string? Store { get; set; }
         public string? Parent { get; set; }
         
         public CatletCpuConfig? Cpu { get; set; }
@@ -36,12 +36,12 @@ namespace Eryph.ConfigModel.Catlets
             // always only from child
             newConfig.Project = child.Project;
             newConfig.Name = child.Name;
-            newConfig.Label = child.Label;
+            newConfig.Location = child.Location;
             newConfig.Environment = child.Environment;
             newConfig.Hostname = child.Hostname;
             
             // inheritance from parent
-            newConfig.Datastore = child.Datastore ?? Datastore;
+            newConfig.Store = child.Store ?? Store;
             newConfig.Parent = parentReference;
             newConfig.Cpu = CatletCpuConfig.Breed(this, child);
             newConfig.Memory = CatletMemoryConfig.Breed(this, child);
@@ -61,10 +61,10 @@ namespace Eryph.ConfigModel.Catlets
                 Version = Version,
                 Project = Project,
                 Name = Name,
-                Label = Label,
+                Location = Location,
                 Hostname = Hostname,
                 Environment = Environment,
-                Datastore = Datastore,
+                Store = Store,
                 Parent = Parent,
                 Cpu = Cpu?.Clone(),
                 Networks = Networks

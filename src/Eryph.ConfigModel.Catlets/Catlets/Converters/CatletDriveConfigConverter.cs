@@ -36,8 +36,8 @@ namespace Eryph.ConfigModel.Catlets.Converters
             {
                 Name = GetStringProperty(dictionary, nameof(CatletDriveConfig.Name)),
                 Size = GetIntProperty(dictionary, nameof(CatletDriveConfig.Size)),
-                Datastore = GetStringProperty(dictionary, nameof(CatletDriveConfig.Datastore)),
-                Label = GetStringProperty(dictionary, nameof(CatletDriveConfig.Label)),
+                Store = GetStringProperty(dictionary, nameof(CatletDriveConfig.Store)),
+                Location = GetStringProperty(dictionary, nameof(CatletDriveConfig.Location)),
                 Source = GetStringProperty(dictionary, nameof(CatletDriveConfig.Source)),
                 Mutation = mutation,
                 Type = type

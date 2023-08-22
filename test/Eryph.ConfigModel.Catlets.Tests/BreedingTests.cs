@@ -27,7 +27,7 @@ public class BreedingTests
                 {
                     Name = "sda", 
                     Type = CatletDriveType.VHD,
-                    Datastore = "lair",
+                    Store = "lair",
                     Size = 100
                 }
             },
@@ -158,14 +158,14 @@ public class BreedingTests
                 new CatletDriveConfig
                 {
                     Name = "sda",
-                    Datastore = "none",
+                    Store = "none",
                 },
                 new CatletDriveConfig
                 {
                     Name = "sdb",
                     Type = CatletDriveType.PHD,
-                    Datastore = "none",
-                    Label = "peng"
+                    Store = "none",
+                    Location = "peng"
                 }
             }};
         
@@ -175,12 +175,12 @@ public class BreedingTests
         breedChild.Drives.Should().NotBeEquivalentTo(parent.Drives);
         breedChild.Drives.Should().HaveCount(2);
         breedChild.Drives?[0].Type.Should().Be(CatletDriveType.VHD);
-        breedChild.Drives?[0].Datastore.Should().Be("none");
+        breedChild.Drives?[0].Store.Should().Be("none");
         breedChild.Drives?[0].Source.Should().Be("gene:reference:sda");
         breedChild.Drives?[1].Type.Should().Be(CatletDriveType.PHD);
-        breedChild.Drives?[1].Datastore.Should().Be("none");
+        breedChild.Drives?[1].Store.Should().Be("none");
         breedChild.Drives?[1].Source.Should().BeNull();
-        breedChild.Drives?[1].Label.Should().Be("peng");
+        breedChild.Drives?[1].Location.Should().Be("peng");
     }
     
     [Fact]

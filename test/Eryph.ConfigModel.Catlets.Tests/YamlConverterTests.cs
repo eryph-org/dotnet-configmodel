@@ -12,10 +12,10 @@ namespace Eryph.ConfigModel.Catlet.Tests
 
       private const string SampleYaml1 = @"project: homeland
 name: cinc-windows
-label: cinc
+location: cinc
 hostname: cinc-host
 environment: world
-datastore: home
+store: home
 parent: dbosoft/winsrv2019-standard/20220324
 cpu:
   count: 4
@@ -26,8 +26,8 @@ memory:
 drives:
 - name: data
   mutation: Overwrite
-  label: cinc-shared
-  datastore: ds2
+  location: cinc-shared
+  store: ds2
   source: some_template
   size: 1
   type: SharedVHD

@@ -13,16 +13,16 @@ public class ConverterTestBase
 
         config.Should().NotBeNull();
         config.Parent.Should().Be("dbosoft/winsrv2019-standard/20220324");
-        config.Label.Should().Be("cinc");
-        config.Datastore.Should().Be("home");
+        config.Location.Should().Be("cinc");
+        config.Store.Should().Be("home");
         config.Cpu.Should().NotBeNull();
         config.Cpu?.Count.Should().Be(4);
 
         config.Drives.Should().HaveCount(1);
         config.Drives?[0].Name.Should().Be("data");
         config.Drives?[0].Size.Should().Be(1);
-        config.Drives?[0].Datastore.Should().Be("ds2");
-        config.Drives?[0].Label.Should().Be("cinc-shared");
+        config.Drives?[0].Store.Should().Be("ds2");
+        config.Drives?[0].Location.Should().Be("cinc-shared");
         config.Drives?[0].Source.Should().Be("some_template");
         config.Drives?[0].Type.Should().Be(CatletDriveType.SharedVHD);
         config.Drives?[0].Mutation.Should().Be(MutationType.Overwrite);
