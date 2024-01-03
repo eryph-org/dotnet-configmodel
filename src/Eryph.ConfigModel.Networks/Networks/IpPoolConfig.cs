@@ -1,16 +1,16 @@
 using JetBrains.Annotations;
 
-namespace Eryph.ConfigModel.Catlets
+namespace Eryph.ConfigModel.Networks
 {
     [PublicAPI]
     public class IpPoolConfig
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         
         [PrivateIdentifier]
-        public string FirstIp { get; set; }
+        public string? FirstIp { get; set; }
         
         [PrivateIdentifier]
-        public string LastIp { get; set; }
+        public string? LastIp { get; set; }
     }
 }

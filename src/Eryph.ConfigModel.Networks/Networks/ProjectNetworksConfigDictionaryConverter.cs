@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Eryph.ConfigModel.Catlets.Converters;
 using Eryph.ConfigModel.Converters;
+using Eryph.ConfigModel.Networks.Converters;
 
-namespace Eryph.ConfigModel.Catlets
+namespace Eryph.ConfigModel.Networks
 {
     public static class ProjectNetworksConfigDictionaryConverter 
     {

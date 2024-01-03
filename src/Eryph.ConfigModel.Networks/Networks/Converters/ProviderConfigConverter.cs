@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Eryph.ConfigModel.Converters;
 
-namespace Eryph.ConfigModel.Catlets.Converters
+namespace Eryph.ConfigModel.Networks.Converters
 {
     public class StrictProviderConfigConverter : DictionaryConverterBase<ProviderConfig, ProjectNetworksConfig>
     {
 
-        public override ProviderConfig ConvertFromDictionary(IConverterContext<ProjectNetworksConfig> context, 
-            IDictionary<object, object> dictionary, object data = null)
+        public override ProviderConfig? ConvertFromDictionary(IConverterContext<ProjectNetworksConfig> context, 
+            IDictionary<object, object> dictionary, object? data = null)
         {
             var providerConfig = ConvertDictionary(GetValueCaseInvariant(dictionary, 
                 nameof(NetworkConfig.Provider)));

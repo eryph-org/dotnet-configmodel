@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <RootNamespace>Eryph.ConfigModel.Catlet.Tests</RootNamespace>
+    <Nullable>enable</Nullable>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

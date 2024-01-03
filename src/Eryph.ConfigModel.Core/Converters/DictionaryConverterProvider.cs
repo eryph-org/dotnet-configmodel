@@ -25,21 +25,20 @@ namespace Eryph.ConfigModel.Converters
         [ExcludeFromCodeCoverage]
         private class PlaceHolderConverter : IDictionaryConverter<TTarget>
         {
-            private readonly Type _type;
-
             public PlaceHolderConverter(Type type)
             {
-                _type = type;
+                CanConvert = type;
             }
 
-            public Type CanConvert => _type;
-            public object ConvertFromDictionary(IConverterContext<TTarget> context, IDictionary<object, object> dictionary, 
-                object data= null)
+            public Type CanConvert { get; }
+
+            public object? ConvertFromDictionary(IConverterContext<TTarget> context, IDictionary<object, object> dictionary, 
+                object? data= null)
             {
                 return default;
             }
 
-            public object ConvertFromObject(IConverterContext<TTarget> context, object unConvertedObject, object data = default)
+            public object? ConvertFromObject(IConverterContext<TTarget> context, object? unConvertedObject, object? data = default)
             {
                 return default;
             }

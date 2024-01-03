@@ -1,12 +1,12 @@
 ﻿namespace Eryph.ConfigModel.Catlets.Converters
 {
-    public class LooseVirtualCatletMemoryConfigConverter : StrictVirtualCatletMemoryConfigConverter
+    public class LooseCatletMemoryConfigConverter : StrictCatletMemoryConfigConverter
     {
-        protected override VirtualCatletMemoryConfig ConvertMemoryConfig(object configObject)
+        protected override CatletMemoryConfig ConvertMemoryConfig(object configObject)
         {
             if (configObject is int number)
             {
-                return new VirtualCatletMemoryConfig
+                return new CatletMemoryConfig
                 {
                     Startup = number
                 };

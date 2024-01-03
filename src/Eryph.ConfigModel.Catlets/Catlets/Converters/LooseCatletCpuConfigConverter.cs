@@ -2,13 +2,13 @@
 
 namespace Eryph.ConfigModel.Catlets.Converters
 {
-    public class LooseVirtualCatletCpuConfigConverter : StrictVirtualCatletCpuConfigConverter
+    public class LooseCatletCpuConfigConverter : StrictCatletCpuConfigConverter
     {
-        protected override VirtualCatletCpuConfig ConvertCpuConfig(object configObject)
+        protected override CatletCpuConfig ConvertCpuConfig(object configObject)
         {
             if (configObject is string numberString && int.TryParse(numberString, out var number) )
             {
-                return new VirtualCatletCpuConfig
+                return new CatletCpuConfig
                 {
                     Count = number
                 };

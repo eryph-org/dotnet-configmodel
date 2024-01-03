@@ -7,8 +7,8 @@ namespace Eryph.ConfigModel.Yaml
 {
     public static class CatletConfigYamlSerializer
     {
-        private static ISerializer _serializer; 
-        private static IDeserializer _deSerializer; 
+        private static ISerializer? _serializer; 
+        private static IDeserializer? _deSerializer; 
         
         public static string Serialize(CatletConfig config)
         {
@@ -16,12 +16,6 @@ namespace Eryph.ConfigModel.Yaml
             {
                 _serializer = new SerializerBuilder()
                     .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                    .WithAttributeOverride<CatletConfig>(d => d.VCatlet,
-                        new YamlMemberAttribute
-                        {
-                            Alias = "vcatlet",
-                            ApplyNamingConventions = false
-                        })
                     .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
                     .Build();
             }

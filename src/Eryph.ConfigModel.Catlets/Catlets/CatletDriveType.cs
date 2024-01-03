@@ -3,7 +3,7 @@
 namespace Eryph.ConfigModel.Catlets
 {
     [PublicAPI]
-    public enum VirtualCatletDriveType
+    public enum CatletDriveType
     {
         // ReSharper disable InconsistentNaming
         VHD = 0,
