@@ -34,7 +34,5 @@ namespace Eryph.ConfigModel.Catlets.Converters
             return context.Target;
         }
 
-
-
     }
 }

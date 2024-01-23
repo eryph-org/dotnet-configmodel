@@ -5,27 +5,36 @@ using Eryph.ConfigModel.Converters;
 
 namespace Eryph.ConfigModel.Catlets.Converters
 {
-    public class CloudInitConfigConverter : DictionaryConverterBase<FodderConfig, CatletConfig>
+    public class FodderConfigConverter<TConfig> : DictionaryConverterBase<FodderConfig, TConfig>
+       where TConfig : IHasFodderConfig
     {
-        public class List : DictionaryToListConverter<FodderConfig[], CatletConfig>
+        public class List : DictionaryToListConverter<FodderConfig[], TConfig>
         {
             public List() : base(nameof(CatletConfig.Fodder))
             {
             }
         }
 
-        public override FodderConfig ConvertFromDictionary(IConverterContext<CatletConfig> context, 
+        public override FodderConfig ConvertFromDictionary(IConverterContext<TConfig> context, 
             IDictionary<object, object> dictionary, object? data = null)
         {
-            return new FodderConfig
+            var res = new FodderConfig
             {
                 Name = GetStringProperty(dictionary, nameof(FodderConfig.Name)),
+                Source = GetStringProperty(dictionary, nameof(FodderConfig.Source)),
                 Type = GetStringProperty(dictionary, nameof(FodderConfig.Type)),
                 Content = GetStringProperty(dictionary, nameof(FodderConfig.Content)),
-                FileName = GetStringProperty(dictionary, nameof(FodderConfig.FileName)),
-                Secret = Convert.ToBoolean(GetStringProperty(dictionary, nameof(FodderConfig.Secret)), CultureInfo.InvariantCulture)
+                FileName = GetStringProperty(dictionary, nameof(FodderConfig.FileName))
             };
+
+            var secretString = GetStringProperty(dictionary, nameof(FodderConfig.Secret));
+            if(!string.IsNullOrEmpty(secretString))
+                res.Secret = bool.Parse(secretString);
+
+            return res;
         }
+
+
 
     }
 }

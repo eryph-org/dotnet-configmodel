@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace Eryph.ConfigModel.Catlets
 {
     [PublicAPI]
-    public class CatletConfig: ICloneable
+    public class CatletConfig: ICloneable, IHasFodderConfig
     {
         public string? Version { get; set; }
         public string? Project { get; set; }
