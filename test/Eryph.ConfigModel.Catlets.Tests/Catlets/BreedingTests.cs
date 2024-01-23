@@ -51,6 +51,11 @@ public class BreedingTests
                         IpPool = "pool1"
                     }
                 }
+            },
+            Fodder = new []{new FodderConfig
+                {
+                    Source = "food_from_somewhere_else"
+                }
             }
         };
 
@@ -68,7 +73,8 @@ public class BreedingTests
             Fodder = new[]{new FodderConfig
             {
                 Name = "food"
-            }}
+            }
+            }
         };
         var breedChild = parent.Breed(child, "reference");
 
@@ -97,7 +103,8 @@ public class BreedingTests
         breedChild.Networks.Should().NotBeSameAs(parent.Networks);
 
         breedChild.Fodder.Should().NotBeNull();
-        breedChild.Fodder.Should().HaveCount(1);
+        breedChild.Fodder.Should().HaveCount(2);
+        breedChild.Fodder?[0].Source.Should().Be("food_from_somewhere_else");
     }
 
     [Fact]
