@@ -31,6 +31,11 @@ namespace Eryph.ConfigModel.Catlets.Converters
             if(!string.IsNullOrEmpty(secretString))
                 res.Secret = bool.Parse(secretString);
 
+            var removeString = GetStringProperty(dictionary, nameof(FodderConfig.Remove));
+            if (!string.IsNullOrEmpty(removeString))
+                res.Remove = bool.Parse(removeString);
+
+
             return res;
         }
 
