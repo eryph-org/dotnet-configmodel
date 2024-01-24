@@ -371,6 +371,80 @@ public class BreedingTests
 
     }
 
+    [Fact]
+    public void Fodder_is_removed()
+    {
+        var parent = new CatletConfig
+        {
+            Name = "Parent",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "cfg",
+                    Type = "type1",
+                    Content = "contenta",
+                    FileName = "filenamea"
+                }
+            }
+        };
+
+        var child = new CatletConfig
+        {
+            Name = "child",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "cfg",
+                    Remove = true
+                }
+            }
+        };
+
+        var breedChild = parent.Breed(child);
+
+        breedChild.Fodder.Should().NotBeNull();
+        breedChild.Fodder.Should().HaveCount(0);
+
+    }
+
+    [Fact]
+    public void Fodder_from_source_is_not_removed()
+    {
+        var parent = new CatletConfig
+        {
+            Name = "Parent",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Source = "gene:somegene/utt/123:gene1"
+                }
+            }
+        };
+
+        var child = new CatletConfig
+        {
+            Name = "child",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Source = "gene:somegene/utt/123:gene1",
+                    Remove = true
+                }
+            }
+        };
+
+        var breedChild = parent.Breed(child);
+
+        breedChild.Fodder.Should().NotBeNull();
+        breedChild.Fodder.Should().HaveCount(1);
+        breedChild.Fodder?[0].Source.Should().Be("gene:somegene/utt/123:gene1");
+        breedChild.Fodder?[0].Remove.Should().BeTrue();
+    }
+
     [Theory]
     [InlineData(MutationType.Merge, 2)]
     [InlineData(MutationType.Remove, 1)]
