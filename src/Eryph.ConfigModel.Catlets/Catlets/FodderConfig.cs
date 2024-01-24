@@ -58,14 +58,14 @@ namespace Eryph.ConfigModel.Catlets
                 
                 foreach (var fodder in newConfigs)
                 {
-                    if(string.IsNullOrWhiteSpace(fodder.Source))
+                    if (fodder.Remove.GetValueOrDefault() && !string.IsNullOrWhiteSpace(fodder.Name))
+                        mergedConfig.Remove(fodder);
+
+                    if (string.IsNullOrWhiteSpace(fodder.Source))
                     {
                         fodder.Source = $"gene:{parentReference}:{fodder.Name}";
                     }
                     
-                    if (fodder.Remove.GetValueOrDefault())
-                        mergedConfig.Remove(fodder);
-
                     var childFodder = childConfig.Fodder?
                         .FirstOrDefault(x => x.Name == fodder.Name);
 
