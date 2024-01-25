@@ -32,7 +32,7 @@ public class JsonConverterTests : ConverterTestBase
     public void Converts_from_json()
     {
         var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
-        var config = FodderConfigDictionaryConverter.Convert(dictionary);
+        var config = FodderGeneConfigDictionaryConverter.Convert(dictionary);
         AssertSample1(config);
     }
 
@@ -41,7 +41,7 @@ public class JsonConverterTests : ConverterTestBase
     public void Converts_to_json(string input, string expected)
     {
         var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(input);
-        var config = FodderConfigDictionaryConverter.Convert(dictionary, false);
+        var config = FodderGeneConfigDictionaryConverter.Convert(dictionary, false);
 
         var copyOptions = new JsonSerializerOptions(ConfigModelJsonSerializer.DefaultOptions)
         {

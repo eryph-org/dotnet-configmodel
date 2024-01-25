@@ -10,7 +10,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
     {
         public class List : DictionaryToListConverter<FodderConfig[], TConfig>
         {
-            public List() : base(nameof(CatletConfig.Fodder))
+            public List() : base(nameof(IHasFodderConfig.Fodder))
             {
             }
         }

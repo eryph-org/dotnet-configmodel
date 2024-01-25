@@ -30,6 +30,6 @@ public static class FodderGeneConfigYamlSerializer
                 .Build();
 
         var dictionary = _deSerializer.Deserialize<Dictionary<object, object>>(yaml);
-        return FodderConfigDictionaryConverter.Convert(dictionary, true);
+        return FodderGeneConfigDictionaryConverter.Convert(dictionary, true);
     }
 }

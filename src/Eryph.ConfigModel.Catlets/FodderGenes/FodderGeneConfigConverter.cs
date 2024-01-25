@@ -15,7 +15,8 @@ public class FodderGeneConfigConverter : DictionaryConverterBase<FodderGeneConfi
         // target should be initialized
         context.Target = new FodderGeneConfig
         {
-            Name = GetStringProperty(dictionary, nameof(CatletConfig.Name)),
+            Version = GetStringProperty(dictionary, nameof(FodderGeneConfig.Version)),
+            Name = GetStringProperty(dictionary, nameof(FodderGeneConfig.Name)),
         };
 
         context.Target.Fodder = context.ConvertList<FodderConfig>(dictionary);

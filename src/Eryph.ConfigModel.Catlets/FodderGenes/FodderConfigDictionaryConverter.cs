@@ -4,7 +4,7 @@ using Eryph.ConfigModel.Converters;
 
 namespace Eryph.ConfigModel.FodderGenes;
 
-public static class FodderConfigDictionaryConverter
+public static class FodderGeneConfigDictionaryConverter
 {
 
     public static FodderGeneConfig Convert(IDictionary<object, object>? dictionary, bool looseMode = false)

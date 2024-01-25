@@ -33,7 +33,7 @@ fodder:
               .Build();
 
             var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml1);
-            var config = FodderConfigDictionaryConverter.Convert(dictionary, true);
+            var config = FodderGeneConfigDictionaryConverter.Convert(dictionary, true);
             AssertSample1(config);
         }
 
