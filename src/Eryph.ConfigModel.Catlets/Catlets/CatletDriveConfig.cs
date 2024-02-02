@@ -47,13 +47,14 @@ namespace Eryph.ConfigModel.Catlets
                 (drive, childDrive) =>
                 {
 
-                    if (childDrive.Type.HasValue && drive.Type != childDrive.Type)
+                    if (childDrive.Type.HasValue && (drive.Type ?? CatletDriveType.VHD) != childDrive.Type)
                         drive.Source = null;
                     
                     drive.Type = childDrive.Type ?? drive.Type;
                     drive.Source = childDrive.Source ?? drive.Source;
                     
-                    if (childDrive.Size != 0) drive.Size = childDrive.Size;
+                    if ((childDrive.Size ?? 0) != 0)
+                        drive.Size = childDrive.Size;
                     if (!string.IsNullOrWhiteSpace(childDrive.Location))
                         drive.Location = childDrive.Location;
                     if (!string.IsNullOrWhiteSpace(childDrive.Store))
