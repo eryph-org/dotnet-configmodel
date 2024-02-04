@@ -14,6 +14,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
             // target should be initialized
             context.Target = new CatletConfig
             {
+                Version = GetStringProperty(dictionary, nameof(CatletConfig.Version)),
                 Name = GetStringProperty(dictionary, nameof(CatletConfig.Name)),
                 Environment = GetStringProperty(dictionary, nameof(CatletConfig.Environment)),
                 Project = GetStringProperty(dictionary, nameof(CatletConfig.Project)),
@@ -33,8 +34,6 @@ namespace Eryph.ConfigModel.Catlets.Converters
 
             return context.Target;
         }
-
-
 
     }
 }

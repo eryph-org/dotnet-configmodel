@@ -5,12 +5,12 @@ using FluentAssertions;
 using Xunit;
 using YamlDotNet.Serialization;
 
-namespace Eryph.ConfigModel.Catlet.Tests
+namespace Eryph.ConfigModel.Catlet.Tests.Catlets
 {
     public class YamlConverterTests : ConverterTestBase
     {
 
-      private const string SampleYaml1 = @"project: homeland
+        private const string SampleYaml1 = @"project: homeland
 name: cinc-windows
 location: cinc
 hostname: cinc-host
@@ -65,37 +65,37 @@ fodder:
   file_name: filename
   secret: true
 ";
-      
-      private const string SampleYaml2 = @"parent: dbosoft/winsrv2019-standard/20220324";
 
-      private const string SampleYaml3 = @"
+        private const string SampleYaml2 = @"parent: dbosoft/winsrv2019-standard/20220324";
+
+        private const string SampleYaml3 = @"
 parent: dbosoft/winsrv2019-standard/20220324  
 cpu: 4
-";      
-      
-      private const string SampleYaml4 = @"
+";
+
+        private const string SampleYaml4 = @"
 capabilities:
   - nested_virtualization
-";           
-      
+";
+
         [Fact]
         public void Converts_from_yaml()
         {
-          var serializer = new DeserializerBuilder()
-            .Build();
-          
+            var serializer = new DeserializerBuilder()
+              .Build();
+
             var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml1);
             var config = CatletConfigDictionaryConverter.Convert(dictionary, true);
             AssertSample1(config);
         }
-        
+
         [Theory()]
         [InlineData(SampleYaml1, SampleYaml1)]
         public void Converts_To_yaml(string input, string expected)
         {
-          var config = CatletConfigYamlSerializer.Deserialize(input);
-          var act = CatletConfigYamlSerializer.Serialize(config);
-          act.Should().Be(expected);
+            var config = CatletConfigYamlSerializer.Deserialize(input);
+            var act = CatletConfigYamlSerializer.Serialize(config);
+            act.Should().Be(expected);
 
         }
 
@@ -119,16 +119,16 @@ capabilities:
             config.Cpu?.Count.Should().Be(4);
 
         }
-        
+
         [Fact]
         public void Convert_from_short_features_yaml()
         {
-          var config = CatletConfigYamlSerializer.Deserialize(SampleYaml4);
+            var config = CatletConfigYamlSerializer.Deserialize(SampleYaml4);
 
-          config.Should().NotBeNull();
-          config.Capabilities.Should().NotBeNull();
-          config.Capabilities.Should().HaveCount(1);
-          config.Capabilities?[0].Name.Should().Be("nested_virtualization");
+            config.Should().NotBeNull();
+            config.Capabilities.Should().NotBeNull();
+            config.Capabilities.Should().HaveCount(1);
+            config.Capabilities?[0].Name.Should().Be("nested_virtualization");
 
         }
     }

@@ -4,11 +4,11 @@ using Eryph.ConfigModel.Json;
 using FluentAssertions;
 using Xunit;
 
-namespace Eryph.ConfigModel.Catlet.Tests;
+namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
-public class JsonConverterTests: ConverterTestBase
+public class JsonConverterTests : ConverterTestBase
 {
-    
+
     private const string SampleJson1 = $@"{{
   ""project"": ""homeland"",
   ""name"": ""cinc-windows"",
@@ -106,7 +106,7 @@ public class JsonConverterTests: ConverterTestBase
         {
             WriteIndented = true
         };
-        var act = ConfigModelJsonSerializer.Serialize(config,copyOptions );
+        var act = ConfigModelJsonSerializer.Serialize(config, copyOptions);
         act.Should().Be(expected);
 
     }

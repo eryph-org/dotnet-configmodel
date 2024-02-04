@@ -58,21 +58,21 @@ namespace Eryph.ConfigModel.Catlets
                 
                 foreach (var fodder in newConfigs)
                 {
-                    if(string.IsNullOrWhiteSpace(fodder.Source))
+
+                    if (string.IsNullOrWhiteSpace(fodder.Source))
                     {
                         fodder.Source = $"gene:{parentReference}:{fodder.Name}";
                     }
                     
-                    if (fodder.Remove.GetValueOrDefault())
-                        mergedConfig.Remove(fodder);
-
                     var childFodder = childConfig.Fodder?
                         .FirstOrDefault(x => x.Name == fodder.Name);
 
                     if (childFodder == null)
                         continue;
 
-                    if (childFodder.Remove.GetValueOrDefault())
+                    if (childFodder.Remove.GetValueOrDefault() 
+                        && !string.IsNullOrWhiteSpace(fodder.Name) && 
+                        childFodder.Name == fodder.Name)
                     {
                         mergedConfig.Remove(fodder);
                         continue;
@@ -85,13 +85,13 @@ namespace Eryph.ConfigModel.Catlets
                     fodder.Content = childFodder.Content ?? fodder.Content;
                     fodder.Type = childFodder.Type ?? fodder.Type;
                     fodder.FileName = childFodder.FileName ?? fodder.FileName;
+                    fodder.Remove = childFodder.Remove ?? fodder.Remove;
                 }
             }
 
             var parentNames = parentConfig.Fodder
                 ?.Select(x => x.Name) ?? Array.Empty<string>();
             mergedConfig.AddRange(childConfig.Fodder?.Where(cfg =>
-                                      !cfg.Remove.GetValueOrDefault() &&                      
                                       !parentNames.Any(x =>
                                           string.Equals(x, cfg.Name, StringComparison.InvariantCultureIgnoreCase))) 
                                   ?? Array.Empty<FodderConfig>());

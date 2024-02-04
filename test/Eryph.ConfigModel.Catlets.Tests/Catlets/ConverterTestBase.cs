@@ -1,7 +1,7 @@
 using Eryph.ConfigModel.Catlets;
 using FluentAssertions;
 
-namespace Eryph.ConfigModel.Catlet.Tests;
+namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
 public class ConverterTestBase
 {
@@ -26,7 +26,7 @@ public class ConverterTestBase
         config.Drives?[0].Source.Should().Be("some_template");
         config.Drives?[0].Type.Should().Be(CatletDriveType.SharedVHD);
         config.Drives?[0].Mutation.Should().Be(MutationType.Overwrite);
-        
+
         config.NetworkAdapters.Should().HaveCount(2);
         config.NetworkAdapters?[0].Name.Should().Be("eth0");
         config.NetworkAdapters?[0].MacAddress.Should().Be("4711");
