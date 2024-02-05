@@ -170,7 +170,7 @@ namespace Eryph.ConfigModel.Core.Tests
 
         private static TestModel? ConvertFromDictionary(IDictionary<object, object> dictionary)
         {
-            var context = new ConverterContext<TestModel>(dictionary, new DictionaryConverterProvider<TestModel>(Array.Empty<IDictionaryConverter<TestModel>>()));
+            var context = new ConverterContext<TestModel>(new DictionaryConverterProvider<TestModel>(Array.Empty<IDictionaryConverter<TestModel>>()));
             var converter = new TestModelDictionaryConverter();
 
             return converter.ConvertFromDictionary(context, dictionary);

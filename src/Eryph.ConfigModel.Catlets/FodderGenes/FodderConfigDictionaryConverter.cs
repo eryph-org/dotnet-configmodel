@@ -19,7 +19,7 @@ public static class FodderGeneConfigDictionaryConverter
             new FodderConfigConverter<FodderGeneConfig>.List(),
         };
 
-        var context = new ConverterContext<FodderGeneConfig>(dictionary,
+        var context = new ConverterContext<FodderGeneConfig>(
             new DictionaryConverterProvider<FodderGeneConfig>(converters));
 
         return context.Convert<FodderGeneConfig>(dictionary) ?? new FodderGeneConfig();

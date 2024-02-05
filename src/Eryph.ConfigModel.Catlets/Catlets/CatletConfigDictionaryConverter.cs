@@ -36,7 +36,7 @@ namespace Eryph.ConfigModel.Catlets
                 new StrictCatletCapabilityConfigConverter.List()
             };
 
-            var context = new ConverterContext<CatletConfig>(dictionary,
+            var context = new ConverterContext<CatletConfig>(
                 new DictionaryConverterProvider<CatletConfig>(converters));
 
             return context.Convert<CatletConfig>(dictionary) ?? new CatletConfig();
