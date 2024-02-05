@@ -6,7 +6,7 @@
     <IsPackable>false</IsPackable>
     <RootNamespace>Eryph.ConfigModel.Catlet.Tests</RootNamespace>
     <Nullable>enable</Nullable>
-    <LangVersion>default</LangVersion>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

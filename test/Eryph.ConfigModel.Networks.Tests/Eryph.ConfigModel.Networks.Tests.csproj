@@ -6,7 +6,7 @@
     <RootNamespace>Eryph.ConfigModel.Catlet.Tests</RootNamespace>
     <Nullable>enable</Nullable>
     <NoWarn>1701;1702;1705;1591</NoWarn>
-    <LangVersion>default</LangVersion>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
