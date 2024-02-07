@@ -76,7 +76,7 @@ namespace Eryph.ConfigModel.Converters
                 return null;
 
             if(!int.TryParse(value, out var result))
-                throw new InvalidConfigModelException($"The value for {propertyNames.FirstOrDefault()} is invalid");
+                throw new InvalidConfigModelException($"The value for {propertyNames[0]} is invalid");
 
             return result;
         }
@@ -88,7 +88,7 @@ namespace Eryph.ConfigModel.Converters
                 return null;
 
             if (!bool.TryParse(stringValue, out var value))
-                throw new InvalidConfigModelException($"The value for {propertyNames.FirstOrDefault()} is invalid");
+                throw new InvalidConfigModelException($"The value for {propertyNames[0]} is invalid");
 
             return value;
         }
