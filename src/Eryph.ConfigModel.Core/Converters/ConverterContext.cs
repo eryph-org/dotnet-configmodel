@@ -6,15 +6,12 @@ namespace Eryph.ConfigModel.Converters
 {
     public class ConverterContext<T> : IConverterContext<T>
     {
-        public ConverterContext(IDictionary<object, object> input, IDictionaryConverterProvider<T> converterProvider)
+        public ConverterContext(IDictionaryConverterProvider<T> converterProvider)
         {
-            Input = input;
             ConverterProvider = converterProvider;
         }
 
         public T? Target { get; set; }
-
-        public IDictionary<object, object> Input { get; }
 
         public IDictionaryConverterProvider<T> ConverterProvider { get;  }
 

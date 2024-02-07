@@ -24,7 +24,7 @@ namespace Eryph.ConfigModel.Networks
                 new IpPoolConfigConverter.List()
             };
 
-            var context = new ConverterContext<ProjectNetworksConfig>(dictionary,
+            var context = new ConverterContext<ProjectNetworksConfig>(
                 new DictionaryConverterProvider<ProjectNetworksConfig>(converters));
 
             return context.Convert<ProjectNetworksConfig>(dictionary);

@@ -71,7 +71,26 @@ namespace Eryph.ConfigModel.Converters
 
         protected static int? GetIntProperty(IDictionary<object, object> dictionary, params string[] propertyNames)
         {
-            return Convert.ToInt32(GetValueCaseInvariant(dictionary, propertyNames));
+            var value = GetStringProperty(dictionary, propertyNames);
+            if (value is null)
+                return null;
+
+            if(!int.TryParse(value, out var result))
+                throw new InvalidConfigModelException($"The value for {propertyNames[0]} is invalid");
+
+            return result;
+        }
+
+        protected static bool? GetBoolProperty(IDictionary<object, object> dictionary, params string[] propertyNames)
+        {
+            var stringValue = GetStringProperty(dictionary, propertyNames);
+            if (stringValue is null)
+                return null;
+
+            if (!bool.TryParse(stringValue, out var value))
+                throw new InvalidConfigModelException($"The value for {propertyNames[0]} is invalid");
+
+            return value;
         }
     }
 }

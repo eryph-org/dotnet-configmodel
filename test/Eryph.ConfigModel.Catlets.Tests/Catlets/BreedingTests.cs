@@ -199,6 +199,46 @@ public class BreedingTests
     }
 
     [Fact]
+    public void Drive_with_default_values_is_merged()
+    {
+        var parent = new CatletConfig
+        {
+            Name = "Parent",
+            Drives =
+            [
+                new CatletDriveConfig
+                {
+                    Name = "sda",
+                    Size = 100,
+                }
+            ]
+        };
+
+        var child = new CatletConfig
+        {
+            Name = "child", 
+            Drives =
+            [
+                new CatletDriveConfig
+                {
+                    Name = "sda",
+                    Type = CatletDriveType.VHD,
+                }
+            ]
+        };
+
+        var breedChild = parent.Breed(child, "reference");
+
+        breedChild.Drives.Should().SatisfyRespectively(
+            breedDrive =>
+            {
+                breedDrive.Name.Should().Be("sda");
+                breedDrive.Size.Should().Be(100);
+                breedDrive.Source.Should().Be("gene:reference:sda");
+            });
+    }
+    
+    [Fact]
     public void NetworkAdapters_are_merged()
     {
         var parent = new CatletConfig
