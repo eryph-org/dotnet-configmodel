@@ -1,4 +1,3 @@
-
 <Project>
   <PropertyGroup>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -12,16 +11,17 @@
     <RepositoryUrl>https://github.com/eryph-org/dotnet-configmodel</RepositoryUrl>
     <RootNamespace>Eryph.ConfigModel</RootNamespace>
     <!-- Declare that the Repository URL can be published to NuSpec -->
-  <PublishRepositoryUrl>true</PublishRepositoryUrl>
-  <!-- Embed source files that are not tracked by the source control manager to the PDB -->
-  <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  <!-- Include PDB in the built .nupkg -->
-  <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-
-  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Embed source files that are not tracked by the source control manager to the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Include PDB in the built .nupkg -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <LangVersion>12</LangVersion>
+  </PropertyGroup>
 
   <PropertyGroup>
     <ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true'">True</ContinuousIntegrationBuild>
@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-      <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
