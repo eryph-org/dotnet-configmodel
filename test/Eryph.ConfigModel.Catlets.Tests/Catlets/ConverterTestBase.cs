@@ -63,12 +63,13 @@ public class ConverterTestBase
 
         config.Hostname.Should().Be("cinc-host");
         config.Fodder.Should().NotBeNull();
-        config.Fodder.Should().HaveCount(1);
-        config.Fodder?[0].Name.Should().Be("admin-windows");
-        config.Fodder?[0].Type.Should().Be("cloud-config");
-        config.Fodder?[0].FileName.Should().Be("filename");
-        config.Fodder?[0].Secret.Should().Be(true);
-        config.Fodder?[0].Content.Should().Contain("- name: Admin");
-        config.Fodder?[0].Content.Should().NotEndWith("\0");
+        config.Fodder.Should().HaveCount(2);
+        config.Fodder?[0].Name.Should().Be("first");
+        config.Fodder?[1].Name.Should().Be("admin-windows");
+        config.Fodder?[1].Type.Should().Be("cloud-config");
+        config.Fodder?[1].FileName.Should().Be("filename");
+        config.Fodder?[1].Secret.Should().Be(true);
+        config.Fodder?[1].Content.Should().Contain("- name: Admin");
+        config.Fodder?[1].Content.Should().NotEndWith("\0");
     }
 }

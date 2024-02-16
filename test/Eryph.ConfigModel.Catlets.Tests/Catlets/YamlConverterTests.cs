@@ -55,6 +55,7 @@ networks:
 - name: backup
   adapter_name: eth1
 fodder:
+- name: first
 - name: admin-windows
   type: cloud-config
   content: >-
