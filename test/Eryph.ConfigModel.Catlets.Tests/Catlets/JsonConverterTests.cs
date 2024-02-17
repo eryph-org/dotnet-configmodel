@@ -79,6 +79,9 @@ public class JsonConverterTests : ConverterTestBase
   ],
   ""fodder"": [
     {{
+      ""name"": ""first""
+    }},
+    {{
       ""name"": ""admin-windows"",
       ""type"": ""cloud-config"",
       ""content"": ""users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd"",

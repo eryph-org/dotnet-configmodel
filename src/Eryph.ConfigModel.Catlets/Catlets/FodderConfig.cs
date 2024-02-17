@@ -96,7 +96,7 @@ namespace Eryph.ConfigModel.Catlets
                                           string.Equals(x, cfg.Name, StringComparison.InvariantCultureIgnoreCase))) 
                                   ?? Array.Empty<FodderConfig>());
 
-            return mergedConfig.OrderBy(x => x.Name).ToArray();
+            return mergedConfig.ToArray();
 
         }
     }
