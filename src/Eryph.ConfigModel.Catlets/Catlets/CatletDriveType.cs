@@ -9,7 +9,8 @@ namespace Eryph.ConfigModel.Catlets
         VHD = 0,
         SharedVHD = 1,
         PHD = 2,
-        DVD = 3
+        DVD = 3,
+        VHDSet = 4,
         // ReSharper restore InconsistentNaming
     }
 }
