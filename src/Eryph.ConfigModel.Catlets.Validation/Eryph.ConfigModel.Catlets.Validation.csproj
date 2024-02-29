@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LanguageExt.Core" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Eryph.ConfigModel.Catlets\Eryph.ConfigModel.Catlets.csproj" />
+    <ProjectReference Include="..\Eryph.ConfigModel.Core.Validation\Eryph.ConfigModel.Core.Validation.csproj" />
+  </ItemGroup>
+
+</Project>
