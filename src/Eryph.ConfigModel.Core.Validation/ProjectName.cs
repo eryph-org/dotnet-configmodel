@@ -12,9 +12,17 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel
 {
-    public class ProjectName(string value)
-        : EryphName<ProjectName, ProjectName.Validating>(value)
+    public class ProjectName : EryphName<ProjectName>
     {
+
+        public ProjectName(string value) : base(value)
+        {
+            _ = ValidOrThrow(
+                Validations<ProjectName>.ValidateCharacters(value)
+                | Validations<ProjectName>.ValidateLength(value, 1, 20));
+
+        }
+
         public readonly struct Validating : Validating<string>
         {
             public Validation<Error, string> Validate(string value) =>

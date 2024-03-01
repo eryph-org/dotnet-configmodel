@@ -71,7 +71,7 @@ namespace Eryph.ConfigModel
     {
         private static readonly Regex UpperCaseRegex = new("[A-Z]", RegexOptions.Compiled);
 
-        private static string Name => UpperCaseRegex.Replace(typeof(T).Name, match => $" {match.Value.ToLowerInvariant()}");
+        private static string Name => UpperCaseRegex.Replace(typeof(T).Name, match => $" {match.Value.ToLowerInvariant()}").Trim();
 
         public static Validation<Error, string> ValidateNotEmpty(string? value) =>
             Validations.ValidateNotEmpty(value, Name);

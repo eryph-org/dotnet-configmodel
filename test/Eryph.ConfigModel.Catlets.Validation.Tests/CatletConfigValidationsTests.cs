@@ -23,6 +23,7 @@ namespace Eryph.ConfigModel.Catlets.Validation.Tests
             var catletConfig = new CatletConfig()
             {
                 Project = "my-project",
+                Parent = "acme/acme-os/1..0.0",
                 Environment = "my-environment",
                 Cpu = new CatletCpuConfig()
                 {

@@ -8,9 +8,13 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel
 {
-    public class CatletDriveName(string value)
-        : EryphName<CatletDriveName, CatletDriveName.Validating>(value)
+    public class CatletDriveName : EryphName<CatletDriveName>
     {
+        public CatletDriveName(string value) : base(value)
+        {
+            _ = ValidOrThrow(
+                Validations<CatletDriveName>.ValidateCharacters(value));
+        }
         public readonly struct Validating : Validating<string>
         {
             public Validation<Error, string> Validate(string value) =>

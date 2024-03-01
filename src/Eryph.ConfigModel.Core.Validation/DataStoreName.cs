@@ -6,9 +6,15 @@ using LanguageExt.Common;
 
 namespace Eryph.ConfigModel
 {
-    public class DataStoreName(string value)
-        : EryphName<DataStoreName, DataStoreName.Validating>(value)
+    public class DataStoreName : EryphName<DataStoreName>
     {
+        public DataStoreName(string value) : base(value)
+        {
+            _ = ValidOrThrow(
+                Validations<DataStoreName>.ValidateCharacters(value)
+                | Validations<DataStoreName>.ValidateLength(value, 1, 50));
+        }
+
         public readonly struct Validating : ConfigModel.Validating<string>
         {
             public Validation<Error, string> Validate(string value) =>

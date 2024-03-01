@@ -13,16 +13,17 @@ namespace Eryph.ConfigModel
     public static  class CatletConfigValidations
     {
         public static Validation<ValidationIssue, Unit> ValidateCatletConfig(CatletConfig toValidate, string path = "") =>
-            validateProperty(toValidate, c => c.Project, path, ProjectName.NewValidation)
-            | validateProperty(toValidate, c => c.Environment, path, EnvironmentName.NewValidation)
+            validateProperty(toValidate, c => c.Project, path, ProjectName.Validate)
+            | validateProperty(toValidate, c => c.Environment, path, EnvironmentName.Validate)
+            | validateProperty(toValidate, c => c.Parent, path, GeneSetIdentifier.Validate)
             | validateList(toValidate, c => c.Drives, path, ValidateCatletDriveConfig)
             | validateProperty(toValidate, c => c.Cpu, path, ValidateCatletCpuConfig);
 
         public static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
             CatletDriveConfig toValidate,
             string path = "") =>
-            validateProperty(toValidate, c => c.Name, path, CatletDriveName.NewValidation);
-
+            validateProperty(toValidate, c => c.Name, path, CatletDriveName.Validate);
+        
         public static Validation<ValidationIssue, Unit> ValidateCatletCpuConfig(
             CatletCpuConfig toValidate,
             string path = "") =>

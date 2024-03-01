@@ -7,9 +7,15 @@ using LanguageExt.Common;
 
 namespace Eryph.ConfigModel
 {
-    public class EnvironmentName(string name)
-        : EryphName<EnvironmentName, EnvironmentName.Validating>(name)
+    public class EnvironmentName : EryphName<EnvironmentName>
     {
+        public EnvironmentName(string value) : base(value)
+        {
+            _ = ValidOrThrow(
+                Validations<EnvironmentName>.ValidateCharacters(value)
+                | Validations<EnvironmentName>.ValidateLength(value, 1, 50));
+        }
+
         public readonly struct Validating : Validating<string>
         {
             public Validation<Error, string> Validate(string value) =>
