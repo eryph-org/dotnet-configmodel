@@ -12,10 +12,10 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel
 {
-    public abstract class EryphName<NEWTYPE, PRED>(string value)
-        : ExtendedNewType<NEWTYPE, string, PRED, OrdStringOrdinalIgnoreCase>(value)
-        where NEWTYPE : EryphName<NEWTYPE, PRED>
-        where PRED : struct, PredWithMessage<string>;
+    public abstract class EryphName<NEWTYPE, VALIDATING>(string value)
+        : ExtendedNewType<NEWTYPE, string, OrdStringOrdinalIgnoreCase, VALIDATING>(value)
+        where NEWTYPE : EryphName<NEWTYPE, VALIDATING>
+        where VALIDATING : struct, Validating<string>;
 
     public struct IsErpyhName : PredWithMessage<string>
     {

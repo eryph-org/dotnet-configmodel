@@ -10,23 +10,53 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel
 {
-    public abstract class ExtendedNewType<NEWTYPE, A, PRED, ORD>(A value)
-        : NewType<NEWTYPE, A, PRED, ORD>(value)
-        where NEWTYPE : ExtendedNewType<NEWTYPE, A, PRED, ORD>
-        where PRED : struct, PredWithMessage<A>
+    public abstract class ExtendedNewType<NEWTYPE, A, ORD, VALIDATING>
+        : NewType<NEWTYPE, A, True<A>, ORD>
+        where NEWTYPE : ExtendedNewType<NEWTYPE, A, ORD, VALIDATING>
         where ORD : struct, Ord<A>
+        where VALIDATING : struct, Validating<A>
+        
     {
-        public static Validation<Error, NEWTYPE> NewValidation(A value)
+        public static readonly Func<A, NEWTYPE> New = IL.Ctor<A, NEWTYPE>();
+
+        public ExtendedNewType(A value) : this(default(VALIDATING).Validate(value)) { }
+
+        private ExtendedNewType(Validation<Error, A> value)
+            : base(value.Match(
+                Succ: v => v,
+                Fail: errors => throw new ArgumentException("The validation failed", nameof(value), Error.Many(errors).ToErrorException())))
+        { }
+
+        private static A DoesValidate(A value)
         {
-            return match(NewTry(value),
-                Succ: Success<Error, NEWTYPE>,
-                Fail: ex => Fail<Error, NEWTYPE>(default(PRED).Message));
+            return default(VALIDATING).Validate(value).Match(
+                Succ: v => v,
+                Fail: errors => throw new ArgumentException("The validation failed", nameof(value), Error.Many(errors).ToErrorException()));
         }
+
+        private static A Foo(A value)
+        {
+            return value;
+        }
+
+        public static Validation<Error, NEWTYPE> NewValidation(A value) =>
+            from _ in default(VALIDATING).Validate(value)
+            select IL.Ctor<Validation<Error, A>, NEWTYPE>()(Success<Error, A>(value));
     }
 
     public interface PredWithMessage<A> : Pred<A>
     {
         string Message { get; }
+    }
+
+    public interface ValidatingPred<A> : Pred<A>
+    {
+        Validation<Error, A> Validate(A value);
+    }
+
+    public interface Validating<A>
+    {
+        Validation<Error, A> Validate(A value);
     }
 
 }

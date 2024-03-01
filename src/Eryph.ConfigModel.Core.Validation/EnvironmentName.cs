@@ -1,10 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using LanguageExt;
 using LanguageExt.ClassInstances.Pred;
+using LanguageExt.Common;
 
 namespace Eryph.ConfigModel
 {
     public class EnvironmentName(string name)
-        : EryphName<EnvironmentName, IsErpyhName>(name);
+        : EryphName<EnvironmentName, EnvironmentName.Validating>(name)
+    {
+        public readonly struct Validating : Validating<string>
+        {
+            public Validation<Error, string> Validate(string value) =>
+                Validations<EnvironmentName>.ValidateCharacters(value)
+                | Validations<EnvironmentName>.ValidateLength(value, 1, 50);
+        }
+    }
 }
