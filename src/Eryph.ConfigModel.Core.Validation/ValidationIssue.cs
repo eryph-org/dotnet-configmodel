@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using LanguageExt.Common;
 
-namespace Eryph.ConfigModel
+namespace Eryph.ConfigModel;
+
+public readonly struct ValidationIssue(string member, string message)
 {
-    public readonly struct ValidationIssue(string member, string message)
-    {
-        public string Member => member;
+    public string Member => member;
 
-        public string Message => message;
+    public string Message => message;
 
-        public Error ToError() => Error.New(ToString());
+    public Error ToError() => Error.New(ToString());
 
-        public override string ToString() => $"{member}: {message}";
-    }
+    public override string ToString() => $"{member}: {message}";
 }

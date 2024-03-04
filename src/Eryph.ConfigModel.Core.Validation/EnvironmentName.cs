@@ -5,14 +5,13 @@ using LanguageExt;
 using LanguageExt.ClassInstances.Pred;
 using LanguageExt.Common;
 
-namespace Eryph.ConfigModel
+namespace Eryph.ConfigModel;
+
+public class EnvironmentName : EryphName<EnvironmentName>
 {
-    public class EnvironmentName : EryphName<EnvironmentName>
+    public EnvironmentName(string value) : base(value)
     {
-        public EnvironmentName(string value) : base(value)
-        {
-            ValidOrThrow(Validations<EnvironmentName>.ValidateCharacters(value)
-                         | Validations<EnvironmentName>.ValidateLength(value, 1, 50));
-        }
+        ValidOrThrow(Validations<EnvironmentName>.ValidateCharacters(value)
+                     | Validations<EnvironmentName>.ValidateLength(value, 1, 50));
     }
 }
