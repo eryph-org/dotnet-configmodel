@@ -11,16 +11,8 @@ namespace Eryph.ConfigModel
     {
         public EnvironmentName(string value) : base(value)
         {
-            _ = ValidOrThrow(
-                Validations<EnvironmentName>.ValidateCharacters(value)
-                | Validations<EnvironmentName>.ValidateLength(value, 1, 50));
-        }
-
-        public readonly struct Validating : Validating<string>
-        {
-            public Validation<Error, string> Validate(string value) =>
-                Validations<EnvironmentName>.ValidateCharacters(value)
-                | Validations<EnvironmentName>.ValidateLength(value, 1, 50);
+            ValidOrThrow(Validations<EnvironmentName>.ValidateCharacters(value)
+                         | Validations<EnvironmentName>.ValidateLength(value, 1, 50));
         }
     }
 }

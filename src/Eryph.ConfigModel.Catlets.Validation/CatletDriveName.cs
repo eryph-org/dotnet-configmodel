@@ -12,13 +12,7 @@ namespace Eryph.ConfigModel
     {
         public CatletDriveName(string value) : base(value)
         {
-            _ = ValidOrThrow(
-                Validations<CatletDriveName>.ValidateCharacters(value));
-        }
-        public readonly struct Validating : Validating<string>
-        {
-            public Validation<Error, string> Validate(string value) =>
-                Validations<CatletDriveName>.ValidateCharacters(value);
+            ValidOrThrow(Validations<CatletDriveName>.ValidateCharacters(value));
         }
     }
 }

@@ -14,20 +14,12 @@ namespace Eryph.ConfigModel
 {
     public class ProjectName : EryphName<ProjectName>
     {
-
         public ProjectName(string value) : base(value)
         {
-            _ = ValidOrThrow(
-                Validations<ProjectName>.ValidateCharacters(value)
-                | Validations<ProjectName>.ValidateLength(value, 1, 20));
-
-        }
-
-        public readonly struct Validating : Validating<string>
-        {
-            public Validation<Error, string> Validate(string value) =>
-                Validations<ProjectName>.ValidateCharacters(value)
-                | Validations<ProjectName>.ValidateLength(value, 1, 20);
+            ValidOrThrow(Validations<ProjectName>.ValidateCharacters(value)
+                         | Validations<ProjectName>.ValidateLength(value, 1, 20)
+                         | Optional(value).Filter(s => !s.StartsWith("p_"))
+                             .ToValidation(Error.New("The project name cannot start with 'p_'.")));
         }
     }
 }
