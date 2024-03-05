@@ -2,6 +2,7 @@
 using LanguageExt;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ public static class Validations
         from nonEmptyValue in Optional(value).Filter(notEmpty).ToValidation(Error.New($"The {name} cannot be empty."))
         select nonEmptyValue;
 
-    public static Validation<Error, string> ValidateLength(string value, string fieldName, int maxLength, int minLength) =>
+    public static Validation<Error, string> ValidateLength(string value, string fieldName, int minLength, int maxLength) =>
         from _ in guardnot(value.Length < minLength,
             Error.New($"The {fieldName} is shorter than the minimum length of {minLength} characters."))
             .ToValidation()
@@ -37,6 +38,33 @@ public static class Validations
                           Error.New($"The {fieldName} cannot contain consecutive dots or hyphens."))
                       .ToValidation()
         select value;
+
+    public static Validation<Error, string> ValidateCharacters(
+        string value,
+        string fieldName,
+        bool allowUpperCase,
+        bool allowHyphens,
+        bool allowDots,
+        bool allowSpaces) =>
+        from _ in guard(value.ToSeq().All(c =>
+                    c is >= 'a' and <= 'z' or >= '0' and <= '9'
+                    || allowUpperCase && c is >= 'A' and <='Z'
+                    || allowDots && c == '.'
+                    || allowHyphens && c == '-'
+                    || allowSpaces && c == ' '),
+                Error.New($"The {fieldName} contains invalid characters. "
+                   + $"Only {(allowUpperCase ? "" : "lower case ")}latin characters, numbers"
+                   + (allowDots ? ", dots" : "")
+                   + (allowHyphens ? ", hyphens" : "")
+                   + (allowSpaces ? ", spaces" : "")
+                   + " are permitted."))
+            .ToValidation()
+        from __ in guardnot(value.Contains("..") || value.Contains("--") || value.Contains("  "),
+                Error.New($"The {fieldName} cannot contain consecutive dots, hyphens or spaces."))
+            .ToValidation()
+        select value;
+
+        
 
     public static Validation<Error, string> ValidatePath(string? value, string fieldName) =>
         from nonEmptyValue in ValidateNotEmpty(value, fieldName)
@@ -62,8 +90,12 @@ public static class Validations<T>
         Validations.ValidateNotEmpty(value, Name);
 
     public static Validation<Error, string> ValidateLength(string value, int minLength, int maxLength) =>
-        Validations.ValidateLength(value, Name, maxLength, minLength);
+        Validations.ValidateLength(value, Name, minLength, maxLength);
 
     public static Validation<Error, string> ValidateCharacters(string value) =>
         Validations.ValidateCharacters(value, Name);
+
+    public static Validation<Error, string> ValidateCharacters(
+        string value, bool allowUpperCase, bool allowHyphens, bool allowDots, bool allowSpaces) =>
+        Validations.ValidateCharacters(value, Name, allowUpperCase, allowHyphens, allowDots, allowSpaces);
 }
