@@ -13,7 +13,7 @@ public class StorageIdentifierTests
     {
         const string id = "BE8BUPERXP1C";
 
-        var result = StorageIdentifier.Validate(id);
+        var result = StorageIdentifier.NewValidation(id);
 
         result.Should().BeSuccess()
             .Which.Value.Should().Be(id);

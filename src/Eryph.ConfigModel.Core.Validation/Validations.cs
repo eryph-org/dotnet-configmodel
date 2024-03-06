@@ -15,8 +15,6 @@ namespace Eryph.ConfigModel;
 
 public static class Validations
 {
-    public static readonly Regex NameRegex = new(@"^[a-z0-9\.\-]*$", RegexOptions.Compiled);
-
     public static Validation<Error, string> ValidateNotEmpty(string? value, string name) =>
         from nonEmptyValue in Optional(value).Filter(notEmpty).ToValidation(Error.New($"The {name} cannot be empty."))
         select nonEmptyValue;
@@ -28,15 +26,6 @@ public static class Validations
         from __ in guardnot(value.Length > maxLength,
             Error.New($"The {fieldName} is longer than the maximum length of {maxLength} characters."))
             .ToValidation()
-        select value;
-
-    public static Validation<Error, string> ValidateCharacters(string value, string fieldName) =>
-        from _ in guard(value is null || NameRegex.IsMatch(value),
-                      Error.New($"The {fieldName} contains invalid characters. Only lower case latin characters, numbers, dots and hyphens are permitted."))
-                      .ToValidation()
-                  | guardnot(value is not null && (value.Contains("..") || value.Contains("--")),
-                          Error.New($"The {fieldName} cannot contain consecutive dots or hyphens."))
-                      .ToValidation()
         select value;
 
     public static Validation<Error, string> ValidateCharacters(
@@ -52,30 +41,40 @@ public static class Validations
                     || allowDots && c == '.'
                     || allowHyphens && c == '-'
                     || allowSpaces && c == ' '),
-                Error.New($"The {fieldName} contains invalid characters. "
-                   + $"Only {(allowUpperCase ? "" : "lower case ")}latin characters, numbers"
-                   + (allowDots ? ", dots" : "")
-                   + (allowHyphens ? ", hyphens" : "")
-                   + (allowSpaces ? ", spaces" : "")
-                   + " are permitted."))
+                Error.New($"The {fieldName} contains invalid characters. Only "
+                          + JoinItems("and", Seq(
+                              Some($"{(allowUpperCase ? "" : "lower case ")}latin characters"),
+                              Some("numbers"),
+                              Some("dots").Filter(_ => allowDots),
+                              Some("hyphens").Filter(_ => allowHyphens),
+                              Some("spaces").Filter(_ => allowSpaces)))
+                          + " are permitted."))
             .ToValidation()
         from __ in guardnot(value.Contains("..") || value.Contains("--") || value.Contains("  "),
-                Error.New($"The {fieldName} cannot contain consecutive dots, hyphens or spaces."))
+                Error.New($"The {fieldName} cannot contain consecutive "
+                          + JoinItems("or", Seq(
+                              Some("dots").Filter(_ => allowDots),
+                              Some("hyphens").Filter(_ => allowHyphens),
+                              Some("spaces").Filter(_ => allowSpaces)))
+                          + "."))
             .ToValidation()
         select value;
 
-        
+    private static string JoinItems(string lastSeparator, Seq<Option<string>> names) =>
+        names.Somes().Match(
+            Empty: () => "",
+            Seq: n => string.Join($" {lastSeparator}", string.Join(", ", n.Take(n.Length - 1)), n.Last()));
 
     public static Validation<Error, string> ValidatePath(string? value, string fieldName) =>
         from nonEmptyValue in ValidateNotEmpty(value, fieldName)
         from _ in guardnot(Path.GetInvalidPathChars().Intersect(nonEmptyValue).Any(),
-                Error.New($"The {fieldName} must be a valid path but contains invalid characters."))
-            .ToValidation()
+                          Error.New($"The {fieldName} must be a valid path but contains invalid characters."))
+                      .ToValidation()
+                  | guardnot(nonEmptyValue.Length > 260,
+                          Error.New($"The {fieldName} must be a valid path but contains more than 260 characters."))
+                      .ToValidation()
         from __ in guard(Path.GetPathRoot(nonEmptyValue) is not null,
                 Error.New($"The {fieldName} must be a fully-qualified path but it is not."))
-            .ToValidation()
-        from ___ in guardnot(nonEmptyValue.Length > 260,
-                Error.New($"The {fieldName} must be a valid path but contains more than 260 characters."))
             .ToValidation()
         select value;
 }
@@ -92,10 +91,9 @@ public static class Validations<T>
     public static Validation<Error, string> ValidateLength(string value, int minLength, int maxLength) =>
         Validations.ValidateLength(value, Name, minLength, maxLength);
 
-    public static Validation<Error, string> ValidateCharacters(string value) =>
-        Validations.ValidateCharacters(value, Name);
-
     public static Validation<Error, string> ValidateCharacters(
         string value, bool allowUpperCase, bool allowHyphens, bool allowDots, bool allowSpaces) =>
         Validations.ValidateCharacters(value, Name, allowUpperCase, allowHyphens, allowDots, allowSpaces);
 }
+
+#nullable restore

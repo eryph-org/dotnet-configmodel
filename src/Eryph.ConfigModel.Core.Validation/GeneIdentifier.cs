@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Dbosoft.Functional.DataTypes;
 using LanguageExt;
 using LanguageExt.ClassInstances;
 using LanguageExt.Common;
@@ -18,8 +19,8 @@ public class GeneIdentifier : ValidatingNewType<GeneIdentifier, string, OrdStrin
             from _ in guard(parts.Length is 3 && parts[0] == "gene", Error.New(
                     "The gene identifier is malformed. It must be gene:geneset:genename"))
                 .ToValidation()
-            from geneSetIdentifier in GeneSetIdentifier.Validate(parts[1])
-            from geneName in GeneName.Validate(parts[2])
+            from geneSetIdentifier in GeneSetIdentifier.NewValidation(parts[1])
+            from geneName in GeneName.NewValidation(parts[2])
             select (geneSetIdentifier, geneName));
     }
 

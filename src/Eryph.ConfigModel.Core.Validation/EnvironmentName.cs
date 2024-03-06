@@ -11,7 +11,12 @@ public class EnvironmentName : EryphName<EnvironmentName>
 {
     public EnvironmentName(string value) : base(value)
     {
-        ValidOrThrow(Validations<EnvironmentName>.ValidateCharacters(value)
+        ValidOrThrow(Validations<EnvironmentName>.ValidateCharacters(
+                        value,
+                        allowUpperCase: true,
+                        allowDots: true,
+                        allowHyphens: true,
+                        allowSpaces: false)
                      | Validations<EnvironmentName>.ValidateLength(value, 1, 50));
     }
 }
