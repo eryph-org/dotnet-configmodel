@@ -19,17 +19,17 @@ public static class Validations
         from nonEmptyValue in Optional(value).Filter(notEmpty).ToValidation(Error.New($"The {name} cannot be empty."))
         select nonEmptyValue;
 
-    public static Validation<Error, string> ValidateLength(string value, string fieldName, int minLength, int maxLength) =>
-        from _ in guardnot(value.Length < minLength,
+    public static Validation<Error, string> ValidateLength(string? value, string fieldName, int minLength, int maxLength) =>
+        from _ in guardnot((value?.Length ?? 0) < minLength,
             Error.New($"The {fieldName} is shorter than the minimum length of {minLength} characters."))
             .ToValidation()
-        from __ in guardnot(value.Length > maxLength,
+        from __ in guardnot((value?.Length ?? 0) > maxLength,
             Error.New($"The {fieldName} is longer than the maximum length of {maxLength} characters."))
             .ToValidation()
         select value;
 
     public static Validation<Error, string> ValidateCharacters(
-        string value,
+        string? value,
         string fieldName,
         bool allowUpperCase,
         bool allowHyphens,
@@ -50,7 +50,8 @@ public static class Validations
                               Some("spaces").Filter(_ => allowSpaces)))
                           + " are permitted."))
             .ToValidation()
-        from __ in guardnot(value.Contains("..") || value.Contains("--") || value.Contains("  "),
+        from __ in guardnot(value is not null
+                            && (value.Contains("..") || value.Contains("--") || value.Contains("  ")),
                 Error.New($"The {fieldName} cannot contain consecutive "
                           + JoinItems("or", Seq(
                               Some("dots").Filter(_ => allowDots),
@@ -63,7 +64,7 @@ public static class Validations
     private static string JoinItems(string lastSeparator, Seq<Option<string>> names) =>
         names.Somes().Match(
             Empty: () => "",
-            Seq: n => string.Join($" {lastSeparator}", string.Join(", ", n.Take(n.Length - 1)), n.Last()));
+            Seq: n => string.Join($" {lastSeparator} ", string.Join(", ", n.Take(n.Length - 1)), n.Last()));
 
     public static Validation<Error, string> ValidatePath(string? value, string fieldName) =>
         from nonEmptyValue in ValidateNotEmpty(value, fieldName)

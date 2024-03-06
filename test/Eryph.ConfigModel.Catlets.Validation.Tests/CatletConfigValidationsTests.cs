@@ -84,19 +84,19 @@ public class CatletConfigValidationsTests
             {
                 issue.Member.Should().Be("Environment");
                 issue.Message.Should()
-                    .Be("The environment name contains invalid characters. Only lower case latin characters, numbers, dots and hyphens are permitted.");
+                    .Be("The environment name contains invalid characters. Only latin characters, numbers, dots and hyphens are permitted.");
             },
             issue =>
             {
                 issue.Member.Should().Be("Drives[0].Name");
                 issue.Message.Should()
-                    .Be("The catlet drive name contains invalid characters. Only lower case latin characters, numbers and hyphens are permitted.");
+                    .Be("The catlet drive name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
             },
             issue =>
             {
                 issue.Member.Should().Be("Drives[1].Name");
                 issue.Message.Should()
-                    .Be("The catlet drive name contains invalid characters. Only lower case latin characters, numbers and hyphens are permitted.");
+                    .Be("The catlet drive name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
             },
             issue =>
             {

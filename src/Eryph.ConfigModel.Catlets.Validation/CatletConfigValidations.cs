@@ -13,17 +13,23 @@ namespace Eryph.ConfigModel;
 public static  class CatletConfigValidations
 {
     public static Validation<ValidationIssue, Unit> ValidateCatletConfig(CatletConfig toValidate, string path = "") =>
-        ValidateProperty(toValidate, c => c.Project, ProjectName.NewValidation, path)
+        ValidateProperty(toValidate, c => c.Name, CatletName.NewValidation, path)
+        | ValidateProperty(toValidate, c => c.Project, ProjectName.NewValidation, path)
+        | ValidateProperty(toValidate, c => c.Store, DataStoreName.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Environment, EnvironmentName.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Parent, GeneSetIdentifier.NewValidation, path)
+        | ValidateProperty(toValidate, c => c.Location, StorageIdentifier.NewValidation, path)
         | ValidateList(toValidate, c => c.Drives, ValidateCatletDriveConfig, path, minCount: 0, maxCount: 64)
         | ValidateProperty(toValidate, c => c.Cpu, ValidateCatletCpuConfig, path)
-        | ValidateProperty(toValidate, c => c.Memory, ValidateCatletMemoryConfig, path);
+        | ValidateProperty(toValidate, c => c.Memory, ValidateCatletMemoryConfig, path)
+        | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path);
 
     public static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
         CatletDriveConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, CatletDriveName.NewValidation, path)
+        | ValidateProperty(toValidate, c => c.Store, DataStoreName.NewValidation, path)
+        | ValidateProperty(toValidate, c => c.Location, StorageIdentifier.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Size, ValidateCatletDriveSize, path)
         | ValidateProperty(toValidate, c => c.Source, source =>
             source.StartsWith("gene:")
@@ -59,4 +65,9 @@ public static  class CatletConfigValidations
         | guard(memorySize % 2 == 0, Error.New("The memory size must be a multiple of 2 MB.")).ToValidation()
         | guardnot(memorySize > 12 * 1024 * 1024, Error.New("The memory size must be at most 12 TB,"))
             .ToValidation();
+
+    public static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
+        FodderConfig toValidate,
+        string path = "") =>
+        ValidateProperty(toValidate, c => c.Source, GeneIdentifier.NewValidation, path);
 }
