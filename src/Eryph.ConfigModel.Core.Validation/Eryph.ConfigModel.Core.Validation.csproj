@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="Dbosoft.Functional" Version="3.0.1-PullRequest0014.10" />
-    <PackageReference Include="LanguageExt.Core" Version="4.4.0" />
   </ItemGroup>
 
 </Project>
