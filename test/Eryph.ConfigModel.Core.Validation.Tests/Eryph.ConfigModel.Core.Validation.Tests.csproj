@@ -28,8 +28,4 @@
     <ProjectReference Include="..\..\src\Eryph.ConfigModel.Core.Validation\Eryph.ConfigModel.Core.Validation.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-
 </Project>

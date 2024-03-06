@@ -62,11 +62,11 @@ public class CatletConfigValidationsTests
             {
                 new CatletDriveConfig()
                 {
-                    Name = "abc.exe"
+                    Name = "abc.bin"
                 },
                 new CatletDriveConfig()
                 {
-                    Name = "def.exe"
+                    Name = "def.bin"
                 },
             },
         };

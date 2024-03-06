@@ -15,22 +15,29 @@ namespace Eryph.ConfigModel;
 
 public static class Validations
 {
-    public static Validation<Error, string> ValidateNotEmpty(string? value, string name) =>
-        from nonEmptyValue in Optional(value).Filter(notEmpty).ToValidation(Error.New($"The {name} cannot be empty."))
+    public static Validation<Error, string> ValidateNotEmpty(
+        string? value,
+        string valueName) =>
+        from nonEmptyValue in Optional(value).Filter(notEmpty)
+            .ToValidation(Error.New($"The {valueName} cannot be empty."))
         select nonEmptyValue;
 
-    public static Validation<Error, string> ValidateLength(string? value, string fieldName, int minLength, int maxLength) =>
+    public static Validation<Error, string> ValidateLength(
+        string? value,
+        string valueName,
+        int minLength,
+        int maxLength) =>
         from _ in guardnot((value?.Length ?? 0) < minLength,
-            Error.New($"The {fieldName} is shorter than the minimum length of {minLength} characters."))
+            Error.New($"The {valueName} is shorter than the minimum length of {minLength} characters."))
             .ToValidation()
         from __ in guardnot((value?.Length ?? 0) > maxLength,
-            Error.New($"The {fieldName} is longer than the maximum length of {maxLength} characters."))
+            Error.New($"The {valueName} is longer than the maximum length of {maxLength} characters."))
             .ToValidation()
         select value;
 
     public static Validation<Error, string> ValidateCharacters(
         string? value,
-        string fieldName,
+        string valueName,
         bool allowUpperCase,
         bool allowHyphens,
         bool allowDots,
@@ -41,7 +48,7 @@ public static class Validations
                     || allowDots && c == '.'
                     || allowHyphens && c == '-'
                     || allowSpaces && c == ' '),
-                Error.New($"The {fieldName} contains invalid characters. Only "
+                Error.New($"The {valueName} contains invalid characters. Only "
                           + JoinItems("and", Seq(
                               Some($"{(allowUpperCase ? "" : "lower case ")}latin characters"),
                               Some("numbers"),
@@ -52,7 +59,7 @@ public static class Validations
             .ToValidation()
         from __ in guardnot(value is not null
                             && (value.Contains("..") || value.Contains("--") || value.Contains("  ")),
-                Error.New($"The {fieldName} cannot contain consecutive "
+                Error.New($"The {valueName} cannot contain consecutive "
                           + JoinItems("or", Seq(
                               Some("dots").Filter(_ => allowDots),
                               Some("hyphens").Filter(_ => allowHyphens),
@@ -61,12 +68,19 @@ public static class Validations
             .ToValidation()
         select value;
 
-    private static string JoinItems(string lastSeparator, Seq<Option<string>> names) =>
+    private static string JoinItems(
+        string lastSeparator,
+        Seq<Option<string>> names) =>
         names.Somes().Match(
             Empty: () => "",
-            Seq: n => string.Join($" {lastSeparator} ", string.Join(", ", n.Take(n.Length - 1)), n.Last()));
+            Seq: n => string.Join(
+                $" {lastSeparator} ",
+                string.Join(", ", n.Take(n.Length - 1)),
+                n.Last()));
 
-    public static Validation<Error, string> ValidatePath(string? value, string fieldName) =>
+    public static Validation<Error, string> ValidatePath(
+        string? value,
+        string fieldName) =>
         from nonEmptyValue in ValidateNotEmpty(value, fieldName)
         from _ in guardnot(Path.GetInvalidPathChars().Intersect(nonEmptyValue).Any(),
                           Error.New($"The {fieldName} must be a valid path but contains invalid characters."))
@@ -84,7 +98,8 @@ public static class Validations<T>
 {
     private static readonly Regex UpperCaseRegex = new("[A-Z]", RegexOptions.Compiled);
 
-    internal static string Name => UpperCaseRegex.Replace(typeof(T).Name, match => $" {match.Value.ToLowerInvariant()}").Trim();
+    internal static string Name => UpperCaseRegex.Replace(
+        typeof(T).Name, match => $" {match.Value.ToLowerInvariant()}").Trim();
 
     public static Validation<Error, string> ValidateNotEmpty(string? value) =>
         Validations.ValidateNotEmpty(value, Name);

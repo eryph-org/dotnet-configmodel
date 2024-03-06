@@ -26,12 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Eryph.ConfigModel.Catlets.Validation\Eryph.ConfigModel.Catlets.Validation.csproj" />
-    <ProjectReference Include="..\..\src\Eryph.ConfigModel.Catlets\Eryph.ConfigModel.Catlets.csproj" />
-    <ProjectReference Include="..\..\src\Eryph.ConfigModel.Core.Validation\Eryph.ConfigModel.Core.Validation.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>

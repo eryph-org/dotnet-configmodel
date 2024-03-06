@@ -14,7 +14,7 @@ namespace Eryph.ConfigModel
                             allowDots: true,
                             allowHyphens:true,
                             allowSpaces: false)
-                        | Validations<CatletName>.ValidateLength(value, 3, 40));
+                        | Validations<CatletName>.ValidateLength(value, 1, 50));
         }
     }
 }
