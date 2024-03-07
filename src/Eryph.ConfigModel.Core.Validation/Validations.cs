@@ -68,6 +68,21 @@ public static class Validations
             .ToValidation()
         select value;
 
+    public static Validation<Error, string> ValidatePath(
+        string? value,
+        string valueName) =>
+        from nonEmptyValue in ValidateNotEmpty(value, valueName)
+        from _ in guardnot(Path.GetInvalidPathChars().Intersect(nonEmptyValue).Any(),
+                          Error.New($"The {valueName} must be a valid path but contains invalid characters."))
+                      .ToValidation()
+                  | guardnot(nonEmptyValue.Length > 260,
+                          Error.New($"The {valueName} must be a valid path but contains more than 260 characters."))
+                      .ToValidation()
+        from __ in guard(Path.GetPathRoot(nonEmptyValue) is not null,
+                Error.New($"The {valueName} must be a fully-qualified path but it is not."))
+            .ToValidation()
+        select value;
+
     private static string JoinItems(
         string lastSeparator,
         Seq<Option<string>> names) =>
@@ -77,21 +92,6 @@ public static class Validations
                 $" {lastSeparator} ",
                 string.Join(", ", n.Take(n.Length - 1)),
                 n.Last()));
-
-    public static Validation<Error, string> ValidatePath(
-        string? value,
-        string fieldName) =>
-        from nonEmptyValue in ValidateNotEmpty(value, fieldName)
-        from _ in guardnot(Path.GetInvalidPathChars().Intersect(nonEmptyValue).Any(),
-                          Error.New($"The {fieldName} must be a valid path but contains invalid characters."))
-                      .ToValidation()
-                  | guardnot(nonEmptyValue.Length > 260,
-                          Error.New($"The {fieldName} must be a valid path but contains more than 260 characters."))
-                      .ToValidation()
-        from __ in guard(Path.GetPathRoot(nonEmptyValue) is not null,
-                Error.New($"The {fieldName} must be a fully-qualified path but it is not."))
-            .ToValidation()
-        select value;
 }
 
 public static class Validations<T>
@@ -110,6 +110,9 @@ public static class Validations<T>
     public static Validation<Error, string> ValidateCharacters(
         string value, bool allowUpperCase, bool allowHyphens, bool allowDots, bool allowSpaces) =>
         Validations.ValidateCharacters(value, Name, allowUpperCase, allowHyphens, allowDots, allowSpaces);
+
+    public static Validation<Error, string> ValidatePath(string? value) =>
+        Validations.ValidatePath(value, Name);
 }
 
 #nullable restore
