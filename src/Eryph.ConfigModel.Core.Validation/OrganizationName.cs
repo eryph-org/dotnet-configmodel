@@ -8,13 +8,11 @@ public class OrganizationName : EryphName<OrganizationName>
 {
     public OrganizationName(string value) : base(value)
     {
-        _ = ValidOrThrow(
-            Validations<OrganizationName>.ValidateCharacters(
-                value,
-                allowUpperCase: false,
-                allowDots: true,
-                allowHyphens: true,
-                allowSpaces: false)
-            | Validations<OrganizationName>.ValidateLength(value, 3, 40));
+        ValidOrThrow(Validations<OrganizationName>.ValidateCharacters(
+                         value,
+                         allowDots: true,
+                         allowHyphens: true,
+                         allowSpaces: false)
+                     | Validations<OrganizationName>.ValidateLength(value, 3, 40));
     }
 }

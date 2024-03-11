@@ -9,8 +9,7 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel;
 
-public class GeneSetIdentifier :
-    ValidatingNewType<GeneSetIdentifier, string, OrdStringOrdinalIgnoreCase>
+public class GeneSetIdentifier : EryphName<GeneSetIdentifier>
 {
     public GeneSetIdentifier(string value) : base(value)
     {
@@ -42,8 +41,12 @@ public class GeneSetIdentifier :
     public TagName Tag{ get; }
 
     /// <summary>
-    /// Returns the normalized form of the <see cref="GeneSetIdentifier"/> which
-    /// always includes the tag.
+    /// Returns the string representation including the tag.
     /// </summary>
-    public string NormalizedValue => $"{Organization.Value}/{GeneSet.Value}/{Tag.Value}";
+    public string ValueWithTag => $"{Organization.Value}/{GeneSet.Value}/{Tag.Value}";
+
+    /// <summary>
+    /// Returns the string representation without the tag.
+    /// </summary>
+    public string ValueWithoutTag => $"{Organization.Value}/{GeneSet.Value}";
 }

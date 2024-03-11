@@ -7,5 +7,8 @@ using LanguageExt.ClassInstances;
 namespace Eryph.ConfigModel;
 
 public abstract class EryphName<NEWTYPE>(string value)
-    : ValidatingNewType<NEWTYPE, string, OrdStringOrdinalIgnoreCase>(value)
-    where NEWTYPE : EryphName<NEWTYPE>;
+    : ValidatingNewType<NEWTYPE, string, OrdStringOrdinalIgnoreCase>(Normalize(value))
+    where NEWTYPE : EryphName<NEWTYPE>
+{
+    private static string Normalize(string value) => value?.ToLowerInvariant();
+}

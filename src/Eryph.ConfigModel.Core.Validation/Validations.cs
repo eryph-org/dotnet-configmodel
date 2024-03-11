@@ -38,19 +38,17 @@ public static class Validations
     public static Validation<Error, string> ValidateCharacters(
         string? value,
         string valueName,
-        bool allowUpperCase,
         bool allowHyphens,
         bool allowDots,
         bool allowSpaces) =>
         from _ in guard(value.ToSeq().All(c =>
-                    c is >= 'a' and <= 'z' or >= '0' and <= '9'
-                    || allowUpperCase && c is >= 'A' and <='Z'
+                    c is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9'
                     || allowDots && c == '.'
                     || allowHyphens && c == '-'
                     || allowSpaces && c == ' '),
                 Error.New($"The {valueName} contains invalid characters. Only "
                           + JoinItems("and", Seq(
-                              Some($"{(allowUpperCase ? "" : "lower case ")}latin characters"),
+                              Some("latin characters"),
                               Some("numbers"),
                               Some("dots").Filter(_ => allowDots),
                               Some("hyphens").Filter(_ => allowHyphens),
@@ -108,8 +106,8 @@ public static class Validations<T>
         Validations.ValidateLength(value, Name, minLength, maxLength);
 
     public static Validation<Error, string> ValidateCharacters(
-        string value, bool allowUpperCase, bool allowHyphens, bool allowDots, bool allowSpaces) =>
-        Validations.ValidateCharacters(value, Name, allowUpperCase, allowHyphens, allowDots, allowSpaces);
+        string value, bool allowHyphens, bool allowDots, bool allowSpaces) =>
+        Validations.ValidateCharacters(value, Name, allowHyphens, allowDots, allowSpaces);
 
     public static Validation<Error, string> ValidatePath(string? value) =>
         Validations.ValidatePath(value, Name);

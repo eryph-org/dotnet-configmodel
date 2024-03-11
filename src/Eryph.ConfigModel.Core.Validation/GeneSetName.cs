@@ -8,13 +8,11 @@ public class GeneSetName : EryphName<GeneSetName>
 {
     public GeneSetName(string value) : base(value)
     {
-        _ = ValidOrThrow(
-            Validations<GeneSetName>.ValidateCharacters(
-                value,
-                allowUpperCase: false,
-                allowDots: true,
-                allowHyphens: true,
-                allowSpaces: false)
-            | Validations<GeneSetName>.ValidateLength(value, 3, 40));
+        ValidOrThrow(Validations<GeneSetName>.ValidateCharacters(
+                         value,
+                         allowDots: true,
+                         allowHyphens: true,
+                         allowSpaces: false)
+                     | Validations<GeneSetName>.ValidateLength(value, 3, 40));
     }
 }

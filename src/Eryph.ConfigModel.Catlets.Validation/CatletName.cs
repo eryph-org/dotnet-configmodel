@@ -10,7 +10,6 @@ namespace Eryph.ConfigModel
         {
             ValidOrThrow(Validations<CatletName>.ValidateCharacters(
                             value,
-                            allowUpperCase: true,
                             allowDots: true,
                             allowHyphens:true,
                             allowSpaces: false)

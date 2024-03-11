@@ -10,7 +10,6 @@ public class GeneName : EryphName<GeneName>
     {
         ValidOrThrow(Validations<GeneName>.ValidateCharacters(
                          value,
-                         allowUpperCase: false,
                          allowDots: true,
                          allowHyphens: true,
                          allowSpaces: false)

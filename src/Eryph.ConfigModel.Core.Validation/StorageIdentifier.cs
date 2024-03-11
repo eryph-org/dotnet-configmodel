@@ -10,7 +10,6 @@ public class StorageIdentifier : EryphName<StorageIdentifier>
     {
         ValidOrThrow(Validations<StorageIdentifier>.ValidateCharacters(
                         value,
-                        allowUpperCase: true,
                         allowDots: true,
                         allowHyphens: true,
                         allowSpaces: false)

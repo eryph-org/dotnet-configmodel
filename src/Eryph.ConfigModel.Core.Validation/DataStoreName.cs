@@ -11,7 +11,6 @@ public class DataStoreName : EryphName<DataStoreName>
     public DataStoreName(string value) : base(value)
     {
         ValidOrThrow(Validations<DataStoreName>.ValidateCharacters(value,
-                         allowUpperCase: true,
                          allowDots:true,
                          allowHyphens:true,
                          allowSpaces:false)

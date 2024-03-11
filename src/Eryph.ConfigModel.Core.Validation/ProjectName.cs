@@ -12,12 +12,11 @@ public class ProjectName : EryphName<ProjectName>
     {
         ValidOrThrow(Validations<ProjectName>.ValidateCharacters(
                          value,
-                         allowUpperCase: false,
                          allowDots: true,
                          allowHyphens: true,
                          allowSpaces: false)
                      | Validations<ProjectName>.ValidateLength(value, 1, 20)
-                     | Optional(value).Filter(s => !s.StartsWith("p_"))
+                     | Optional(value).Filter(s => !s.StartsWith("p_", StringComparison.OrdinalIgnoreCase))
                          .ToValidation(Error.New("The project name cannot start with 'p_'.")));
     }
 }

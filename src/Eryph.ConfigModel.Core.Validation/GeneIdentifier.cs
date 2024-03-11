@@ -9,7 +9,7 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel;
 
-public class GeneIdentifier : ValidatingNewType<GeneIdentifier, string, OrdStringOrdinalIgnoreCase>
+public class GeneIdentifier : EryphName<GeneIdentifier>
 {
     public GeneIdentifier(string value) : base(value)
     {

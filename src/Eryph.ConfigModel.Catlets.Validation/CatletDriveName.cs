@@ -14,7 +14,6 @@ public class CatletDriveName : EryphName<CatletDriveName>
     {
         ValidOrThrow(Validations<CatletDriveName>.ValidateCharacters(
                          value,
-                         allowUpperCase: true,
                          allowDots: false,
                          allowHyphens: true,
                          allowSpaces: false)

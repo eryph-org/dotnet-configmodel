@@ -13,7 +13,6 @@ public class EnvironmentName : EryphName<EnvironmentName>
     {
         ValidOrThrow(Validations<EnvironmentName>.ValidateCharacters(
                         value,
-                        allowUpperCase: true,
                         allowDots: true,
                         allowHyphens: true,
                         allowSpaces: false)
