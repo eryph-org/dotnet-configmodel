@@ -78,7 +78,7 @@ public class CatletConfigValidationsTests
             {
                 issue.Member.Should().Be("Project");
                 issue.Message.Should()
-                    .Be("The project name contains invalid characters. Only lower case latin characters, numbers, dots and hyphens are permitted.");
+                    .Be("The project name contains invalid characters. Only latin characters, numbers, dots and hyphens are permitted.");
             },
             issue =>
             {
