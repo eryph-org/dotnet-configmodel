@@ -28,9 +28,22 @@ public class GeneSetIdentifier :
             select (orgName, geneSetName, tagName));
     }
 
-    public OrganizationName Organization { get; private set; }
+    public GeneSetIdentifier(OrganizationName organization, GeneSetName geneSet)
+        : this($"{organization.Value}/{geneSet.Value}") { }
 
-    public GeneSetName GeneSet { get; private set; }
+    public GeneSetIdentifier(OrganizationName organization, GeneSetName geneSet, TagName tag)
+        : this($"{organization.Value}/{geneSet.Value}/{tag.Value}") { }
 
-    public TagName Tag{ get; private set; }
+
+    public OrganizationName Organization { get; }
+
+    public GeneSetName GeneSet { get; }
+
+    public TagName Tag{ get; }
+
+    /// <summary>
+    /// Returns the normalized form of the <see cref="GeneSetIdentifier"/> which
+    /// always includes the tag.
+    /// </summary>
+    public string NormalizedValue => $"{Organization.Value}/{GeneSet.Value}/{Tag.Value}";
 }

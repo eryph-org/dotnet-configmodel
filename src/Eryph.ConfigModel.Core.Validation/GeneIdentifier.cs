@@ -24,7 +24,10 @@ public class GeneIdentifier : ValidatingNewType<GeneIdentifier, string, OrdStrin
             select (geneSetIdentifier, geneName));
     }
 
-    public GeneSetIdentifier GeneSet { get; private set; }
+    public GeneIdentifier(GeneSetIdentifier geneSetIdentifier, GeneName geneName)
+        : this($"gene:{geneSetIdentifier.Value}:{geneName.Value}") { }
 
-    public GeneName GeneName { get; private set; }
+    public GeneSetIdentifier GeneSet { get; }
+
+    public GeneName GeneName { get; }
 }
