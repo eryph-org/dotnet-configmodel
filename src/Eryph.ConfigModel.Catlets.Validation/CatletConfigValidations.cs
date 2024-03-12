@@ -70,5 +70,6 @@ public static  class CatletConfigValidations
     public static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
         FodderConfig toValidate,
         string path = "") =>
-        ValidateProperty(toValidate, c => c.Source, GeneIdentifier.NewValidation, path);
+        ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path)
+        | ValidateProperty(toValidate, c => c.Source, GeneIdentifier.NewValidation, path);
 }

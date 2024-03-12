@@ -69,6 +69,14 @@ public class CatletConfigValidationsTests
                     Name = "def.bin"
                 },
             },
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "my fodder",
+                    Source = "invalid source"
+                }
+            }
         };
 
         var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
@@ -103,6 +111,19 @@ public class CatletConfigValidationsTests
                 issue.Member.Should().Be("Cpu.Count");
                 issue.Message.Should()
                     .Be("The number of CPUs must be positive.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Name");
+                issue.Message.Should()
+                    .Be("The fodder name contains invalid characters. Only latin characters, numbers, dots and hyphens are permitted.");
+            },
+
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Source");
+                issue.Message.Should()
+                    .Be("The gene identifier is malformed. It must be gene:geneset:genename.");
             });
     }
 }
