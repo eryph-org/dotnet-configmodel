@@ -8,25 +8,36 @@ namespace Eryph.ConfigModel.Core.Validation.Tests;
 
 public class GeneIdentifierTests
 {
-    [Fact]
-    public void New_ComplexData_ReturnsValue()
+    [Theory]
+    [InlineData("acme/acme-linux", "catlet")]
+    [InlineData("ACME/ACME-Linux", "Catlet")]
+    [InlineData("acme/acme-linux/latest", "catlet")]
+    [InlineData("ACME/ACME-Linux/Latest", "Catlet")]
+    public void New_ComplexData_ReturnsValue(string geneSetId, string geneName)
     {
-        var geneIdentifier = new GeneIdentifier(
+        var result = new GeneIdentifier(
             GeneSetIdentifier.New("acme/acme-linux/latest"),
             GeneName.New("catlet"));
 
-        geneIdentifier.Value.Should().Be("gene:acme/acme-linux/latest:catlet");
+        Validate(result);
     }
 
-    [Fact]
-    public void New_String_ReturnsValue()
+    [Theory]
+    [InlineData("gene:acme/acme-linux:catlet")]
+    [InlineData("gene:ACME/ACME-Linux:Catlet")]
+    [InlineData("gene:acme/acme-linux/latest:catlet")]
+    [InlineData("gene:ACME/ACME-Linux/Latest:Catlet")]
+    public void New_String_ReturnsValue(string geneId)
     {
-        string id = "gene:acme/acme-linux/latest:catlet";
+        var result = GeneIdentifier.New(geneId);
 
-        var geneIdentifier = GeneIdentifier.New(id);
+        Validate(result);
+    }
 
-        geneIdentifier.Value.Should().Be(id);
-        geneIdentifier.GeneSet.Value.Should().Be("acme/acme-linux/latest");
-        geneIdentifier.GeneName.Value.Should().Be("catlet");
+    private void Validate(GeneIdentifier geneId)
+    {
+        geneId.Value.Should().Be("gene:acme/acme-linux/latest:catlet");
+        geneId.GeneSet.Value.Should().Be("acme/acme-linux/latest");
+        geneId.GeneName.Value.Should().Be("catlet");
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,63 +9,67 @@ namespace Eryph.ConfigModel.Core.Validation.Tests;
 
 public class GeneSetIdentifierTests
 {
-    [Fact]
-    public void New_ComplexDataWithTag_ReturnsValue()
+    [Theory]
+    [InlineData("acme", "acme-linux", "1.0-rc.1")]
+    [InlineData("ACME", "ACME-Linux", "1.0-RC.1")]
+    public void New_ComplexDataWithTag_ReturnsValue(string organisation, string geneset, string tag)
     {
-        var geneSetIdentifier = new GeneSetIdentifier(
-            OrganizationName.New("acme"),
-            GeneSetName.New("acme-linux"),
-            TagName.New("1.0"));
+        var result = new GeneSetIdentifier(
+            OrganizationName.New(organisation),
+            GeneSetName.New(geneset),
+            TagName.New(tag));
 
-        geneSetIdentifier.Value.Should().Be("acme/acme-linux/1.0");
+        Validate(result, "1.0-rc.1");
     }
 
-    [Fact]
-    public void New_ComplexDataWithoutTag_ReturnsValue()
+    [Theory]
+    [InlineData("acme", "acme-linux")]
+    [InlineData("ACME", "ACME-Linux")]
+    public void New_ComplexDataWithoutTag_ReturnsValue(string organisation, string geneset)
     {
-        var geneSetIdentifier = new GeneSetIdentifier(
-            OrganizationName.New("acme"),
-            GeneSetName.New("acme-linux"));
-
-        geneSetIdentifier.Value.Should().Be("acme/acme-linux");
-    }
-
-    [Fact]
-    public void New_StringWithTag_ReturnsValue()
-    {
-        string id = "acme/acme-linux/1.0";
+        var result = new GeneSetIdentifier(
+            OrganizationName.New(organisation),
+            GeneSetName.New(geneset));
         
-        var geneSetIdentifier = GeneSetIdentifier.New(id);
-
-        geneSetIdentifier.Value.Should().Be(id);
-        geneSetIdentifier.Organization.Value.Should().Be("acme");
-        geneSetIdentifier.GeneSet.Value.Should().Be("acme-linux");
-        geneSetIdentifier.Tag.Value.Should().Be("1.0");
+        Validate(result, "latest");
     }
 
-    [Fact]
-    public void New_StringWithoutTag_ReturnsValue()
+    [Theory]
+    [InlineData("acme/acme-linux/1.0-rc.1")]
+    [InlineData("ACME/ACME-Linux/1.0-RC.1")]
+    public void New_StringWithTag_ReturnsValue(string id)
     {
-        string id = "acme/acme-linux";
+        var result = GeneSetIdentifier.New(id);
 
-        var geneSetIdentifier = GeneSetIdentifier.New(id);
-
-        geneSetIdentifier.Value.Should().Be(id);
-        geneSetIdentifier.Organization.Value.Should().Be("acme");
-        geneSetIdentifier.GeneSet.Value.Should().Be("acme-linux");
-        geneSetIdentifier.Tag.Value.Should().Be("latest");
+        Validate(result, "1.0-rc.1");
     }
 
-    [Fact]
-    public void New_StringWithLatestTag_ReturnsValue()
+    [Theory]
+    [InlineData("acme/acme-linux")]
+    [InlineData("ACME/ACME-Linux")]
+    public void New_StringWithoutTag_ReturnsValue(string id)
     {
-        string id = "acme/acme-linux/latest";
+        var result = GeneSetIdentifier.New(id);
 
-        var geneSetIdentifier = GeneSetIdentifier.New(id);
+        Validate(result, "latest");
+    }
 
-        geneSetIdentifier.Value.Should().Be(id);
+    [Theory]
+    [InlineData("acme/acme-linux/latest")]
+    [InlineData("ACME/ACME-Linux/Latest")]
+    public void New_StringWithLatestTag_ReturnsValue(string id)
+    {
+        var result = GeneSetIdentifier.New(id);
+
+        Validate(result, "latest");
+    }
+
+    private void Validate(GeneSetIdentifier geneSetIdentifier, string expectedTag)
+    {
+        geneSetIdentifier.Value.Should().Be($"acme/acme-linux/{expectedTag}");
+        geneSetIdentifier.ValueWithoutTag.Should().Be("acme/acme-linux");
         geneSetIdentifier.Organization.Value.Should().Be("acme");
         geneSetIdentifier.GeneSet.Value.Should().Be("acme-linux");
-        geneSetIdentifier.Tag.Value.Should().Be("latest");
+        geneSetIdentifier.Tag.Value.Should().Be(expectedTag);
     }
 }

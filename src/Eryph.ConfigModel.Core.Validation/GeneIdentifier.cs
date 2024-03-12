@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Dbosoft.Functional.DataTypes;
 using LanguageExt;
-using LanguageExt.ClassInstances;
 using LanguageExt.Common;
 using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel;
 
+/// <summary>
+/// Represents a gene identifier. The tag <c>latest</c> is automatically
+/// added when no tag has been specified for the gene set.
+/// </summary>
 public class GeneIdentifier : EryphName<GeneIdentifier>
 {
-    public GeneIdentifier(string value) : base(value)
+    public GeneIdentifier(string value) : base(Normalize(value))
     {
         (GeneSet, GeneName) = ValidOrThrow(
             from nonEmptyValue in Validations<GeneSetIdentifier>.ValidateNotEmpty(value)
@@ -30,4 +33,10 @@ public class GeneIdentifier : EryphName<GeneIdentifier>
     public GeneSetIdentifier GeneSet { get; }
 
     public GeneName GeneName { get; }
+
+    private static string Normalize(string value) => 
+        Optional(value)
+            .Filter(v => v.Count(c => c == ':') == 2 && v.Count(c => c == '/') == 1)
+            .Match(Some: v => v.Insert(v.LastIndexOf(':'), "/latest"),
+                   None: () => value);
 }
