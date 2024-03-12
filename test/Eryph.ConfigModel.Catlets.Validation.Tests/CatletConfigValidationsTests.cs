@@ -126,7 +126,6 @@ public class CatletConfigValidationsTests
                 issue.Message.Should()
                     .Be("The fodder name contains invalid characters. Only latin characters, numbers, dots and hyphens are permitted.");
             },
-
             issue =>
             {
                 issue.Member.Should().Be("Fodder[0].Source");
