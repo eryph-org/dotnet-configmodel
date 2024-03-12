@@ -38,7 +38,15 @@ public class CatletConfigValidationsTests
                 new CatletDriveConfig()
                 {
                     Name = "sdb"
-                }
+                },
+            },
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "my-fodder",
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                },
             },
         };
 
@@ -75,8 +83,8 @@ public class CatletConfigValidationsTests
                 {
                     Name = "my fodder",
                     Source = "invalid source"
-                }
-            }
+                },
+            },
         };
 
         var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);

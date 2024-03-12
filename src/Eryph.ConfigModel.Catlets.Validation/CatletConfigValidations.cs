@@ -64,7 +64,7 @@ public static  class CatletConfigValidations
         guard(memorySize >= 128, Error.New("The memory size must be least 128 MB.")).ToValidation()
         // For Linux guests, dynamic memory only works reliably when the memory size is a multiple of 128 MB.
         | guard(memorySize % 128 == 0, Error.New("The memory size must be a multiple of 128 MB.")).ToValidation()
-        | guardnot(memorySize > 12 * 1024 * 1024, Error.New("The memory size must be at most 12 TB,"))
+        | guardnot(memorySize > 12 * 1024 * 1024, Error.New("The memory size must be at most 12 TB."))
             .ToValidation();
 
     public static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
