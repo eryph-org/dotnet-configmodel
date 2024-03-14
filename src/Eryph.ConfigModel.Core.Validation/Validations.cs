@@ -80,6 +80,18 @@ public static class Validations
             .ToValidation()
         select value;
 
+    public static Validation<Error, string> ValidateFileName(
+        string? value,
+        string valueName) =>
+        from nonEmptyValue in ValidateNotEmpty(value, valueName)
+        from _ in guardnot(Path.GetInvalidFileNameChars().Intersect(nonEmptyValue).Any(),
+                          Error.New($"The {valueName} must be a valid file name but contains invalid characters."))
+                      .ToValidation()
+                  | guardnot(nonEmptyValue.Length > 255,
+                          Error.New($"The {valueName} must be a valid file name but contains more than 255 characters."))
+                      .ToValidation()
+        select value;
+
     private static string JoinItems(
         string lastSeparator,
         Seq<Option<string>> names) =>
@@ -110,6 +122,9 @@ public static class Validations<T>
 
     public static Validation<Error, string> ValidatePath(string? value) =>
         Validations.ValidatePath(value, Name);
+
+    public static Validation<Error, string> ValidateFileName(string? value) =>
+        Validations.ValidateFileName(value, Name);
 }
 
 #nullable restore
