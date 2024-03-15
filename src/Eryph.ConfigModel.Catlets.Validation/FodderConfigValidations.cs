@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
+using JetBrains.Annotations;
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -28,22 +29,16 @@ internal static class FodderConfigValidations
         | ValidateProperty(toValidate, c => c.Secret,
             s => ValidateWhenAllowed(s, toValidate, Success<Error, bool?>, "secret flag"), path);
 
-    private static Validation<Error, string> ValidateWhenAllowed(
-        string value,
-        FodderConfig config,
-        Func<string, Validation<Error, string>> validate,
-        string valueName) =>
-        ValidateWhenAllowed<string>(notEmpty(value) ? value : null, config, validate, valueName);
-
     private static Validation<Error, T> ValidateWhenAllowed<T>(
         T value,
         FodderConfig config,
         Func<T, Validation<Error, T>> validate,
         string valueName) =>
-        from _ in guardnot(value is not null && config.Remove.GetValueOrDefault(),
+        from valueIsNotEmpty in Success<Error, bool>(value is not null && (value is not string s || notEmpty(s)))
+        from _ in guardnot(valueIsNotEmpty && config.Remove.GetValueOrDefault(),
                           Error.New($"The {valueName} must not be specified when the fodder is removed."))
                       .ToValidation()
-                  | guardnot(value is not null && notEmpty(config.Source),
+                  | guardnot(valueIsNotEmpty && notEmpty(config.Source),
                           Error.New($"The {valueName} must not be specified when the fodder is a reference."))
                       .ToValidation()
         from __ in validate(value)
@@ -52,14 +47,14 @@ internal static class FodderConfigValidations
     private static Validation<Error, string> ValidateFodderType(
         string fodderType) =>
         from _ in guard(fodderType
-                    is "include-url"
-                    or "include-once-url"
-                    or "cloud-config-archive"
-                    or "upstart-job"
+                    is "cloud-boothook"
                     or "cloud-config"
+                    or "cloud-config-archive"
+                    or "include-once-url"
+                    or "include-url"
                     or "part-handler"
                     or "shellscript"
-                    or "cloud-boothook",
+                    or "upstart-job",
                 Error.New("The fodder type is not supported."))
             .ToValidation()
         select fodderType;
