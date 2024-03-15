@@ -22,8 +22,8 @@ public class FodderGeneConfigValidationsTests
                 new FodderConfig
                 {
                     Source = "gene:acme/acme-linux/latest:fodder",
-                }
-            }
+                },
+            },
         };
 
         var result = ValidateFodderGeneConfig(config);
@@ -55,4 +55,30 @@ public class FodderGeneConfigValidationsTests
                 issue.Message.Should().Be("The list must have 1 or more entries.");
             });
     }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_AddedFodderWithoutContent_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Fodder = new[]
+            {
+                new FodderConfig
+                {
+                    Name = "test-fodder",
+                },
+            },
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0]");
+                issue.Message.Should().Be("The content must be specified when adding fodder.");
+            });
+    }
+
 }

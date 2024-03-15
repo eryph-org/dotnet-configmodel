@@ -68,8 +68,13 @@ public static  class CatletConfigValidations
         | guardnot(memorySize > 12 * 1024 * 1024, Error.New("The memory size must be at most 12 TB."))
             .ToValidation();
 
-    public static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
+    private static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
         FodderConfig toValidate,
         string path = "") =>
-        FodderConfigValidations.ValidateFodderConfig(toValidate, path);
+        FodderConfigValidations.ValidateFodderConfig(toValidate, path)
+        | guard(toValidate.Remove.GetValueOrDefault()
+                || notEmpty(toValidate.Content)
+                || notEmpty(toValidate.Source),
+                new ValidationIssue(path, "The content or source must be specified when adding fodder."))
+            .ToValidation();
 }

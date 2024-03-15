@@ -20,28 +20,28 @@ internal static class FodderConfigValidations
         ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Source, GeneIdentifier.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Type,
-            s => ValidateIfAllowed(s, toValidate, ValidateFodderType, "fodder type"), path)
+            s => ValidateWhenAllowed(s, toValidate, ValidateFodderType, "fodder type"), path)
         | ValidateProperty(toValidate, c => c.Content,
-            s => ValidateIfAllowed(s, toValidate, Success<Error, string>, "content"), path)
+            s => ValidateWhenAllowed(s, toValidate, Success<Error, string>, "content"), path)
         | ValidateProperty(toValidate, c => c.FileName,
-            s => ValidateIfAllowed(s, toValidate, s2 => ValidateFileName(s2, "file name"), "file name"), path)
+            s => ValidateWhenAllowed(s, toValidate, s2 => ValidateFileName(s2, "file name"), "file name"), path)
         | ValidateProperty(toValidate, c => c.Secret,
-            s => ValidateIfAllowed(s, toValidate, Success<Error, bool?>, "secret"), path);
+            s => ValidateWhenAllowed(s, toValidate, Success<Error, bool?>, "secret flag"), path);
 
-    private static Validation<Error, string> ValidateIfAllowed(
+    private static Validation<Error, string> ValidateWhenAllowed(
         string value,
         FodderConfig config,
         Func<string, Validation<Error, string>> validate,
         string valueName) =>
-        ValidateIfAllowed<string>(notEmpty(value) ? value : null, config, validate, valueName);
+        ValidateWhenAllowed<string>(notEmpty(value) ? value : null, config, validate, valueName);
 
-    private static Validation<Error, T> ValidateIfAllowed<T>(
+    private static Validation<Error, T> ValidateWhenAllowed<T>(
         T value,
         FodderConfig config,
         Func<T, Validation<Error, T>> validate,
         string valueName) =>
         from _ in guardnot(value is not null && config.Remove.GetValueOrDefault(),
-                          Error.New($"The {valueName} must not be specified when the remove flag is used."))
+                          Error.New($"The {valueName} must not be specified when the fodder is removed."))
                       .ToValidation()
                   | guardnot(value is not null && notEmpty(config.Source),
                           Error.New($"The {valueName} must not be specified when the fodder is a reference."))
