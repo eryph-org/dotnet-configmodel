@@ -61,6 +61,21 @@ public class ValidationsTests
     }
 
     [Theory]
+    [InlineData("not|a|path")]
+    [InlineData("not?a?path")]
+    [InlineData("not*a*path")]
+    [InlineData("not\"a\"path")]
+    [InlineData("not<a>path")]
+    public void ValidateWindowsPath_PathWithInvalidCharacters_ReturnsFail(string path)
+    {
+        var result = Validations.ValidateWindowsPath(path, "path");
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            error => error.Message.Should()
+                .Be("The path must be a valid Windows path but contains invalid characters."));
+    }
+
+    [Theory]
     [InlineData(@"abc\def")]
     [InlineData(@"Z:abc\def")]
     public void ValidateWindowsPath_NotRooted_ReturnsFail(string path)
