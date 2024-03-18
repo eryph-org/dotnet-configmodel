@@ -147,7 +147,7 @@ public static class Validations<T>
         string value, bool allowHyphens, bool allowDots, bool allowSpaces) =>
         Validations.ValidateCharacters(value, Name, allowHyphens, allowDots, allowSpaces);
 
-    public static Validation<Error, string> ValidatePath(string? value) =>
+    public static Validation<Error, string> ValidateWindowsPath(string? value) =>
         Validations.ValidateWindowsPath(value, Name);
 
     public static Validation<Error, string> ValidateFileName(string? value) =>
