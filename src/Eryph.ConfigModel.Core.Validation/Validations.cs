@@ -85,7 +85,7 @@ public static class Validations
     public static Validation<Error, string> ValidateWindowsPath(
         string? value,
         string valueName) =>
-        // This code in intentionally does not use any System.IO methods
+        // This code intentionally does not use any System.IO methods
         // as their behavior is OS dependent.
         from nonEmptyValue in ValidateNotEmpty(value, valueName)
         from _ in guardnot(WindowsPath.GetInvalidPathChars().Intersect(nonEmptyValue).Any(),
@@ -109,7 +109,9 @@ public static class Validations
         string? value,
         string valueName) =>
         from nonEmptyValue in ValidateNotEmpty(value, valueName)
-        from _ in guardnot(Path.GetInvalidFileNameChars().Intersect(nonEmptyValue).Any(),
+        // Unix OS might allow additional characters in file names, but we limit the user
+        // to the more restrictive list of characters which is allowed for Windows file names.
+        from _ in guardnot(WindowsPath.GetInvalidFileNameChars().Intersect(nonEmptyValue).Any(),
                           Error.New($"The {valueName} must be a valid file name but contains invalid characters."))
                       .ToValidation()
                   | guardnot(nonEmptyValue.Length > 255,
