@@ -14,6 +14,8 @@ namespace Eryph.ConfigModel;
 
 public static class Validations
 {
+    private static readonly Regex DriveRootRegex = new(@"^[a-zA-Z]:\\", RegexOptions.Compiled);
+
     public static Validation<Error, string> ValidateNotEmpty(
         string? value,
         string valueName) =>
@@ -54,30 +56,53 @@ public static class Validations
                               Some("spaces").Filter(_ => allowSpaces)))
                           + " are permitted."))
             .ToValidation()
-        from __ in guardnot(value is not null
-                            && (value.Contains("..") || value.Contains("--") || value.Contains("  ")),
-                Error.New($"The {valueName} cannot contain consecutive "
-                          + JoinItems("or", Seq(
-                              Some("dots").Filter(_ => allowDots),
-                              Some("hyphens").Filter(_ => allowHyphens),
-                              Some("spaces").Filter(_ => allowSpaces)))
-                          + "."))
-            .ToValidation()
+        from __ in guardnot(notEmpty(value) && (value.Contains("..") || value.Contains("--") || value.Contains("  ")),
+                           Error.New($"The {valueName} cannot contain consecutive "
+                              + JoinItems("or", Seq(
+                                  Some("dots").Filter(_ => allowDots),
+                                  Some("hyphens").Filter(_ => allowHyphens),
+                                  Some("spaces").Filter(_ => allowSpaces)))
+                              + "."))
+                       .ToValidation()
+                   | guardnot(notEmpty(value) && value[0] is '.' or '-' or ' ',
+                           Error.New($"The {valueName} cannot start with a "
+                              + JoinItems("or", Seq(
+                                  Some("dot").Filter(_ => allowDots),
+                                  Some("hyphen").Filter(_ => allowHyphens),
+                                  Some("space").Filter(_ => allowSpaces)))
+                              + "."))
+                       .ToValidation()
+                   | guardnot(notEmpty(value) && value.Last() is '.' or '-' or ' ',
+                           Error.New($"The {valueName} cannot end with a "
+                              + JoinItems("or", Seq(
+                                  Some("dot").Filter(_ => allowDots),
+                                  Some("hyphen").Filter(_ => allowHyphens),
+                                  Some("space").Filter(_ => allowSpaces)))
+                              + "."))
+                       .ToValidation()
         select value;
 
-    public static Validation<Error, string> ValidatePath(
+    public static Validation<Error, string> ValidateWindowsPath(
         string? value,
         string valueName) =>
+        // This code in intentionally does not use any System.IO methods
+        // as their behavior is OS dependent.
         from nonEmptyValue in ValidateNotEmpty(value, valueName)
-        from _ in guardnot(Path.GetInvalidPathChars().Intersect(nonEmptyValue).Any(),
-                          Error.New($"The {valueName} must be a valid path but contains invalid characters."))
+        from _ in guardnot(WindowsPath.GetInvalidPathChars().Intersect(nonEmptyValue).Any(),
+                          Error.New($"The {valueName} must be a valid Windows path but contains invalid characters."))
+                      .ToValidation()
+                  | guardnot(nonEmptyValue.Contains('/'),
+                          Error.New($"The {valueName} must only contain Windows directory separators."))
                       .ToValidation()
                   | guardnot(nonEmptyValue.Length > 260,
-                          Error.New($"The {valueName} must be a valid path but contains more than 260 characters."))
+                          Error.New($"The {valueName} must be a valid Windows path but contains more than 260 characters."))
                       .ToValidation()
-        from __ in guard(Path.GetPathRoot(nonEmptyValue) is not null,
-                Error.New($"The {valueName} must be a fully-qualified path but it is not."))
-            .ToValidation()
+                  | guard(nonEmptyValue.StartsWith(@"\\") || DriveRootRegex.IsMatch(nonEmptyValue),
+                          Error.New($"The {valueName} must be a fully-qualified path."))
+                      .ToValidation()
+                  | guardnot(nonEmptyValue.Contains(@"\.\") || nonEmptyValue.Contains(@"\..\"),
+                          Error.New($"The {valueName} must be a path without relative segments."))
+                      .ToValidation()
         select value;
 
     public static Validation<Error, string> ValidateFileName(
@@ -121,7 +146,7 @@ public static class Validations<T>
         Validations.ValidateCharacters(value, Name, allowHyphens, allowDots, allowSpaces);
 
     public static Validation<Error, string> ValidatePath(string? value) =>
-        Validations.ValidatePath(value, Name);
+        Validations.ValidateWindowsPath(value, Name);
 
     public static Validation<Error, string> ValidateFileName(string? value) =>
         Validations.ValidateFileName(value, Name);

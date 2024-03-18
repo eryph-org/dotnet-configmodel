@@ -35,7 +35,7 @@ public static  class CatletConfigValidations
         | ValidateProperty(toValidate, c => c.Source, source =>
             source.StartsWith("gene:")
                 ? GeneIdentifier.NewValidation(source).Map(_ => unit)
-                : Validations.ValidatePath(source, "source").Map(_ => unit)
+                : Validations.ValidateWindowsPath(source, "source").Map(_ => unit)
                     .ToEither()
                     .MapLeft(errors => Error.New("The source must be a valid gene identifier or path.", Error.Many(errors)))
                     .ToValidation(),
