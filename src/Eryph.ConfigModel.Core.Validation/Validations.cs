@@ -97,12 +97,12 @@ public static class Validations
                   | guardnot(nonEmptyValue.Length > 260,
                           Error.New($"The {valueName} must be a valid Windows path but contains more than 260 characters."))
                       .ToValidation()
-                  | guard(nonEmptyValue.StartsWith(@"\\") || DriveRootRegex.IsMatch(nonEmptyValue),
-                          Error.New($"The {valueName} must be a fully-qualified path."))
-                      .ToValidation()
-                  | guardnot(nonEmptyValue.Contains(@"\.\") || nonEmptyValue.Contains(@"\..\"),
-                          Error.New($"The {valueName} must be a path without relative segments."))
-                      .ToValidation()
+        from __ in guard(nonEmptyValue.StartsWith(@"\\") || DriveRootRegex.IsMatch(nonEmptyValue),
+                           Error.New($"The {valueName} must be a fully-qualified path."))
+                       .ToValidation()
+                   | guardnot(nonEmptyValue.Contains(@"\.\") || nonEmptyValue.Contains(@"\..\"),
+                           Error.New($"The {valueName} must be a path without relative segments."))
+                       .ToValidation()
         select value;
 
     public static Validation<Error, string> ValidateFileName(
