@@ -5,6 +5,7 @@ using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
 using LanguageExt;
 using LanguageExt.Common;
+
 using static LanguageExt.Prelude;
 using static Dbosoft.Functional.Validations.ComplexValidations;
 
@@ -34,7 +35,7 @@ public static  class CatletConfigValidations
         | ValidateProperty(toValidate, c => c.Source, source =>
             source.StartsWith("gene:")
                 ? GeneIdentifier.NewValidation(source).Map(_ => unit)
-                : Validations.ValidatePath(source, "source").Map(_ => unit)
+                : Validations.ValidateWindowsPath(source, "source").Map(_ => unit)
                     .ToEither()
                     .MapLeft(errors => Error.New("The source must be a valid gene identifier or path.", Error.Many(errors)))
                     .ToValidation(),
@@ -67,9 +68,13 @@ public static  class CatletConfigValidations
         | guardnot(memorySize > 12 * 1024 * 1024, Error.New("The memory size must be at most 12 TB."))
             .ToValidation();
 
-    public static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
+    private static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
         FodderConfig toValidate,
         string path = "") =>
-        ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path)
-        | ValidateProperty(toValidate, c => c.Source, GeneIdentifier.NewValidation, path);
+        FodderConfigValidations.ValidateFodderConfig(toValidate, path)
+        | guard(toValidate.Remove.GetValueOrDefault()
+                || notEmpty(toValidate.Content)
+                || notEmpty(toValidate.Source),
+                new ValidationIssue(path, "The content or source must be specified when adding fodder."))
+            .ToValidation();
 }

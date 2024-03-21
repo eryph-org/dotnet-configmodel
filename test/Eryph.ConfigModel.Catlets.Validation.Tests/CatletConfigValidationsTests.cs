@@ -133,4 +133,28 @@ public class CatletConfigValidationsTests
                     .Be("The gene identifier is malformed. It must be gene:geneset:genename.");
             });
     }
+
+    [Fact]
+    public void ValidateCatletConfig_AddedFodderWithoutContentOrSource_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "test-fodder",
+                },
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0]");
+                issue.Message.Should().Be("The content or source must be specified when adding fodder.");
+            });
+    }
 }
