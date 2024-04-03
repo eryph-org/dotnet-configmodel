@@ -20,6 +20,7 @@ namespace Eryph.ConfigModel.Networks.Converters
             {
                 Name = GetStringProperty(dictionary, nameof(IpPoolConfig.Name)),
                 FirstIp = GetStringProperty(dictionary, nameof(IpPoolConfig.FirstIp)),
+                NextIp = GetStringProperty(dictionary, nameof(IpPoolConfig.NextIp)),
                 LastIp = GetStringProperty(dictionary, nameof(IpPoolConfig.LastIp))
             };
         }

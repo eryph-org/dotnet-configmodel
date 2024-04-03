@@ -29,7 +29,8 @@ public class ConverterTestBase
         config.Networks?[0].Subnets?[0].IpPools?[0].Name.Should().Be("pool_name");
         config.Networks?[0].Subnets?[0].IpPools?[0].FirstIp.Should().Be("192.168.2.10");
         config.Networks?[0].Subnets?[0].IpPools?[0].LastIp.Should().Be("192.168.2.100");
-        
+        config.Networks?[0].Subnets?[0].IpPools?[0].NextIp.Should().Be("192.168.2.20");
+
         config.Networks?[0].Provider.Should().NotBeNull();
         config.Networks?[0].Provider?.Name.Should().Be("default");
         config.Networks?[0].Provider?.Subnet.Should().Be("provider_subnet");
