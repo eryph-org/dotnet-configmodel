@@ -12,5 +12,8 @@ namespace Eryph.ConfigModel.Networks
         
         [PrivateIdentifier]
         public string? LastIp { get; set; }
+
+        [PrivateIdentifier]
+        public string? NextIp { get; set; }
     }
 }

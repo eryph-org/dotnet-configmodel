@@ -22,7 +22,8 @@ public static class Samples
             {
               ""name"": ""pool_name"",
               ""firstIp"": ""192.168.2.10"",
-              ""lastIp"": ""192.168.2.100""
+              ""lastIp"": ""192.168.2.100"",
+              ""nextIp"": ""192.168.2.20""
             }
           ],
           ""dnsServers"": [
@@ -60,6 +61,7 @@ networks:
     - name: pool_name
       first_ip: 192.168.2.10
       last_ip: 192.168.2.100
+      next_ip: 192.168.2.20
     dns_servers:
     - 1.2.3.4
     - 5.6.7.8
