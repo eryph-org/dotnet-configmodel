@@ -30,6 +30,7 @@ public static class Samples
             ""1.2.3.4"",
             ""5.6.7.8""
           ],
+          ""dnsDomain"": ""jabba.beng"",
           ""mtu"": 1300
         }
       ]
@@ -65,6 +66,7 @@ networks:
     dns_servers:
     - 1.2.3.4
     - 5.6.7.8
+    dns_domain: jabba.beng
     mtu: 1300
 - name: default
   environment: dev

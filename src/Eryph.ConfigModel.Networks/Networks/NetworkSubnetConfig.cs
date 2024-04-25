@@ -13,6 +13,8 @@ namespace Eryph.ConfigModel.Networks
         public IpPoolConfig[]? IpPools { get; set; }
         
         public string[]? DnsServers { get; set; }
+        public string? DnsDomain { get; set; }
+
         public int? Mtu  { get; set; }
     }
 }
