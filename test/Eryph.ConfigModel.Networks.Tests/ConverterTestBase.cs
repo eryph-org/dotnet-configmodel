@@ -23,6 +23,9 @@ public class ConverterTestBase
         config.Networks?[0].Subnets?[0].DnsServers.Should().NotBeNull();
         config.Networks?[0].Subnets?[0].DnsServers.Should().HaveCount(2);
         config.Networks?[0].Subnets?[0].Mtu.Should().Be(1300);
+        // ReSharper disable StringLiteralTypo
+        config.Networks?[0].Subnets?[0].DnsDomain.Should().Be("jabba.beng");
+        // ReSharper restore StringLiteralTypo
 
         config.Networks?[0].Subnets?[0].IpPools.Should().NotBeNull();
         config.Networks?[0].Subnets?[0].IpPools.Should().HaveCount(1);
