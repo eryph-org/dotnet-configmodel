@@ -11,6 +11,14 @@ namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes
     {
 
         private const string SampleYaml1 = @"name: fodder1
+variables:
+- name: first
+  value: first value
+- name: second
+  type: Boolean
+  value: true
+  secret: true
+  required: true
 fodder:
 - name: admin-windows
   type: cloud-config

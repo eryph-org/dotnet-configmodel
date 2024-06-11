@@ -88,6 +88,19 @@ public class JsonConverterTests : ConverterTestBase
       ""fileName"": ""filename"",
       ""secret"": true
     }}
+  ],
+  ""variables"": [
+    {{
+      ""name"": ""first"",
+      ""value"": ""first value""
+    }},
+    {{
+      ""name"": ""second"",
+      ""type"": ""Boolean"",
+      ""value"": ""true"",
+      ""secret"": true,
+      ""required"": true
+    }}
   ]
 }}";
     [Fact]

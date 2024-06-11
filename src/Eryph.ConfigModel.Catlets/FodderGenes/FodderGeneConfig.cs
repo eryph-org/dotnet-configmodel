@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Linq;
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Variables;
 using JetBrains.Annotations;
 
 namespace Eryph.ConfigModel.FodderGenes;
 
 [PublicAPI]
-public class FodderGeneConfig : ICloneable, IHasFodderConfig
+public class FodderGeneConfig : ICloneable, IHasFodderConfig, IHasVariableConfig, ICloneableConfig<FodderGeneConfig>
 {
     public string? Version { get; set; }
+
     public string? Name { get; set; }
+
+    public VariableConfig[]? Variables { get; set; }
 
     public FodderConfig[]? Fodder { get; set; }
 
@@ -20,6 +24,7 @@ public class FodderGeneConfig : ICloneable, IHasFodderConfig
             Version = Version,
             Name = Name,
             Fodder = Fodder?.Select(x => x.Clone()).ToArray(),
+            Variables = Variables?.Select(x => x.Clone()).ToArray(),
         };
     }
 

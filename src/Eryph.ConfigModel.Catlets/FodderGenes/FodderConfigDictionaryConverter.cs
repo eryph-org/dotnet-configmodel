@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Eryph.ConfigModel.Catlets.Converters;
 using Eryph.ConfigModel.Converters;
+using Eryph.ConfigModel.Variables;
 
 namespace Eryph.ConfigModel.FodderGenes;
 
 public static class FodderGeneConfigDictionaryConverter
 {
-
     public static FodderGeneConfig Convert(IDictionary<object, object>? dictionary, bool looseMode = false)
     {
         if (dictionary == null)
@@ -17,6 +17,10 @@ public static class FodderGeneConfigDictionaryConverter
             new FodderGeneConfigConverter(),
             new FodderConfigConverter<FodderGeneConfig>(),
             new FodderConfigConverter<FodderGeneConfig>.List(),
+            new VariableConfigConverter<FodderGeneConfig>(),
+            new VariableConfigConverter<FodderGeneConfig>.List(),
+            new VariableBindingConfigConverter<FodderGeneConfig>(),
+            new VariableBindingConfigConverter<FodderGeneConfig>.List(),
         };
 
         var context = new ConverterContext<FodderGeneConfig>(
@@ -24,6 +28,4 @@ public static class FodderGeneConfigDictionaryConverter
 
         return context.Convert<FodderGeneConfig>(dictionary) ?? new FodderGeneConfig();
     }
-
-
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Eryph.ConfigModel.Converters;
+using Eryph.ConfigModel.Variables;
 
 namespace Eryph.ConfigModel.Catlets.Converters
 {
@@ -31,6 +32,7 @@ namespace Eryph.ConfigModel.Catlets.Converters
             context.Target.Capabilities = context.ConvertList<CatletCapabilityConfig>(dictionary);
             context.Target.Networks = context.ConvertList<CatletNetworkConfig>(dictionary);
             context.Target.Fodder = context.ConvertList<FodderConfig>(dictionary);
+            context.Target.Variables = context.ConvertList<VariableConfig>(dictionary);
 
             return context.Target;
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Converters;
+using Eryph.ConfigModel.Variables;
 
 namespace Eryph.ConfigModel.FodderGenes;
 
@@ -20,6 +21,7 @@ public class FodderGeneConfigConverter : DictionaryConverterBase<FodderGeneConfi
         };
 
         context.Target.Fodder = context.ConvertList<FodderConfig>(dictionary);
+        context.Target.Variables = context.ConvertList<VariableConfig>(dictionary);
 
         return context.Target;
     }

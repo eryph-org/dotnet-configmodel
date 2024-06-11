@@ -3,12 +3,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Eryph.ConfigModel.Variables;
 using JetBrains.Annotations;
 
 namespace Eryph.ConfigModel.Catlets
 {
     [PublicAPI]
-    public class FodderConfig: ICloneable
+    public class FodderConfig: ICloneable, ICloneableConfig<FodderConfig>
     {
         public string? Name { get; set; }
         public bool? Remove { get; set; }
@@ -21,6 +22,8 @@ namespace Eryph.ConfigModel.Catlets
         public string? FileName { get; set; }
         
         public bool? Secret { get; set; }
+
+        public VariableBindingConfig[]? Variables { get; set; }
 
         public FodderConfig Clone()
         {

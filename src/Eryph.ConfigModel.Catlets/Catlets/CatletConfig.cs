@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using Eryph.ConfigModel.Variables;
 using JetBrains.Annotations;
 
 namespace Eryph.ConfigModel.Catlets
 {
     [PublicAPI]
-    public class CatletConfig: ICloneable, IHasFodderConfig
+    public class CatletConfig: ICloneable, IHasFodderConfig, IHasVariableConfig, ICloneableConfig<CatletConfig>
     {
         public string? Version { get; set; }
         public string? Project { get; set; }
@@ -30,6 +31,8 @@ namespace Eryph.ConfigModel.Catlets
         
         public FodderConfig[]? Fodder { get; set; }
 
+        public VariableConfig[]? Variables { get; set; }
+
         public CatletConfig Breed(CatletConfig child, string? parentReference= default)
         {
             var newConfig = Clone();
@@ -50,6 +53,7 @@ namespace Eryph.ConfigModel.Catlets
             newConfig.Capabilities = CatletCapabilityConfig.Breed(this, child);
             newConfig.Networks = CatletNetworkConfig.Breed(this, child);
             newConfig.Fodder = FodderConfig.Breed(this, child, parentReference);
+            newConfig.Variables = VariableConfig.Breed(this, child);
 
             return newConfig;
         }
@@ -74,7 +78,8 @@ namespace Eryph.ConfigModel.Catlets
                 Fodder = Fodder?.Select(x=>x.Clone()).ToArray(),
                 NetworkAdapters = NetworkAdapters?
                     .Select(x=>x.Clone()).ToArray(),
-                Memory = Memory?.Clone()
+                Memory = Memory?.Clone(),
+                Variables = Variables?.Select(x=>x.Clone()).ToArray(),
             };
         }
 

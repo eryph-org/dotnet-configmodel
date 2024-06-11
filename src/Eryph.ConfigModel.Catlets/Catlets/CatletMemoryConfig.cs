@@ -5,7 +5,7 @@ namespace Eryph.ConfigModel.Catlets
 {
     [PublicAPI]
 
-    public class CatletMemoryConfig : ICloneable
+    public class CatletMemoryConfig : ICloneable, ICloneableConfig<CatletMemoryConfig>
     {
         public int? Startup { get; set; }
 

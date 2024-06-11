@@ -1,4 +1,5 @@
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Variables;
 using FluentAssertions;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
@@ -71,5 +72,24 @@ public class ConverterTestBase
         config.Fodder?[1].Secret.Should().Be(true);
         config.Fodder?[1].Content.Should().Contain("- name: Admin");
         config.Fodder?[1].Content.Should().NotEndWith("\0");
+
+        config.Variables.Should().SatisfyRespectively(
+            variable =>
+            {
+                variable.Name.Should().Be("first");
+                variable.Type.Should().BeNull();
+                variable.Value.Should().Be("first value");
+                variable.Required.Should().BeNull();
+                variable.Secret.Should().BeNull();
+            },
+            variable =>
+            {
+                variable.Name.Should().Be("second");
+                variable.Type.Should().Be(VariableType.Boolean);
+                variable.Value.Should().Be("true");
+                variable.Required.Should().BeTrue();
+                variable.Secret.Should().BeTrue();
+            });
+
     }
 }

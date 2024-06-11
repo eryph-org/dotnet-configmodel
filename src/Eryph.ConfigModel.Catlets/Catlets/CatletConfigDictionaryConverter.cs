@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Eryph.ConfigModel.Catlets.Converters;
 using Eryph.ConfigModel.Converters;
+using Eryph.ConfigModel.Variables;
 
 namespace Eryph.ConfigModel.Catlets
 {
@@ -33,7 +34,11 @@ namespace Eryph.ConfigModel.Catlets
                 looseMode
                     ? new LooseCatletCapabilitiesConfigConverter()
                     : new StrictCatletCapabilityConfigConverter(),
-                new StrictCatletCapabilityConfigConverter.List()
+                new StrictCatletCapabilityConfigConverter.List(),
+                new VariableConfigConverter<CatletConfig>(),
+                new VariableConfigConverter<CatletConfig>.List(),
+                new VariableBindingConfigConverter<CatletConfig>(),
+                new VariableBindingConfigConverter<CatletConfig>.List(),
             };
 
             var context = new ConverterContext<CatletConfig>(

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace Eryph.ConfigModel.Catlets
 {
     [PublicAPI]
-    public class CatletCpuConfig: ICloneable
+    public class CatletCpuConfig: ICloneable, ICloneableConfig<CatletCpuConfig>
     {
         public int? Count { get; set; }
 

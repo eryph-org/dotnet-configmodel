@@ -13,6 +13,19 @@ public class JsonConverterTests : ConverterTestBase
     private const string SampleJson1 = """
                                        {
                                          "name": "fodder1",
+                                         "variables": [
+                                           {
+                                             "name": "first",
+                                             "value": "first value"
+                                           },
+                                           {
+                                             "name": "second",
+                                             "type": "Boolean",
+                                             "value": "true",
+                                             "secret": true,
+                                             "required": true
+                                           }
+                                         ],
                                          "fodder": [
                                            {
                                              "name": "admin-windows",

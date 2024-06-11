@@ -65,6 +65,14 @@ fodder:
         passwd: InitialPassw0rd
   file_name: filename
   secret: true
+variables:
+- name: first
+  value: first value
+- name: second
+  type: Boolean
+  value: true
+  secret: true
+  required: true
 ";
 
         private const string SampleYaml2 = @"parent: dbosoft/winsrv2019-standard/20220324";

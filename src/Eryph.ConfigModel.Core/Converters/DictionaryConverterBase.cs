@@ -92,5 +92,20 @@ namespace Eryph.ConfigModel.Converters
 
             return value;
         }
+
+        protected static T? GetEnumProperty<T>(
+            IDictionary<object, object> dictionary,
+            params string[] propertyNames)
+            where T : struct, Enum
+        {
+            var stringValue = GetStringProperty(dictionary, propertyNames);
+            if (stringValue is null)
+                return null;
+
+            if (!Enum.TryParse<T>(stringValue, true, out var value))
+                throw new InvalidConfigModelException($"The value for {propertyNames[0]} is invalid");
+
+            return value;
+        }
     }
 }
