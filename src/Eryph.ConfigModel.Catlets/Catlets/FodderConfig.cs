@@ -89,6 +89,7 @@ namespace Eryph.ConfigModel.Catlets
                     fodder.Type = childFodder.Type ?? fodder.Type;
                     fodder.FileName = childFodder.FileName ?? fodder.FileName;
                     fodder.Remove = childFodder.Remove ?? fodder.Remove;
+                    fodder.Variables = VariableBindingConfig.Breed(fodder, childFodder);
                 }
             }
 
