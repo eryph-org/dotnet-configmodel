@@ -10,82 +10,94 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
     public class YamlConverterTests : ConverterTestBase
     {
 
-        private const string SampleYaml1 = @"project: homeland
-name: cinc-windows
-location: cinc
-hostname: cinc-host
-environment: world
-store: home
-parent: dbosoft/winsrv2019-standard/20220324
-cpu:
-  count: 4
-memory:
-  startup: 1024
-  minimum: 512
-  maximum: 4096
-drives:
-- name: data
-  mutation: Overwrite
-  location: cinc-shared
-  store: ds2
-  source: some_template
-  size: 1
-  type: SharedVHD
-network_adapters:
-- name: eth0
-  mac_address: 4711
-- name: eth1
-  mutation: Remove
-  mac_address: 4712
-capabilities:
-- name: nested_virtualization
-- name: secure_boot
-  mutation: Remove
-  details:
-  - tpm
-  - shielded
-networks:
-- name: default
-  adapter_name: eth0
-  subnet_v4:
-    name: other
-    ip_pool: other_pool
-  subnet_v6:
-    name: otherv6
-- name: backup
-  adapter_name: eth1
-fodder:
-- name: first
-- name: admin-windows
-  type: cloud-config
-  content: >-
-    users:
-      - name: Admin
-        groups: [ ""Administrators"" ]
-        passwd: InitialPassw0rd
-  file_name: filename
-  secret: true
-variables:
-- name: first
-  value: first value
-- name: second
-  type: Boolean
-  value: true
-  secret: true
-  required: true
-";
+        private const string SampleYaml1 =
+            """
+            project: homeland
+            name: cinc-windows
+            location: cinc
+            hostname: cinc-host
+            environment: world
+            store: home
+            parent: dbosoft/winsrv2019-standard/20220324
+            cpu:
+              count: 4
+            memory:
+              startup: 1024
+              minimum: 512
+              maximum: 4096
+            drives:
+            - name: data
+              mutation: Overwrite
+              location: cinc-shared
+              store: ds2
+              source: some_template
+              size: 1
+              type: SharedVHD
+            network_adapters:
+            - name: eth0
+              mac_address: 4711
+            - name: eth1
+              mutation: Remove
+              mac_address: 4712
+            capabilities:
+            - name: nested_virtualization
+            - name: secure_boot
+              mutation: Remove
+              details:
+              - tpm
+              - shielded
+            networks:
+            - name: default
+              adapter_name: eth0
+              subnet_v4:
+                name: other
+                ip_pool: other_pool
+              subnet_v6:
+                name: otherv6
+            - name: backup
+              adapter_name: eth1
+            fodder:
+            - name: first
+            - name: admin-windows
+              type: cloud-config
+              content: >-
+                users:
+                  - name: Admin
+                    groups: [ "Administrators" ]
+                    passwd: "{{password}}"
+              file_name: filename
+              secret: true
+              variables:
+              - name: first
+                type: String
+                value: InitialPassw0rd
+                secret: true
+                required: true
+            variables:
+            - name: first
+              value: first value
+            - name: second
+              type: Boolean
+              value: true
+              secret: true
+              required: true
+            
+            """;
 
-        private const string SampleYaml2 = @"parent: dbosoft/winsrv2019-standard/20220324";
+        private const string SampleYaml2 = "parent: dbosoft/winsrv2019-standard/20220324";
 
-        private const string SampleYaml3 = @"
-parent: dbosoft/winsrv2019-standard/20220324  
-cpu: 4
-";
+        private const string SampleYaml3 =
+            """
+            parent: dbosoft/winsrv2019-standard/20220324  
+            cpu: 4
 
-        private const string SampleYaml4 = @"
-capabilities:
-  - nested_virtualization
-";
+            """;
+
+        private const string SampleYaml4 = 
+            """
+            capabilities:
+            - nested_virtualization                         
+            """;
 
         [Fact]
         public void Converts_from_yaml()

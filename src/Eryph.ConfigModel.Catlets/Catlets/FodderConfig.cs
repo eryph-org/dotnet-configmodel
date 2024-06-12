@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 namespace Eryph.ConfigModel.Catlets
 {
     [PublicAPI]
-    public class FodderConfig: ICloneable, ICloneableConfig<FodderConfig>
+    public class FodderConfig: ICloneable, ICloneableConfig<FodderConfig>, IHasVariableConfig
     {
         public string? Name { get; set; }
         public bool? Remove { get; set; }
@@ -23,7 +23,7 @@ namespace Eryph.ConfigModel.Catlets
         
         public bool? Secret { get; set; }
 
-        public VariableBindingConfig[]? Variables { get; set; }
+        public VariableConfig[]? Variables { get; set; }
 
         public FodderConfig Clone()
         {
@@ -35,7 +35,8 @@ namespace Eryph.ConfigModel.Catlets
                 Type = Type,
                 Content = Content,
                 FileName = FileName,
-                Secret = Secret
+                Secret = Secret,
+                Variables = Variables?.Select(x => x.Clone()).ToArray(),
             };
         }
         
@@ -89,7 +90,9 @@ namespace Eryph.ConfigModel.Catlets
                     fodder.Type = childFodder.Type ?? fodder.Type;
                     fodder.FileName = childFodder.FileName ?? fodder.FileName;
                     fodder.Remove = childFodder.Remove ?? fodder.Remove;
-                    fodder.Variables = VariableBindingConfig.Breed(fodder, childFodder);
+                    fodder.Variables = childFodder.Content is not null
+                        ? childFodder.Variables?.Select(x => x.Clone()).ToArray()
+                        : fodder.Variables?.Select(x => x.Clone()).ToArray();
                 }
             }
 

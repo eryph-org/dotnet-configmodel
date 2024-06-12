@@ -37,8 +37,6 @@ namespace Eryph.ConfigModel.Catlets
                 new StrictCatletCapabilityConfigConverter.List(),
                 new VariableConfigConverter<CatletConfig>(),
                 new VariableConfigConverter<CatletConfig>.List(),
-                new VariableBindingConfigConverter<CatletConfig>(),
-                new VariableBindingConfigConverter<CatletConfig>.List(),
             };
 
             var context = new ConverterContext<CatletConfig>(

@@ -19,8 +19,6 @@ public static class FodderGeneConfigDictionaryConverter
             new FodderConfigConverter<FodderGeneConfig>.List(),
             new VariableConfigConverter<FodderGeneConfig>(),
             new VariableConfigConverter<FodderGeneConfig>.List(),
-            new VariableBindingConfigConverter<FodderGeneConfig>(),
-            new VariableBindingConfigConverter<FodderGeneConfig>.List(),
         };
 
         var context = new ConverterContext<FodderGeneConfig>(

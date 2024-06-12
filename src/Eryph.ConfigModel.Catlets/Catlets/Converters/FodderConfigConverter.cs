@@ -23,6 +23,6 @@ public class FodderConfigConverter<TConfig> : DictionaryConverterBase<FodderConf
             FileName = GetStringProperty(dictionary, nameof(FodderConfig.FileName)),
             Secret = GetBoolProperty(dictionary, nameof(FodderConfig.Secret)),
             Remove = GetBoolProperty(dictionary, nameof(FodderConfig.Remove)),
-            Variables = context.ConvertList<VariableBindingConfig>(dictionary),
+            Variables = context.ConvertList<VariableConfig>(dictionary),
         };
 }

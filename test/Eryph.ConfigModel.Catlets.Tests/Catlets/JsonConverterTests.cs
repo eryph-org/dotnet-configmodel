@@ -8,101 +8,113 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
 public class JsonConverterTests : ConverterTestBase
 {
+    private const string SampleJson1 =
+        """
+        {
+          "project": "homeland",
+          "name": "cinc-windows",
+          "location": "cinc",
+          "hostname": "cinc-host",
+          "environment": "world",
+          "store": "home",
+          "parent": "dbosoft/winsrv2019-standard/20220324",
+          "cpu": {
+            "count": 4
+          },
+          "memory": {
+            "startup": 1024,
+            "minimum": 512,
+            "maximum": 4096
+          },
+          "drives": [
+            {
+              "name": "data",
+              "mutation": "Overwrite",
+              "location": "cinc-shared",
+              "store": "ds2",
+              "source": "some_template",
+              "size": 1,
+              "type": "SharedVHD"
+            }
+          ],
+          "networkAdapters": [
+            {
+              "name": "eth0",
+              "macAddress": "4711"
+            },
+            {
+              "name": "eth1",
+              "mutation": "Remove",
+              "macAddress": "4712"
+            }
+          ],
+          "capabilities": [
+            {
+              "name": "nested_virtualization"
+            },
+            {
+              "name": "secure_boot",
+              "mutation": "Remove",
+              "details": [
+                "tpm",
+                "shielded"
+              ]
+            }
+          ],
+          "networks": [
+            {
+              "name": "default",
+              "adapterName": "eth0",
+              "subnetV4": {
+                "name": "other",
+                "ipPool": "other_pool"
+              },
+              "subnetV6": {
+                "name": "other_v6"
+              }
+            },
+            {
+              "name": "backup",
+              "adapterName": "eth1"
+            }
+          ],
+          "fodder": [
+            {
+              "name": "first"
+            },
+            {
+              "name": "admin-windows",
+              "type": "cloud-config",
+              "content": "users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: {{password}}",
+              "fileName": "filename",
+              "secret": true,
+              "variables": [
+                {
+                  "name": "password",
+                  "type": "String",
+                  "value": "InitialPassw0rd",
+                  "secret": true,
+                  "required": true
+                }
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "first",
+              "value": "first value"
+            },
+            {
+              "name": "second",
+              "type": "Boolean",
+              "value": "true",
+              "secret": true,
+              "required": true
+            }
+          ]
+        }
+        """;
 
-    private const string SampleJson1 = $@"{{
-  ""project"": ""homeland"",
-  ""name"": ""cinc-windows"",
-  ""location"": ""cinc"",
-  ""hostname"": ""cinc-host"",
-  ""environment"": ""world"",
-  ""store"": ""home"",
-  ""parent"": ""dbosoft/winsrv2019-standard/20220324"",
-  ""cpu"": {{
-    ""count"": 4
-  }},
-  ""memory"": {{
-    ""startup"": 1024,
-    ""minimum"": 512,
-    ""maximum"": 4096
-  }},
-  ""drives"": [
-    {{
-      ""name"": ""data"",
-      ""mutation"": ""Overwrite"",
-      ""location"": ""cinc-shared"",
-      ""store"": ""ds2"",
-      ""source"": ""some_template"",
-      ""size"": 1,
-      ""type"": ""SharedVHD""
-    }}
-  ],
-  ""networkAdapters"": [
-    {{
-      ""name"": ""eth0"",
-      ""macAddress"": ""4711""
-    }},
-    {{
-      ""name"": ""eth1"",
-      ""mutation"": ""Remove"",
-      ""macAddress"": ""4712""
-    }}
-  ],
-  ""capabilities"": [
-    {{
-      ""name"": ""nested_virtualization""
-    }},
-    {{
-      ""name"": ""secure_boot"",
-      ""mutation"": ""Remove"",
-      ""details"": [
-        ""tpm"",
-        ""shielded""
-      ]
-    }}
-  ],
-  ""networks"": [
-    {{
-      ""name"": ""default"",
-      ""adapterName"": ""eth0"",
-      ""subnetV4"": {{
-        ""name"": ""other"",
-        ""ipPool"": ""other_pool""
-      }},
-      ""subnetV6"": {{
-        ""name"": ""other_v6""
-      }}
-    }},
-    {{
-      ""name"": ""backup"",
-      ""adapterName"": ""eth1""
-    }}
-  ],
-  ""fodder"": [
-    {{
-      ""name"": ""first""
-    }},
-    {{
-      ""name"": ""admin-windows"",
-      ""type"": ""cloud-config"",
-      ""content"": ""users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd"",
-      ""fileName"": ""filename"",
-      ""secret"": true
-    }}
-  ],
-  ""variables"": [
-    {{
-      ""name"": ""first"",
-      ""value"": ""first value""
-    }},
-    {{
-      ""name"": ""second"",
-      ""type"": ""Boolean"",
-      ""value"": ""true"",
-      ""secret"": true,
-      ""required"": true
-    }}
-  ]
-}}";
     [Fact]
     public void Converts_from_json()
     {

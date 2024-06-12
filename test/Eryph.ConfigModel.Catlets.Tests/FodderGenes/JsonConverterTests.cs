@@ -9,38 +9,39 @@ namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
 
 public class JsonConverterTests : ConverterTestBase
 {
+    private const string SampleJson1 =
+        """
+        {
+          "name": "fodder1",
+          "variables": [
+            {
+              "name": "first",
+              "value": "first value"
+            },
+            {
+              "name": "second",
+              "type": "Boolean",
+              "value": "true",
+              "secret": true,
+              "required": true
+            }
+          ],
+          "fodder": [
+            {
+              "name": "admin-windows",
+              "type": "cloud-config",
+              "content": "users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd",
+              "fileName": "filename",
+              "secret": true
+            },
+            {
+              "name": "super-dupa",
+              "type": "cloud-config"
+            }
+          ]
+        }
+        """;
 
-    private const string SampleJson1 = """
-                                       {
-                                         "name": "fodder1",
-                                         "variables": [
-                                           {
-                                             "name": "first",
-                                             "value": "first value"
-                                           },
-                                           {
-                                             "name": "second",
-                                             "type": "Boolean",
-                                             "value": "true",
-                                             "secret": true,
-                                             "required": true
-                                           }
-                                         ],
-                                         "fodder": [
-                                           {
-                                             "name": "admin-windows",
-                                             "type": "cloud-config",
-                                             "content": "users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd",
-                                             "fileName": "filename",
-                                             "secret": true
-                                           },
-                                           {
-                                             "name": "super-dupa",
-                                             "type": "cloud-config"
-                                           }
-                                         ]
-                                       }
-                                       """;
     [Fact]
     public void Converts_from_json()
     {
@@ -62,6 +63,5 @@ public class JsonConverterTests : ConverterTestBase
         };
         var act = ConfigModelJsonSerializer.Serialize(config, copyOptions);
         act.Should().Be(expected);
-
     }
 }
