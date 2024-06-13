@@ -1,3 +1,4 @@
+using Eryph.ConfigModel.Variables;
 using FluentAssertions;
 using FluentAssertions.LanguageExt;
 using LanguageExt.ClassInstances;
@@ -25,6 +26,14 @@ public class CatletConfigValidationsTests
             Project = "my-project",
             Parent = "acme/acme-os/1.0.0",
             Environment = "my-environment",
+            Variables = new[]
+            {
+                new VariableConfig()
+                {
+                    Name = "myVariable",
+                    Value = "my value",
+                },
+            },
             Cpu = new CatletCpuConfig()
             {
                 Count = 1,
@@ -62,6 +71,15 @@ public class CatletConfigValidationsTests
         {
             Project = "my project",
             Environment = "my environment",
+            Variables = new[]
+            {
+                new VariableConfig()
+                {
+                    Name = "my variable",
+                    Type = VariableType.Boolean,
+                    Value = "invalid value",
+                },
+            },
             Cpu = new CatletCpuConfig()
             {
                 Count = -1,
@@ -131,6 +149,18 @@ public class CatletConfigValidationsTests
                 issue.Member.Should().Be("Fodder[0].Source");
                 issue.Message.Should()
                     .Be("The gene identifier is malformed. It must be gene:geneset:genename.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Variables[0].Name");
+                issue.Message.Should()
+                    .Be("The variable name contains invalid characters. Only latin characters and numbers are permitted.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Variables[0].Value");
+                issue.Message.Should()
+                    .Be("The value is not a valid boolean. Only 'true' and 'false' are allowed.");
             });
     }
 
@@ -155,6 +185,30 @@ public class CatletConfigValidationsTests
             {
                 issue.Member.Should().Be("Fodder[0]");
                 issue.Message.Should().Be("The content or source must be specified when adding fodder.");
+            });
+    }
+
+    [Fact]
+    public void ValidateCatletConfig_FodderWithoutNameOrSource_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Content = "test-content",
+                },
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0]");
+                issue.Message.Should().Be("The name or source must be specified.");
             });
     }
 }

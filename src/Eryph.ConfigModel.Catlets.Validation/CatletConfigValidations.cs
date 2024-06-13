@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Variables;
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -23,7 +24,8 @@ public static  class CatletConfigValidations
         | ValidateList(toValidate, c => c.Drives, ValidateCatletDriveConfig, path, minCount: 0, maxCount: 64)
         | ValidateProperty(toValidate, c => c.Cpu, ValidateCatletCpuConfig, path)
         | ValidateProperty(toValidate, c => c.Memory, ValidateCatletMemoryConfig, path)
-        | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path);
+        | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path)
+        | ValidateList(toValidate, c => c.Variables, ValidateVariableConfig, path, minCount: 0, maxCount: 64);
 
     public static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
         CatletDriveConfig toValidate,
@@ -77,4 +79,9 @@ public static  class CatletConfigValidations
                 || notEmpty(toValidate.Source),
                 new ValidationIssue(path, "The content or source must be specified when adding fodder."))
             .ToValidation();
+
+    private static Validation<ValidationIssue, Unit> ValidateVariableConfig(
+        VariableConfig toValidate,
+        string path = "") =>
+        VariableConfigValidations.ValidateVariableConfig(toValidate, path);
 }

@@ -20,6 +20,9 @@ internal static class FodderConfigValidations
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Source, GeneIdentifier.NewValidation, path)
+        | guard(notEmpty(toValidate.Name) || notEmpty(toValidate.Source),
+                new ValidationIssue(path, "The name or source must be specified."))
+            .ToValidation()
         | ValidateProperty(toValidate, c => c.Type,
             s => ValidateWhenAllowed(s, toValidate, ValidateFodderType, "fodder type"), path)
         | ValidateProperty(toValidate, c => c.Content,

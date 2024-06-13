@@ -15,7 +15,7 @@ public class VariableName : EryphName<VariableName>
             from validName in Validations<VariableName>.ValidateCharacters(
                                   value,
                                   allowDots: false,
-                                  allowHyphens: true,
+                                  allowHyphens: false,
                                   allowSpaces: false)
                               | Validations<VariableName>.ValidateLength(value, 1, 50)
             from _ in guardnot(char.IsDigit(validName[0]),

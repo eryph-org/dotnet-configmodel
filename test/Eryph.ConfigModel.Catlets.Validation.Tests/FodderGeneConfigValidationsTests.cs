@@ -21,6 +21,7 @@ public class FodderGeneConfigValidationsTests
             {
                 new FodderConfig
                 {
+                    Name = "test-fodder",
                     Source = "gene:acme/acme-linux/latest:fodder",
                 },
             },
@@ -81,4 +82,28 @@ public class FodderGeneConfigValidationsTests
             });
     }
 
+    [Fact]
+    public void ValidateFodderGeneConfig_FodderWithoutName_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Content = "test-content",
+                },
+            },
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Name");
+                issue.Message.Should().Be("The Name is required.");
+            });
+    }
 }
