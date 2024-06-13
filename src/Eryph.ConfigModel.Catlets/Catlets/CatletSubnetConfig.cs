@@ -1,27 +1,20 @@
 using System;
 using JetBrains.Annotations;
 
-namespace Eryph.ConfigModel.Catlets
+namespace Eryph.ConfigModel.Catlets;
+
+[PublicAPI]
+public class CatletSubnetConfig : ICloneableConfig<CatletSubnetConfig>
 {
-    [PublicAPI]
-    public class CatletSubnetConfig : ICloneable, ICloneableConfig<CatletSubnetConfig>
+    public string? Name { get; set; }
+    public string? IpPool { get; set; }
+
+    public CatletSubnetConfig Clone()
     {
-        public string? Name { get; set; }
-        public string? IpPool { get; set; }
-
-        public CatletSubnetConfig Clone()
+        return new CatletSubnetConfig
         {
-            return new CatletSubnetConfig
-            {
-                Name = Name,
-                IpPool = IpPool
-            };
-        }
-
-        object ICloneable.Clone()
-        {
-            return Clone();
-        }
-        
+            Name = Name,
+            IpPool = IpPool
+        };
     }
 }

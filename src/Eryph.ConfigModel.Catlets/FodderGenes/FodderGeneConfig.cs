@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 namespace Eryph.ConfigModel.FodderGenes;
 
 [PublicAPI]
-public class FodderGeneConfig : ICloneable, IHasFodderConfig, IHasVariableConfig, ICloneableConfig<FodderGeneConfig>
+public class FodderGeneConfig : ICloneableConfig<FodderGeneConfig>, IHasFodderConfig, IHasVariableConfig 
 {
     public string? Version { get; set; }
 
@@ -26,10 +26,5 @@ public class FodderGeneConfig : ICloneable, IHasFodderConfig, IHasVariableConfig
             Variables = Variables?.Select(x => x.Clone()).ToArray(),
             Fodder = Fodder?.Select(x => x.Clone()).ToArray(),
         };
-    }
-
-    object ICloneable.Clone()
-    {
-        return Clone();
     }
 }

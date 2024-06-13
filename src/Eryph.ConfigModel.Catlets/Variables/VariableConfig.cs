@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Eryph.ConfigModel.Catlets;
 
 namespace Eryph.ConfigModel.Variables;
 
-public class VariableConfig : ICloneable, ICloneableConfig<VariableConfig>
+public class VariableConfig : ICloneableConfig<VariableConfig>
 {
     public string? Name { get; set; }
 
     public VariableType? Type { get; set; }
 
+    [PrivateIdentifier(Critical = true)]
     public string? Value { get; set; }
 
     public bool? Secret { get; set; }
 
     public bool? Required { get; set; }
     
-    public new VariableConfig Clone()
-    {
-        return new VariableConfig
+    public VariableConfig Clone() =>
+        new()
         {
             Name = Name,
             Type = Type,
@@ -28,12 +27,6 @@ public class VariableConfig : ICloneable, ICloneableConfig<VariableConfig>
             Secret = Secret,
             Required = Required,
         };
-    }
-
-    object ICloneable.Clone()
-    {
-        return Clone();
-    }
 
     internal static VariableConfig[]? Breed(IHasVariableConfig parentConfig, IHasVariableConfig child)
     {

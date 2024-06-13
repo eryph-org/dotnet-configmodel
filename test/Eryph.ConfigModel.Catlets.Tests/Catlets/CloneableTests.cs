@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Variables;
 using FluentAssertions;
 using Xunit;
 
@@ -8,36 +9,35 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
 public class CloneableTests
 {
-    private static readonly CatletConfig TestData = new CatletConfig
+    private static readonly CatletConfig TestData = new()
     {
-        Capabilities = new[] { new CatletCapabilityConfig { Name = "one" } },
+        Capabilities = [new CatletCapabilityConfig { Name = "one" }],
         Cpu = new CatletCpuConfig { Count = 2 },
+        Drives = [new CatletDriveConfig { Name = "sda" }],
+        Fodder = [new FodderConfig { Name = "food" }],
         Memory = new CatletMemoryConfig { Startup = 1 },
-        NetworkAdapters = new[] { new CatletNetworkAdapterConfig { Name = "eth0" } },
-        Drives = new[] { new CatletDriveConfig { Name = "sda" } },
-        Fodder = new[] { new FodderConfig { Name = "food" } },
-        Networks = new[] { new CatletNetworkConfig
-        {
-            Name = "nw",
-            SubnetV4 = new CatletSubnetConfig{Name = "name"}
-        } },
+        Networks =
+        [
+            new CatletNetworkConfig
+            {
+                Name = "nw",
+                SubnetV4 = new CatletSubnetConfig { Name = "name" },
+            }
+        ],
+        NetworkAdapters = [new CatletNetworkAdapterConfig { Name = "eth0" }],
+        Variables = [new VariableConfig { Name = "variable" }],
     };
 
     [Fact]
     public void CatletConfig_is_cloned()
     {
-        var clone = (TestData as ICloneable).Clone();
-        clone.Should().BeOfType<CatletConfig>();
-        var clonedConfig = (CatletConfig)clone;
+        var clonedConfig = TestData.Clone();
+
+        clonedConfig.Capabilities.Should().NotBeNull();
+        clonedConfig.Capabilities.Should().NotBeSameAs(TestData.Capabilities);
 
         clonedConfig.Cpu.Should().NotBeNull();
         clonedConfig.Cpu.Should().NotBeSameAs(TestData.Cpu);
-
-        clonedConfig.Memory.Should().NotBeNull();
-        clonedConfig.Memory.Should().NotBeSameAs(TestData.Memory);
-
-        clonedConfig.NetworkAdapters.Should().NotBeNull();
-        clonedConfig.NetworkAdapters.Should().NotBeSameAs(TestData.NetworkAdapters);
 
         clonedConfig.Drives.Should().NotBeNull();
         clonedConfig.Drives.Should().NotBeSameAs(TestData.Drives);
@@ -45,16 +45,23 @@ public class CloneableTests
         clonedConfig.Fodder.Should().NotBeNull();
         clonedConfig.Fodder.Should().NotBeSameAs(TestData.Fodder);
 
-        clonedConfig.Fodder.Should().NotBeNull();
-        clonedConfig.Fodder.Should().NotBeSameAs(TestData.Fodder);
+        clonedConfig.Memory.Should().NotBeNull();
+        clonedConfig.Memory.Should().NotBeSameAs(TestData.Memory);
+
+        clonedConfig.Networks.Should().NotBeNull();
+        clonedConfig.Networks.Should().NotBeSameAs(TestData.Networks);
+
+        clonedConfig.NetworkAdapters.Should().NotBeNull();
+        clonedConfig.NetworkAdapters.Should().NotBeSameAs(TestData.NetworkAdapters);
+
+        clonedConfig.Variables.Should().NotBeNull();
+        clonedConfig.Variables.Should().NotBeSameAs(TestData.Variables);
     }
 
     [Fact]
     public void CpuConfig_is_cloned()
     {
-        var clone = (TestData.Cpu as ICloneable)?.Clone();
-        clone.Should().BeOfType<CatletCpuConfig>();
-        var clonedConfig = (CatletCpuConfig)clone!;
+        var clonedConfig = TestData.Cpu!.Clone();
 
         clonedConfig.Should().NotBeNull();
         clonedConfig.Should().NotBeSameAs(TestData.Cpu);
@@ -64,9 +71,7 @@ public class CloneableTests
     [Fact]
     public void MemoryConfig_is_cloned()
     {
-        var clone = (TestData.Memory as ICloneable)?.Clone();
-        clone.Should().BeOfType<CatletMemoryConfig>();
-        var clonedConfig = (CatletMemoryConfig)clone!;
+        var clonedConfig = TestData.Memory!.Clone();
 
         clonedConfig.Should().NotBeNull();
         clonedConfig.Should().NotBeSameAs(TestData.Memory);
@@ -76,9 +81,7 @@ public class CloneableTests
     [Fact]
     public void SubnetConfig_is_cloned()
     {
-        var clone = (TestData.Networks?[0].SubnetV4 as ICloneable)?.Clone();
-        clone.Should().BeOfType<CatletSubnetConfig>();
-        var clonedConfig = (CatletSubnetConfig)clone!;
+        var clonedConfig = TestData.Networks![0].SubnetV4!.Clone();
 
         clonedConfig.Should().NotBeNull();
         clonedConfig.Should().NotBeSameAs(TestData.Networks?[0].SubnetV4);
@@ -88,10 +91,9 @@ public class CloneableTests
     [Fact]
     public void Capabilities_are_cloned()
     {
-        var cloned = TestData.Capabilities?
-            .Select(a => (a as ICloneable).Clone())
-            .Cast<CatletCapabilityConfig>().ToArray();
-
+        var cloned = TestData.Capabilities!
+            .Select(a => a.Clone())
+            .ToArray();
 
         cloned.Should().NotBeNull();
         cloned.Should().HaveCount(1);
@@ -100,10 +102,9 @@ public class CloneableTests
     [Fact]
     public void NetworkAdapters_are_cloned()
     {
-        var cloned = TestData.NetworkAdapters?
-            .Select(a => (a as ICloneable).Clone())
-            .Cast<CatletNetworkAdapterConfig>().ToArray();
-
+        var cloned = TestData.NetworkAdapters!
+            .Select(a => a.Clone())
+            .ToArray();
 
         cloned.Should().NotBeNull();
         cloned.Should().HaveCount(1);
@@ -112,9 +113,9 @@ public class CloneableTests
     [Fact]
     public void Drives_are_cloned()
     {
-        var cloned = TestData.Drives?
-            .Select(a => (a as ICloneable).Clone())
-            .Cast<CatletDriveConfig>().ToArray();
+        var cloned = TestData.Drives!
+            .Select(a => a.Clone())
+            .ToArray();
 
         cloned.Should().NotBeNull();
         cloned.Should().HaveCount(1);
@@ -123,9 +124,9 @@ public class CloneableTests
     [Fact]
     public void Networks_are_cloned()
     {
-        var cloned = TestData.Networks?
-            .Select(a => (a as ICloneable).Clone())
-            .Cast<CatletNetworkConfig>().ToArray();
+        var cloned = TestData.Networks!
+            .Select(a => a.Clone())
+            .ToArray();
 
         cloned.Should().NotBeNull();
         cloned.Should().HaveCount(1);
@@ -135,8 +136,8 @@ public class CloneableTests
     public void Fodder_is_cloned()
     {
         var cloned = TestData.Fodder?
-            .Select(a => (a as ICloneable).Clone())
-            .Cast<FodderConfig>().ToArray();
+            .Select(a => a.Clone())
+            .ToArray();
 
         cloned.Should().NotBeNull();
         cloned.Should().HaveCount(1);
