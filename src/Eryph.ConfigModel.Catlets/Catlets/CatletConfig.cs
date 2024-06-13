@@ -28,10 +28,10 @@ namespace Eryph.ConfigModel.Catlets
         public CatletCapabilityConfig[]? Capabilities  { get; set; }
 
         public CatletNetworkConfig[]? Networks { get; set; }
-        
-        public FodderConfig[]? Fodder { get; set; }
 
         public VariableConfig[]? Variables { get; set; }
+
+        public FodderConfig[]? Fodder { get; set; }
 
         public CatletConfig Breed(CatletConfig child, string? parentReference= default)
         {
@@ -52,8 +52,8 @@ namespace Eryph.ConfigModel.Catlets
             newConfig.NetworkAdapters = CatletNetworkAdapterConfig.Breed(this, child);
             newConfig.Capabilities = CatletCapabilityConfig.Breed(this, child);
             newConfig.Networks = CatletNetworkConfig.Breed(this, child);
-            newConfig.Fodder = FodderConfig.Breed(this, child, parentReference);
             newConfig.Variables = VariableConfig.Breed(this, child);
+            newConfig.Fodder = FodderConfig.Breed(this, child, parentReference);
 
             return newConfig;
         }

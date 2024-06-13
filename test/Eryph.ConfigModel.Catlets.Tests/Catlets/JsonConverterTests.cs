@@ -78,6 +78,19 @@ public class JsonConverterTests : ConverterTestBase
               "adapterName": "eth1"
             }
           ],
+          "variables": [
+            {
+              "name": "first",
+              "value": "first value"
+            },
+            {
+              "name": "second",
+              "type": "Boolean",
+              "value": "true",
+              "secret": true,
+              "required": true
+            }
+          ],
           "fodder": [
             {
               "name": "first"
@@ -97,19 +110,6 @@ public class JsonConverterTests : ConverterTestBase
                   "required": true
                 }
               ]
-            }
-          ],
-          "variables": [
-            {
-              "name": "first",
-              "value": "first value"
-            },
-            {
-              "name": "second",
-              "type": "Boolean",
-              "value": "true",
-              "secret": true,
-              "required": true
             }
           ]
         }

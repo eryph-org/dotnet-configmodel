@@ -56,6 +56,14 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
                 name: otherv6
             - name: backup
               adapter_name: eth1
+            variables:
+            - name: first
+              value: first value
+            - name: second
+              type: Boolean
+              value: true
+              secret: true
+              required: true
             fodder:
             - name: first
             - name: admin-windows
@@ -73,14 +81,6 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
                 value: InitialPassw0rd
                 secret: true
                 required: true
-            variables:
-            - name: first
-              value: first value
-            - name: second
-              type: Boolean
-              value: true
-              secret: true
-              required: true
             
             """;
 

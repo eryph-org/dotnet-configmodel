@@ -23,8 +23,8 @@ public class FodderGeneConfig : ICloneable, IHasFodderConfig, IHasVariableConfig
         {
             Version = Version,
             Name = Name,
-            Fodder = Fodder?.Select(x => x.Clone()).ToArray(),
             Variables = Variables?.Select(x => x.Clone()).ToArray(),
+            Fodder = Fodder?.Select(x => x.Clone()).ToArray(),
         };
     }
 
