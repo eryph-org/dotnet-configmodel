@@ -10,6 +10,25 @@ namespace Eryph.ConfigModel.Catlets.Validation.Tests;
 public class VariableConfigValidationsTests
 {
     [Theory]
+    [InlineData("catletId")]
+    [InlineData("vmId")]
+    public void ValidateVariableConfig_ReservedVariableName_ReturnsError(string name)
+    {
+        var config = new VariableConfig()
+        {
+            Name = name,
+        };
+
+        var result = VariableConfigValidations.ValidateVariableConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Message.Should().Be($"The variable '{name}' is an automatically provided system variable and cannot be explicitly defined.");
+            });
+    }
+
+    [Theory]
     [InlineData("true")]
     [InlineData("false")]
     public void ValidateVariableValue_ValidBooleanValue_ReturnsValue(

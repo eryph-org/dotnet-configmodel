@@ -19,9 +19,19 @@ public static class VariableConfigValidations
     internal static Validation<ValidationIssue, Unit> ValidateVariableConfig(
         VariableConfig toValidate,
         string path = "") =>
-        ValidateProperty(toValidate, c => c.Name, VariableName.NewValidation, path, required: true)
+        ValidateProperty(toValidate, c => c.Name, ValidateVariableName, path, required: true)
         | ValidateProperty(toValidate, c => c.Value, v => ValidateVariableValue(v, toValidate.Type), path);
 
+    private static Validation<Error, string> ValidateVariableName(string value) =>
+        from validName in VariableName.NewValidation(value)
+        from _ in Seq("catletId", "vmId")
+            .Map(n => guardnot(
+                    validName == VariableName.New(n),
+                    Error.New($"The variable '{n}' is an automatically provided system variable and cannot be explicitly defined."))
+                .ToValidation())
+            .Sequence()
+        select value;
+    
     public static Validation<Error, string> ValidateVariableValue(
         string value,
         VariableType? variableType) =>
