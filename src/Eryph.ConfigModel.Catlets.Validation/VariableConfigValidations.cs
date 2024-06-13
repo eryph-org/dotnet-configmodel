@@ -16,7 +16,7 @@ namespace Eryph.ConfigModel;
 
 public static class VariableConfigValidations
 {
-    public static Validation<ValidationIssue, Unit> ValidateVariableConfig(
+    internal static Validation<ValidationIssue, Unit> ValidateVariableConfig(
         VariableConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, VariableName.NewValidation, path, required: true)
