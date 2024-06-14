@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Converters;
 
 namespace Eryph.ConfigModel.Variables;
@@ -24,7 +23,7 @@ public class VariableConfigConverter<TConfig> : DictionaryConverterBase<Variable
             Required = GetBoolProperty(dictionary, nameof(VariableConfig.Required)),
         };
 
-    private string? GetVariableValue(IDictionary<object, object> dictionary)
+    private static string? GetVariableValue(IDictionary<object, object> dictionary)
     {
         var value = GetValueCaseInvariant(dictionary, nameof(VariableConfig.Value));
         return value is bool

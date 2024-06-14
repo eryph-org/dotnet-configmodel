@@ -5,12 +5,15 @@ using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Variables;
+using JetBrains.Annotations;
 using LanguageExt;
 using LanguageExt.Common;
 using static LanguageExt.Prelude;
 using static Dbosoft.Functional.Validations.ComplexValidations;
 
 namespace Eryph.ConfigModel;
+
+#nullable enable
 
 public static class FodderGeneConfigValidations
 {
@@ -26,6 +29,7 @@ public static class FodderGeneConfigValidations
         string path = "") =>
         from _ in ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path, required: true)
                   | ValidateProperty(toValidate, c => c.Source, ValidateSourceIsEmpty, path)
+                  | ValidateProperty(toValidate, c=> c.Variables, ValidateVariablesAreNull, path)
         from __ in FodderConfigValidations.ValidateFodderConfig(toValidate, path)
                    | guard(toValidate.Remove.GetValueOrDefault() || notEmpty(toValidate.Content),
                            new ValidationIssue(path, "The content must be specified when adding fodder."))
@@ -43,4 +47,10 @@ public static class FodderGeneConfigValidations
                 Error.New("References are not supported in fodder genes. The source must be empty."))
             .ToValidation()
         select source;
+
+    private static Validation<Error, VariableConfig[]?> ValidateVariablesAreNull(
+        VariableConfig[]? variableConfigs) =>
+        from _ in guard(variableConfigs is null, Error.New("Variables are not supported here."))
+            .ToValidation()
+        select variableConfigs;
 }

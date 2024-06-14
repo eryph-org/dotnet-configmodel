@@ -38,14 +38,15 @@ public class FodderConfig: ICloneableConfig<FodderConfig>, IHasVariableConfig
         };
     }
 
-    internal static FodderConfig[]? Breed(CatletConfig parentConfig, 
-        CatletConfig childConfig, string? parentReference)
+    internal static FodderConfig[]? Breed(
+        CatletConfig parentConfig, 
+        CatletConfig childConfig,
+        string? parentReference)
     {
         if (parentConfig.Fodder == null && childConfig.Fodder == null)
-            return default;
+            return null;
             
-        var newConfigs = parentConfig.Fodder?
-            .Select(a=>a.Clone()).ToArray();
+        var newConfigs = parentConfig.Fodder?.Select(a=>a.Clone()).ToArray();
             
         var mergedConfig = new List<FodderConfig>();
 
@@ -61,8 +62,7 @@ public class FodderConfig: ICloneableConfig<FodderConfig>, IHasVariableConfig
                     fodder.Source = $"gene:{parentReference}:{fodder.Name}";
                 }
                     
-                var childFodder = childConfig.Fodder?
-                    .FirstOrDefault(x => x.Name == fodder.Name);
+                var childFodder = childConfig.Fodder?.FirstOrDefault(x => x.Name == fodder.Name);
 
                 if (childFodder == null)
                     continue;
@@ -83,18 +83,26 @@ public class FodderConfig: ICloneableConfig<FodderConfig>, IHasVariableConfig
                 fodder.Type = childFodder.Type ?? fodder.Type;
                 fodder.FileName = childFodder.FileName ?? fodder.FileName;
                 fodder.Remove = childFodder.Remove ?? fodder.Remove;
+
+                // A parameterized fodder content is only useful with its corresponding
+                // variables. Hence, we take the variables from the fodder config which
+                // provides the content.
                 fodder.Variables = childFodder.Content is not null
                     ? childFodder.Variables?.Select(x => x.Clone()).ToArray()
                     : fodder.Variables?.Select(x => x.Clone()).ToArray();
             }
         }
 
-        var parentNames = parentConfig.Fodder
-            ?.Select(x => x.Name) ?? Array.Empty<string>();
-        mergedConfig.AddRange(childConfig.Fodder?.Where(cfg =>
-                                  !parentNames.Any(x =>
-                                      string.Equals(x, cfg.Name, StringComparison.InvariantCultureIgnoreCase))) 
-                              ?? Array.Empty<FodderConfig>());
+        if (childConfig.Fodder is not null)
+        {
+            var parentNames = new HashSet<string>(
+                parentConfig.Fodder?.Select(x => x.Name ?? "") ?? [],
+                StringComparer.OrdinalIgnoreCase);
+
+            mergedConfig.AddRange(childConfig.Fodder
+                .Where(cfg => !parentNames.Contains(cfg.Name ?? ""))
+                .Select(x => x.Clone()));
+        }
 
         return mergedConfig.ToArray();
     }

@@ -28,10 +28,16 @@ public class VariableConfig : ICloneableConfig<VariableConfig>
             Required = Required,
         };
 
-    internal static VariableConfig[]? Breed(IHasVariableConfig parentConfig, IHasVariableConfig child)
+    internal static VariableConfig[] Breed(
+        IHasVariableConfig parentConfig,
+        IHasVariableConfig childConfig)
     {
+        // Merging a variable config is potentially problematic, e.g. the merge could
+        // remove the secret flag without the user realizing the variable's value is
+        // sensitive. Hence, a child variable always completely replaces the parent variable.
+
         var parentVariables = parentConfig.Variables ?? [];
-        var childVariables = child.Variables ?? [];
+        var childVariables = childConfig.Variables ?? [];
         var childVariableNames = new HashSet<string>(
             childVariables.Select(x => x.Name ?? ""),
             StringComparer.OrdinalIgnoreCase);

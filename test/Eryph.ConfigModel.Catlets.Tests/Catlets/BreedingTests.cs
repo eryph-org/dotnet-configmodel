@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
 using FluentAssertions;
@@ -62,7 +63,7 @@ public class BreedingTests
             ],
             Variables =
             [
-                new VariableConfig() { Name = "parentCatletVariable" } 
+                new VariableConfig() { Name = "parentCatletVariable" }
             ],
         };
 
@@ -83,7 +84,7 @@ public class BreedingTests
             Fodder =
             [
                 new FodderConfig { Name = "food" }
-            ], 
+            ],
             Variables =
             [
                 new VariableConfig() { Name = "catletVariable" }
@@ -135,7 +136,7 @@ public class BreedingTests
                 new CatletCapabilityConfig
                 {
                     Name = "Cap1",
-                    Details = new []{"detail"}
+                    Details = new[] { "detail" }
                 }
             }
         };
@@ -143,11 +144,14 @@ public class BreedingTests
         var child = new CatletConfig
         {
             Name = "child",
-            Capabilities = new[] { new CatletCapabilityConfig
+            Capabilities = new[]
             {
-                Name = "Cap1",
-                Details = new []{"detail2"}
-            }}
+                new CatletCapabilityConfig
+                {
+                    Name = "Cap1",
+                    Details = new[] { "detail2" }
+                }
+            }
         };
 
         var breedChild = parent.Breed(child);
@@ -233,7 +237,7 @@ public class BreedingTests
 
         var child = new CatletConfig
         {
-            Name = "child", 
+            Name = "child",
             Drives =
             [
                 new CatletDriveConfig
@@ -254,7 +258,7 @@ public class BreedingTests
                 breedDrive.Source.Should().Be("gene:reference:sda");
             });
     }
-    
+
     [Fact]
     public void NetworkAdapters_are_merged()
     {
@@ -515,7 +519,7 @@ public class BreedingTests
                 new CatletCapabilityConfig
                 {
                     Name = "cap1",
-                    Details = new []{"any"}
+                    Details = new[] { "any" }
                 },
                 new CatletCapabilityConfig
                 {
@@ -537,7 +541,7 @@ public class BreedingTests
                 {
                     Name = "cap1",
                     Mutation = type,
-                    Details = new []{"none"}
+                    Details = new[] { "none" }
                 },
                 new CatletCapabilityConfig
                 {
@@ -557,4 +561,174 @@ public class BreedingTests
         }
     }
 
+
+    [Fact]
+    public void Variables_are_not_mutated_but_child_replaces_parent()
+    {
+        var parent = new CatletConfig
+        {
+            Variables =
+            [
+                new VariableConfig
+                {
+                    Name = "catletVariable",
+                    Type = VariableType.Number,
+                    Value = "4.2",
+                    Required = true,
+                    Secret = true,
+                },
+            ],
+        };
+
+        var child = new CatletConfig
+        {
+            Variables =
+            [
+                new VariableConfig
+                {
+                    Name = "catletVariable",
+                    Value = "string value",
+                },
+            ],
+        };
+
+        var breedChild = parent.Breed(child);
+
+        breedChild.Variables.Should().SatisfyRespectively(
+            variable =>
+            {
+                variable.Name.Should().Be("catletVariable");
+                variable.Type.Should().BeNull();
+                variable.Value.Should().Be("string value");
+                variable.Required.Should().BeNull();
+                variable.Secret.Should().BeNull();
+            });
+    }
+
+    [Fact]
+    public void Variables_in_fodder_are_replaced_when_content_is_mutated()
+    {
+        var parent = new CatletConfig
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "fodder",
+                    Content = "parent fodder content",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "parentVariable",
+                            Type = VariableType.Number,
+                            Value = "4.2",
+                            Required = true,
+                            Secret = true,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var child = new CatletConfig
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "fodder",
+                    Content = "child fodder content",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "childVariable",
+                            Value = "string value",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var breedChild = parent.Breed(child);
+
+        breedChild.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Content.Should().Be("child fodder content");
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("childVariable");
+                        variable.Type.Should().BeNull();
+                        variable.Value.Should().Be("string value");
+                        variable.Required.Should().BeNull();
+                        variable.Secret.Should().BeNull();
+                    });
+            });
+    }
+
+    [Fact]
+    public void Variables_in_fodder_are_not_replaced_when_content_is_not_mutated()
+    {
+        var parent = new CatletConfig
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "fodder",
+                    Content = "parent fodder content",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "parentVariable",
+                            Type = VariableType.Number,
+                            Value = "4.2",
+                            Required = true,
+                            Secret = true,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var child = new CatletConfig
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "fodder",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "childVariable",
+                            Value = "string value",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var breedChild = parent.Breed(child);
+
+        breedChild.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Content.Should().Be("parent fodder content");
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("parentVariable");
+                        variable.Type.Should().Be(VariableType.Number);
+                        variable.Value.Should().Be("4.2");
+                        variable.Required.Should().BeTrue();
+                        variable.Secret.Should().BeTrue();
+                    });
+            });
+    }
 }
