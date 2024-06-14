@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Eryph.ConfigModel.Variables;
 using static Eryph.ConfigModel.FodderConfigValidations;
 
 namespace Eryph.ConfigModel.Catlets.Validation.Tests;
@@ -74,7 +74,14 @@ public class FodderConfigValidationsTests
             Type = "shellscript",
             Content = "test content",
             FileName = "test-file-sh",
-            Secret = true
+            Secret = true,
+            Variables = new[]
+            {
+                new VariableConfig()
+                {
+                    Name  = "testVariable",
+                },
+            }
         };
 
         var result = ValidateFodderConfig(fodderConfig);
@@ -99,6 +106,11 @@ public class FodderConfigValidationsTests
             {
                 issue.Member.Should().Be("Secret");
                 issue.Message.Should().Be("The secret flag must not be specified when the fodder is removed.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Variables");
+                issue.Message.Should().Be("The variables must not be specified when the fodder is removed.");
             });
     }
 }

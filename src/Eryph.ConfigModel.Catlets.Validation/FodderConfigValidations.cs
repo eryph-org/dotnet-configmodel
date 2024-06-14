@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Variables;
 using JetBrains.Annotations;
 using LanguageExt;
 using LanguageExt.Common;
@@ -30,7 +31,11 @@ internal static class FodderConfigValidations
         | ValidateProperty(toValidate, c => c.FileName,
             s => ValidateWhenAllowed(s, toValidate, s2 => ValidateFileName(s2, "file name"), "file name"), path)
         | ValidateProperty(toValidate, c => c.Secret,
-            s => ValidateWhenAllowed(s, toValidate, Success<Error, bool?>, "secret flag"), path);
+            s => ValidateWhenAllowed(s, toValidate, Success<Error, bool?>, "secret flag"), path)
+        | ValidateProperty(toValidate, c => c.Variables,
+            v => ValidateVariablesNotForbidden(v, toValidate), path)
+        | ValidateList(toValidate, c => c.Variables,
+            (v, p) => ValidateVariableConfig(v, toValidate, p), path);
 
     private static Validation<Error, T> ValidateWhenAllowed<T>(
         T value,
@@ -61,4 +66,31 @@ internal static class FodderConfigValidations
                 Error.New("The fodder type is not supported."))
             .ToValidation()
         select fodderType;
+
+    private static Validation<Error, VariableConfig[]> ValidateVariablesNotForbidden(
+        VariableConfig[] variableConfigs,
+        FodderConfig fodderConfig) =>
+        from _ in guardnot(variableConfigs.Length > 0 && fodderConfig.Remove.GetValueOrDefault(),
+                          Error.New($"The variables must not be specified when the fodder is removed."))
+                      .ToValidation()
+        select variableConfigs;
+
+    private static Validation<ValidationIssue, Unit> ValidateVariableConfig(
+        VariableConfig toValidate,
+        FodderConfig fodderConfig,
+        string path) =>
+        from _ in VariableConfigValidations.ValidateVariableConfig(toValidate, path)
+        let isReference = notEmpty(fodderConfig.Source)
+        from __ in guardnot(isReference && toValidate.Required is not null,
+                           new ValidationIssue(
+                               path,
+                               "The required flag cannot be specified when the fodder is a reference."))
+                       .ToValidation()
+                   | guardnot(isReference && toValidate.Type is not null,
+                           new ValidationIssue(
+                               path,
+                               "The variable type cannot be specified when the fodder is a reference."))
+                       .ToValidation()
+        select unit;
+
 }

@@ -118,4 +118,37 @@ public class FodderGeneConfigValidationsTests
                 issue.Message.Should().Be("The Name is required.");
             });
     }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_FodderWithVariables_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "test-fodder",
+                    Content = "test-content",
+                    Variables = new[]
+                    {
+                        new VariableConfig()
+                        {
+                            Name = "testVariable",
+                        }
+                    }
+                },
+            },
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Variables");
+                issue.Message.Should().Be("Variables are not supported here.");
+            });
+    }
 }

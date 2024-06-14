@@ -1,8 +1,5 @@
 using Eryph.ConfigModel.Variables;
-using FluentAssertions;
-using FluentAssertions.LanguageExt;
-using LanguageExt.ClassInstances;
-using LanguageExt.Common;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace Eryph.ConfigModel.Catlets.Validation.Tests;
 
@@ -209,6 +206,46 @@ public class CatletConfigValidationsTests
             {
                 issue.Member.Should().Be("Fodder[0]");
                 issue.Message.Should().Be("The name or source must be specified.");
+            });
+    }
+
+    [Fact]
+    public void ValidateCatletConfig_FodderWithReferenceAndInvalidVariableBinding_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder",
+                    Variables = new []
+                    {
+                        new VariableConfig()
+                        {
+                            Name = "testVariable",
+                            Type = VariableType.Number,
+                            Value = "4.2",
+                            Required = true,
+                            Secret = true,
+                        },
+                    },
+                },
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Variables[0]");
+                issue.Message.Should().Be("The required flag cannot be specified when the fodder is a reference.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Variables[0]");
+                issue.Message.Should().Be("The variable type cannot be specified when the fodder is a reference.");
             });
     }
 }
