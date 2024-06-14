@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
@@ -35,6 +36,18 @@ public class YamlConverterTests : ConverterTestBase
         
         """;
 
+    private const string SampleNativeVariableValuesYaml =
+        """
+        variables:
+        - name: boolean
+          value: true
+        - name: number
+          value: -4.2
+        fodder:
+        - name: fodder
+        
+        """;
+
     [Fact]
     public void Converts_from_yaml()
     {
@@ -44,6 +57,17 @@ public class YamlConverterTests : ConverterTestBase
         var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml1);
         var config = FodderGeneConfigDictionaryConverter.Convert(dictionary, true);
         AssertSample1(config);
+    }
+
+    [Fact]
+    public void Converts_native_variable_values_from_yaml()
+    {
+        var serializer = new DeserializerBuilder()
+            .Build();
+
+        var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleNativeVariableValuesYaml);
+        var config = FodderGeneConfigDictionaryConverter.Convert(dictionary);
+        AssertNativeVariableValuesSample(config);
     }
 
     [Theory()]

@@ -19,8 +19,16 @@ public class VariableConfigConverter<TConfig> : DictionaryConverterBase<Variable
         {
             Name = GetStringProperty(dictionary, nameof(VariableConfig.Name)),
             Type = GetEnumProperty<VariableType>(dictionary, nameof(VariableConfig.Type)),
-            Value = GetStringProperty(dictionary, nameof(VariableConfig.Value)),
+            Value = GetVariableValue(dictionary),
             Secret = GetBoolProperty(dictionary, nameof(VariableConfig.Secret)),
             Required = GetBoolProperty(dictionary, nameof(VariableConfig.Required)),
         };
+
+    private string? GetVariableValue(IDictionary<object, object> dictionary)
+    {
+        var value = GetValueCaseInvariant(dictionary, nameof(VariableConfig.Value));
+        return value is bool
+            ? value.ToString().ToLowerInvariant()
+            : value?.ToString().TrimEnd(char.MinValue);
+    }
 }

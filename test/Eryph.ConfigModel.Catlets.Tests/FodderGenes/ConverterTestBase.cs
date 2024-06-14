@@ -1,3 +1,4 @@
+using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Variables;
 using FluentAssertions;
@@ -38,6 +39,27 @@ public class ConverterTestBase
                 variable.Value.Should().Be("true");
                 variable.Required.Should().BeTrue();
                 variable.Secret.Should().BeTrue();
+            });
+    }
+
+    protected static void AssertNativeVariableValuesSample(FodderGeneConfig config)
+    {
+        config.Variables.Should().SatisfyRespectively(
+            variable =>
+            {
+                variable.Name.Should().Be("boolean");
+                variable.Type.Should().BeNull();
+                variable.Value.Should().Be("true");
+                variable.Required.Should().BeNull();
+                variable.Secret.Should().BeNull();
+            },
+            variable =>
+            {
+                variable.Name.Should().Be("number");
+                variable.Type.Should().BeNull();
+                variable.Value.Should().Be("-4.2");
+                variable.Required.Should().BeNull();
+                variable.Secret.Should().BeNull();
             });
     }
 }

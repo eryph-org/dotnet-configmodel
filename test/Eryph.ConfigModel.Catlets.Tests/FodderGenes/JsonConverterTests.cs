@@ -42,12 +42,41 @@ public class JsonConverterTests : ConverterTestBase
         }
         """;
 
+    private const string SampleNativeVariableValuesJson =
+        """
+        {
+          "variables": [
+            {
+              "name": "boolean",
+              "value": true
+            },
+            {
+              "name": "number",
+              "value": -4.2
+            }
+          ],
+          "fodder": [
+            {
+              "name": "fodder"
+            }
+          ]
+        }
+        """;
+
     [Fact]
     public void Converts_from_json()
     {
         var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
         var config = FodderGeneConfigDictionaryConverter.Convert(dictionary);
         AssertSample1(config);
+    }
+
+    [Fact]
+    public void Converts_native_variable_values_from_json()
+    {
+        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleNativeVariableValuesJson);
+        var config = FodderGeneConfigDictionaryConverter.Convert(dictionary);
+        AssertNativeVariableValuesSample(config);
     }
 
     [Theory]

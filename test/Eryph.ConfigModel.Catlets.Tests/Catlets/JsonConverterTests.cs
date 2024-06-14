@@ -85,8 +85,8 @@ public class JsonConverterTests : ConverterTestBase
             },
             {
               "name": "second",
-              "type": "Boolean",
-              "value": "true",
+              "type": "Number",
+              "value": "-4.2",
               "secret": true,
               "required": true
             }
@@ -115,12 +115,52 @@ public class JsonConverterTests : ConverterTestBase
         }
         """;
 
+    private const string SampleNativeVariableValuesJson =
+        """
+        {
+          "variables": [
+            {
+              "name": "boolean",
+              "value": true
+            },
+            {
+              "name": "number",
+              "value": -4.2
+            }
+          ],
+          "fodder": [
+            {
+              "name": "fodder",
+              "variables": [
+                {
+                  "name": "boolean",
+                  "value": true
+                },
+                {
+                  "name": "number",
+                  "value": -4.2
+                }
+              ]
+            }
+          ]
+        }
+        """;
+    
+
     [Fact]
     public void Converts_from_json()
     {
         var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
         var config = CatletConfigDictionaryConverter.Convert(dictionary);
         AssertSample1(config);
+    }
+
+    [Fact]
+    public void Converts_native_variable_values_from_json()
+    {
+        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleNativeVariableValuesJson);
+        var config = CatletConfigDictionaryConverter.Convert(dictionary);
+        AssertNativeVariableValuesSample(config);
     }
 
     [Theory]

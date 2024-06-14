@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
 using Xunit;
@@ -60,8 +61,8 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
             - name: first
               value: first value
             - name: second
-              type: Boolean
-              value: true
+              type: Number
+              value: -4.2
               secret: true
               required: true
             fodder:
@@ -99,6 +100,23 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
             - nested_virtualization                         
             """;
 
+        private const string SampleNativeVariableValuesYaml =
+            """
+            variables:
+            - name: boolean
+              value: true
+            - name: number
+              value: -4.2
+            fodder:
+            - name: fodder
+              variables:
+              - name: boolean
+                value: true
+              - name: number
+                value: -4.2
+            
+            """;
+
         [Fact]
         public void Converts_from_yaml()
         {
@@ -108,6 +126,17 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
             var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml1);
             var config = CatletConfigDictionaryConverter.Convert(dictionary, true);
             AssertSample1(config);
+        }
+
+        [Fact]
+        public void Converts_native_variable_values_from_yaml()
+        {
+            var serializer = new DeserializerBuilder()
+                .Build();
+
+            var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleNativeVariableValuesYaml);
+            var config = CatletConfigDictionaryConverter.Convert(dictionary);
+            AssertNativeVariableValuesSample(config);
         }
 
         [Theory()]
