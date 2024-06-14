@@ -1,5 +1,6 @@
 using System;
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Variables;
 using FluentAssertions;
 using Xunit;
 
@@ -13,16 +14,16 @@ public class BreedingTests
         var parent = new CatletConfig
         {
             Name = "Parent",
-            Capabilities = new[]
-            {
+            Capabilities =
+            [
                 new CatletCapabilityConfig
                 {
                     Name = "Cap1"
                 }
-            },
+            ],
             Cpu = new CatletCpuConfig { Count = 2 },
-            Drives = new[]
-            {
+            Drives =
+            [
                 new CatletDriveConfig
                 {
                     Name = "sda",
@@ -30,17 +31,17 @@ public class BreedingTests
                     Store = "lair",
                     Size = 100
                 }
-            },
+            ],
             Memory = new CatletMemoryConfig { Startup = 2048 },
-            NetworkAdapters = new[]
-            {
+            NetworkAdapters =
+            [
                 new CatletNetworkAdapterConfig
                 {
                     Name = "eth0"
                 }
-            },
-            Networks = new[]
-            {
+            ],
+            Networks =
+            [
                 new CatletNetworkConfig
                 {
                     Name = "default",
@@ -51,12 +52,18 @@ public class BreedingTests
                         IpPool = "pool1"
                     }
                 }
-            },
-            Fodder = new []{new FodderConfig
+            ],
+            Fodder =
+            [
+                new FodderConfig
                 {
                     Source = "food_from_somewhere_else"
                 }
-            }
+            ],
+            Variables =
+            [
+                new VariableConfig() { Name = "parentCatletVariable" } 
+            ],
         };
 
         var child = new CatletConfig
@@ -64,17 +71,23 @@ public class BreedingTests
             Name = "child",
             Project = "social",
             Environment = "env1",
-            Drives = Array.Empty<CatletDriveConfig>(),
-            Networks = new[]{new CatletNetworkConfig
-            {
-                Name = "default",
-                AdapterName = "eth0"
-            }},
-            Fodder = new[]{new FodderConfig
-            {
-                Name = "food"
-            }
-            }
+            Drives = [],
+            Networks =
+            [
+                new CatletNetworkConfig
+                {
+                    Name = "default",
+                    AdapterName = "eth0"
+                }
+            ],
+            Fodder =
+            [
+                new FodderConfig { Name = "food" }
+            ], 
+            Variables =
+            [
+                new VariableConfig() { Name = "catletVariable" }
+            ]
         };
         var breedChild = parent.Breed(child, "reference");
 
@@ -105,6 +118,10 @@ public class BreedingTests
         breedChild.Fodder.Should().NotBeNull();
         breedChild.Fodder.Should().HaveCount(2);
         breedChild.Fodder?[0].Source.Should().Be("food_from_somewhere_else");
+
+        breedChild.Variables.Should().SatisfyRespectively(
+            variable => variable.Name.Should().Be("catletVariable"),
+            variable => variable.Name.Should().Be("parentCatletVariable"));
     }
 
     [Fact]

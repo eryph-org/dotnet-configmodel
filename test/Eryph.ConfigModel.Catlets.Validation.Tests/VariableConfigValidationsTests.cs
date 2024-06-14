@@ -41,6 +41,7 @@ public class VariableConfigValidationsTests
 
     [Theory]
     [InlineData("not a boolean")]
+    [InlineData("truefalse")]
     [InlineData("True")]
     [InlineData("False")]
     public void ValidateVariableValue_InvalidBooleanValue_ReturnsError(

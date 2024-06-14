@@ -11,10 +11,26 @@ public class CloneableTests
 {
     private static readonly CatletConfig TestData = new()
     {
-        Capabilities = [new CatletCapabilityConfig { Name = "one" }],
+        Capabilities =
+        [
+            new CatletCapabilityConfig { Name = "one" }
+        ],
         Cpu = new CatletCpuConfig { Count = 2 },
-        Drives = [new CatletDriveConfig { Name = "sda" }],
-        Fodder = [new FodderConfig { Name = "food" }],
+        Drives =
+        [
+            new CatletDriveConfig { Name = "sda" }
+        ],
+        Fodder = 
+        [
+            new FodderConfig
+            {
+                Name = "food",
+                Variables =
+                [
+                    new VariableConfig { Name = "foodVariable" }
+                ]
+            }
+        ],
         Memory = new CatletMemoryConfig { Startup = 1 },
         Networks =
         [
@@ -24,8 +40,14 @@ public class CloneableTests
                 SubnetV4 = new CatletSubnetConfig { Name = "name" },
             }
         ],
-        NetworkAdapters = [new CatletNetworkAdapterConfig { Name = "eth0" }],
-        Variables = [new VariableConfig { Name = "variable" }],
+        NetworkAdapters =
+        [
+            new CatletNetworkAdapterConfig { Name = "eth0" }
+        ],
+        Variables =
+        [
+            new VariableConfig { Name = "catletVariable" }
+        ],
     };
 
     [Fact]
@@ -135,11 +157,20 @@ public class CloneableTests
     [Fact]
     public void Fodder_is_cloned()
     {
-        var cloned = TestData.Fodder?
+        var cloned = TestData.Fodder!
             .Select(a => a.Clone())
             .ToArray();
 
         cloned.Should().NotBeNull();
         cloned.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void FodderVariables_are_cloned()
+    {
+        var cloned = TestData.Fodder![0].Clone();
+
+        cloned.Variables.Should().NotBeNull();
+        cloned.Variables.Should().NotBeSameAs(TestData.Fodder![0].Variables);
     }
 }

@@ -40,13 +40,13 @@ public static class VariableConfigValidations
             VariableType.String => value,
             VariableType.Number =>
                 from _ in guard(
-                        Regex.IsMatch(value, @"^-?\d{1,9}(\.\d{0,3})?$", RegexOptions.Compiled, TimeSpan.FromSeconds(1)),
+                        Regex.IsMatch(value, VariableValueRegex.Number, RegexOptions.Compiled, TimeSpan.FromSeconds(1)),
                         Error.New("The value is not a valid number. The number must be between -999999999.999 and 999999999.999."))
                     .ToValidation()
                 select value,
             VariableType.Boolean =>
                 from _ in  guard(
-                        value is "true" or "false",
+                        Regex.IsMatch(value, VariableValueRegex.Boolean, RegexOptions.Compiled, TimeSpan.FromSeconds(1)),
                         Error.New("The value is not a valid boolean. Only 'true' and 'false' are allowed."))
                     .ToValidation()
                 select value,
