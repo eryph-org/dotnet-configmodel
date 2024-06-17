@@ -12,7 +12,7 @@ namespace Eryph.ConfigModel.Catlets.Validation.Tests;
 public class FodderGeneConfigValidationsTests
 {
     [Fact]
-    public void ValidateFodderGeneConfig_FodderWithUnsupportedData_ReturnsFail()
+    public void ValidateFodderGeneConfig_FodderWithSource_ReturnsFail()
     {
         var config = new FodderGeneConfig
         {
@@ -23,13 +23,6 @@ public class FodderGeneConfigValidationsTests
                 {
                     Name = "test-fodder",
                     Source = "gene:acme/acme-linux/latest:fodder",
-                    Variables = new[]
-                    {
-                        new VariableConfig
-                        {
-                            Name = "test-variable",
-                        },
-                    },
                 },
             },
         };
@@ -41,11 +34,6 @@ public class FodderGeneConfigValidationsTests
             {
                 issue.Member.Should().Be("Fodder[0].Source");
                 issue.Message.Should().Be("References are not supported in fodder genes. The source must be empty.");
-            },
-            issue =>
-            {
-                issue.Member.Should().Be("Fodder[0].Variables");
-                issue.Message.Should().Be("Variables are not supported here.");
             });
     }
 

@@ -96,6 +96,4 @@ public class VariableConfigValidationsTests
 
         result.Should().BeSuccess().Which.Should().Be(value);
     }
-
-
 }

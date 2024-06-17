@@ -25,7 +25,7 @@ public static  class CatletConfigValidations
         | ValidateProperty(toValidate, c => c.Cpu, ValidateCatletCpuConfig, path)
         | ValidateProperty(toValidate, c => c.Memory, ValidateCatletMemoryConfig, path)
         | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path)
-        | ValidateList(toValidate, c => c.Variables, ValidateVariableConfig, path, minCount: 0, maxCount: 64);
+        | ValidateList(toValidate, c => c.Variables, ValidateVariableConfig, path);
 
     public static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
         CatletDriveConfig toValidate,
