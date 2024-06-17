@@ -32,10 +32,7 @@ internal static class FodderConfigValidations
             s => ValidateWhenAllowed(s, toValidate, s2 => ValidateFileName(s2, "file name"), "file name"), path)
         | ValidateProperty(toValidate, c => c.Secret,
             s => ValidateWhenAllowed(s, toValidate, Success<Error, bool?>, "secret flag"), path)
-        | ValidateProperty(toValidate, c => c.Variables,
-            v => ValidateVariablesNotForbidden(v, toValidate), path)
-        | ValidateList(toValidate, c => c.Variables,
-            (v, p) => ValidateVariableConfig(v, toValidate, p), path);
+        | ValidateVariableConfigs(toValidate, path);
 
     private static Validation<Error, T> ValidateWhenAllowed<T>(
         T value,
@@ -67,30 +64,37 @@ internal static class FodderConfigValidations
             .ToValidation()
         select fodderType;
 
+    private static Validation<ValidationIssue, Unit> ValidateVariableConfigs(
+        FodderConfig toValidate,
+        string path) =>
+        from _ in ValidateProperty(toValidate, c => c.Variables,
+            v => ValidateVariablesNotForbidden(v, toValidate), path)
+        from __ in VariableConfigValidations.ValidateVariableConfigs(toValidate, path)
+            | ValidateList(toValidate, c => c.Variables,
+                (v, p) => ValidateFodderReferenceVariableConfig(v, toValidate, p), path)
+        select unit;
+
     private static Validation<Error, VariableConfig[]> ValidateVariablesNotForbidden(
         VariableConfig[] variableConfigs,
         FodderConfig fodderConfig) =>
         from _ in guardnot(variableConfigs.Length > 0 && fodderConfig.Remove.GetValueOrDefault(),
-                          Error.New($"The variables must not be specified when the fodder is removed."))
+                          Error.New("The variables must not be specified when the fodder is removed."))
                       .ToValidation()
         select variableConfigs;
 
-    private static Validation<ValidationIssue, Unit> ValidateVariableConfig(
+    private static Validation<ValidationIssue, Unit> ValidateFodderReferenceVariableConfig(
         VariableConfig toValidate,
         FodderConfig fodderConfig,
         string path) =>
-        from _ in VariableConfigValidations.ValidateVariableConfig(toValidate, path)
-        let isReference = notEmpty(fodderConfig.Source)
-        from __ in guardnot(isReference && toValidate.Required is not null,
+        from __ in guardnot(notEmpty(fodderConfig.Source) && toValidate.Required is not null,
                            new ValidationIssue(
                                path,
                                "The required flag cannot be specified when the fodder is a reference."))
                        .ToValidation()
-                   | guardnot(isReference && toValidate.Type is not null,
+                   | guardnot(notEmpty(fodderConfig.Source) && toValidate.Type is not null,
                            new ValidationIssue(
                                path,
                                "The variable type cannot be specified when the fodder is a reference."))
                        .ToValidation()
         select unit;
-
 }

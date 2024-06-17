@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using Dbosoft.Functional.Validations;
@@ -14,13 +16,35 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel;
 
+#nullable enable
+
 public static class VariableConfigValidations
 {
-    internal static Validation<ValidationIssue, Unit> ValidateVariableConfig(
+    internal static Validation<ValidationIssue, Unit> ValidateVariableConfigs(
+        IHasVariableConfig toValidate,
+        string path = "") =>
+        from _  in ValidateList(toValidate, c => c.Variables, ValidateVariableConfig, path)
+        from __ in ValidateProperty(toValidate, c => c.Variables, ValidateNoDuplicateVariables, path)
+        select unit;
+
+    private static Validation<ValidationIssue, Unit> ValidateVariableConfig(
         VariableConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, ValidateVariableName, path, required: true)
         | ValidateProperty(toValidate, c => c.Value, v => ValidateVariableValue(v, toValidate.Type), path);
+
+    private static Validation<Error, Unit> ValidateNoDuplicateVariables(
+        VariableConfig[] variableConfigs) =>
+        from variableNames in variableConfigs
+            .Map(v => VariableName.NewValidation(v.Name))
+            .Sequence()
+        from _ in variableNames
+            .GroupBy(identity)
+            .Filter(g => g.Count() > 1)
+            .Map(g => g.Key)
+            .Map(n => Fail<Error, Unit>(Error.New($"The variable name '{n}' is not unique.")))
+            .Sequence()
+        select unit;
 
     private static Validation<Error, string> ValidateVariableName(string value) =>
         from validName in VariableName.NewValidation(value)

@@ -9,21 +9,58 @@ namespace Eryph.ConfigModel.Catlets.Validation.Tests;
 
 public class VariableConfigValidationsTests
 {
+    [Fact]
+    public void ValidateVariableConfigs_DuplicateVariableNames_ReturnsError()
+    {
+
+        var config = new HasVariableConfig()
+        {
+            Variables = new[]
+            {
+                new VariableConfig() { Name = "first" },
+                new VariableConfig() { Name = "First" },
+                new VariableConfig() { Name = "second" },
+                new VariableConfig() { Name = "Second" },
+            },
+        };
+
+        var result = VariableConfigValidations.ValidateVariableConfigs(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Variables");
+                issue.Message.Should().Be("The variable name 'first' is not unique.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Variables");
+                issue.Message.Should().Be("The variable name 'second' is not unique.");
+            });
+    }
+
     [Theory]
     [InlineData("catletId")]
     [InlineData("vmId")]
     public void ValidateVariableConfig_ReservedVariableName_ReturnsError(string name)
     {
-        var config = new VariableConfig()
+        var config = new HasVariableConfig()
         {
-            Name = name,
+            Variables = new []
+            {
+                new VariableConfig()
+                {
+                    Name = name,
+                }
+            }
         };
 
-        var result = VariableConfigValidations.ValidateVariableConfig(config);
+        var result = VariableConfigValidations.ValidateVariableConfigs(config);
 
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             issue =>
             {
+                issue.Member.Should().Be("Variables[0].Name");
                 issue.Message.Should().Be($"The variable '{name}' is an automatically provided system variable and cannot be explicitly defined.");
             });
     }
@@ -95,5 +132,10 @@ public class VariableConfigValidationsTests
         var result = VariableConfigValidations.ValidateVariableValue(value, VariableType.String);
 
         result.Should().BeSuccess().Which.Should().Be(value);
+    }
+
+    private sealed class HasVariableConfig : IHasVariableConfig
+    {
+        public VariableConfig[]? Variables { get; set; }
     }
 }

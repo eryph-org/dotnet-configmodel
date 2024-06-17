@@ -25,7 +25,7 @@ public static  class CatletConfigValidations
         | ValidateProperty(toValidate, c => c.Cpu, ValidateCatletCpuConfig, path)
         | ValidateProperty(toValidate, c => c.Memory, ValidateCatletMemoryConfig, path)
         | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path)
-        | ValidateList(toValidate, c => c.Variables, ValidateVariableConfig, path);
+        | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
 
     public static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
         CatletDriveConfig toValidate,
@@ -79,9 +79,4 @@ public static  class CatletConfigValidations
                 || notEmpty(toValidate.Source),
                 new ValidationIssue(path, "The content or source must be specified when adding fodder."))
             .ToValidation();
-
-    private static Validation<ValidationIssue, Unit> ValidateVariableConfig(
-        VariableConfig toValidate,
-        string path = "") =>
-        VariableConfigValidations.ValidateVariableConfig(toValidate, path);
 }

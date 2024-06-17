@@ -22,7 +22,7 @@ public static class FodderGeneConfigValidations
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, GeneName.NewValidation, path, required: true)
         | ValidateList(toValidate, c => c.Fodder, ValidateFodderConfig, minCount: 1)
-        | ValidateList(toValidate, c => c.Variables, ValidateVariableConfig, path);
+        | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
 
     private static Validation<ValidationIssue, Unit> ValidateFodderConfig(
         FodderConfig toValidate,
@@ -39,11 +39,6 @@ public static class FodderGeneConfigValidations
                            new ValidationIssue(path, "The content must be specified when adding fodder."))
                        .ToValidation()
         select unit;
-
-    private static Validation<ValidationIssue, Unit> ValidateVariableConfig(
-        VariableConfig toValidate,
-        string path = "") =>
-        VariableConfigValidations.ValidateVariableConfig(toValidate, path);
     
     private static Validation<Error, string> ValidateSourceIsEmpty(
         string source) =>
