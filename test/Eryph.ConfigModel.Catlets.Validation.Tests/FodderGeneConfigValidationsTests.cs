@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Eryph.ConfigModel.FodderGenes;
-
+using Eryph.ConfigModel.Variables;
 using static Eryph.ConfigModel.FodderGeneConfigValidations;
 
 namespace Eryph.ConfigModel.Catlets.Validation.Tests;
@@ -21,6 +21,7 @@ public class FodderGeneConfigValidationsTests
             {
                 new FodderConfig
                 {
+                    Name = "test-fodder",
                     Source = "gene:acme/acme-linux/latest:fodder",
                 },
             },
@@ -81,4 +82,61 @@ public class FodderGeneConfigValidationsTests
             });
     }
 
+    [Fact]
+    public void ValidateFodderGeneConfig_FodderWithoutName_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Content = "test-content",
+                },
+            },
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Name");
+                issue.Message.Should().Be("The Name is required.");
+            });
+    }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_FodderWithVariables_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "test-fodder",
+                    Content = "test-content",
+                    Variables = new[]
+                    {
+                        new VariableConfig()
+                        {
+                            Name = "testVariable",
+                        }
+                    }
+                },
+            },
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Variables");
+                issue.Message.Should().Be("Variables are not supported here.");
+            });
+    }
 }

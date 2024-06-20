@@ -9,31 +9,74 @@ namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
 
 public class JsonConverterTests : ConverterTestBase
 {
+    private const string SampleJson1 =
+        """
+        {
+          "name": "fodder1",
+          "variables": [
+            {
+              "name": "first",
+              "value": "first value"
+            },
+            {
+              "name": "second",
+              "type": "Boolean",
+              "value": "true",
+              "secret": true,
+              "required": true
+            }
+          ],
+          "fodder": [
+            {
+              "name": "admin-windows",
+              "type": "cloud-config",
+              "content": "users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd",
+              "fileName": "filename",
+              "secret": true
+            },
+            {
+              "name": "super-dupa",
+              "type": "cloud-config"
+            }
+          ]
+        }
+        """;
 
-    private const string SampleJson1 = """
-                                       {
-                                         "name": "fodder1",
-                                         "fodder": [
-                                           {
-                                             "name": "admin-windows",
-                                             "type": "cloud-config",
-                                             "content": "users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd",
-                                             "fileName": "filename",
-                                             "secret": true
-                                           },
-                                           {
-                                             "name": "super-dupa",
-                                             "type": "cloud-config"
-                                           }
-                                         ]
-                                       }
-                                       """;
+    private const string SampleNativeVariableValuesJson =
+        """
+        {
+          "variables": [
+            {
+              "name": "boolean",
+              "value": true
+            },
+            {
+              "name": "number",
+              "value": -4.2
+            }
+          ],
+          "fodder": [
+            {
+              "name": "fodder"
+            }
+          ]
+        }
+        """;
+
     [Fact]
     public void Converts_from_json()
     {
         var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
         var config = FodderGeneConfigDictionaryConverter.Convert(dictionary);
         AssertSample1(config);
+    }
+
+    [Fact]
+    public void Converts_native_variable_values_from_json()
+    {
+        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleNativeVariableValuesJson);
+        var config = FodderGeneConfigDictionaryConverter.Convert(dictionary);
+        AssertNativeVariableValuesSample(config);
     }
 
     [Theory]
@@ -49,6 +92,5 @@ public class JsonConverterTests : ConverterTestBase
         };
         var act = ConfigModelJsonSerializer.Serialize(config, copyOptions);
         act.Should().Be(expected);
-
     }
 }

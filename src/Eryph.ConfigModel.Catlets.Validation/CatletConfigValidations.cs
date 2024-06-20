@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Variables;
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -23,7 +24,8 @@ public static  class CatletConfigValidations
         | ValidateList(toValidate, c => c.Drives, ValidateCatletDriveConfig, path, minCount: 0, maxCount: 64)
         | ValidateProperty(toValidate, c => c.Cpu, ValidateCatletCpuConfig, path)
         | ValidateProperty(toValidate, c => c.Memory, ValidateCatletMemoryConfig, path)
-        | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path);
+        | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path)
+        | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
 
     public static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
         CatletDriveConfig toValidate,
