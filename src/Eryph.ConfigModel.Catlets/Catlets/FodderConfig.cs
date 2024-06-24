@@ -86,8 +86,8 @@ public class FodderConfig: ICloneableConfig<FodderConfig>, IHasVariableConfig
 
                 // A parameterized fodder content is only useful with its corresponding
                 // variables. Hence, we take the variables from the fodder config which
-                // provides the content.
-                fodder.Variables = childFodder.Content is not null
+                // provides the content or the source.
+                fodder.Variables = childFodder.Content is not null || childFodder.Source is not null
                     ? childFodder.Variables?.Select(x => x.Clone()).ToArray()
                     : fodder.Variables?.Select(x => x.Clone()).ToArray();
             }

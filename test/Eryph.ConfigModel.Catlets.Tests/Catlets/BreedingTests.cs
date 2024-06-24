@@ -506,6 +506,82 @@ public class BreedingTests
         breedChild.Fodder?[0].Remove.Should().BeTrue();
     }
 
+    [Fact]
+    public void Fodder_from_parent_with_source_is_not_removed()
+    {
+        var parent = new CatletConfig
+        {
+            Name = "parent",
+            Fodder =
+            [
+                new FodderConfig()
+                {
+                    Source = "gene:somegene/utt/123:gene1",
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:somegene/utt/123:gene2",
+                },
+            ],
+        };
+
+        var child = new CatletConfig
+        {
+            Name = "child",
+            Fodder =
+            [
+                new FodderConfig()
+                {
+                    Source = "gene:somegene/utt/123:gene1",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "testVariable",
+                            Value = "gene 1 child fodder value",
+                        },
+                    ],
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:somegene/utt/123:gene2",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "testVariable",
+                            Value = "gene 2 child fodder value",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var breedChild = parent.Breed(child);
+
+        breedChild.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Source.Should().Be("gene:somegene/utt/123:gene1");
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("testVariable");
+                        variable.Value.Should().Be("gene 1 child fodder value");
+                    });
+            },
+            fodder =>
+            {
+                fodder.Source.Should().Be("gene:somegene/utt/123:gene2");
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("testVariable");
+                        variable.Value.Should().Be("gene 2 child fodder value");
+                    });
+            });
+    }
+
     [Theory]
     [InlineData(MutationType.Merge, 2)]
     [InlineData(MutationType.Remove, 1)]
