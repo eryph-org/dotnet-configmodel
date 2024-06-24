@@ -24,7 +24,7 @@ public static  class CatletConfigValidations
         | ValidateList(toValidate, c => c.Drives, ValidateCatletDriveConfig, path, minCount: 0, maxCount: 64)
         | ValidateProperty(toValidate, c => c.Cpu, ValidateCatletCpuConfig, path)
         | ValidateProperty(toValidate, c => c.Memory, ValidateCatletMemoryConfig, path)
-        | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path)
+        | ValidateCatletFodderConfigs(toValidate, path)
         | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
 
     public static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
@@ -70,13 +70,18 @@ public static  class CatletConfigValidations
         | guardnot(memorySize > 12 * 1024 * 1024, Error.New("The memory size must be at most 12 TB."))
             .ToValidation();
 
+    private static Validation<ValidationIssue, Unit> ValidateCatletFodderConfigs(
+        CatletConfig toValidate,
+        string path = "") =>
+        FodderConfigValidations.ValidateFodderConfigs(toValidate, path)
+        | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path);
+
     private static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
         FodderConfig toValidate,
         string path = "") =>
-        FodderConfigValidations.ValidateFodderConfig(toValidate, path)
-        | guard(toValidate.Remove.GetValueOrDefault()
-                || notEmpty(toValidate.Content)
-                || notEmpty(toValidate.Source),
+        guard(toValidate.Remove.GetValueOrDefault()
+              || notEmpty(toValidate.Content)
+              || notEmpty(toValidate.Source),
                 new ValidationIssue(path, "The content or source must be specified when adding fodder."))
             .ToValidation();
 }

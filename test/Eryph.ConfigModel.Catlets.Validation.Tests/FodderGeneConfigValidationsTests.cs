@@ -108,6 +108,38 @@ public class FodderGeneConfigValidationsTests
     }
 
     [Fact]
+    public void ValidateFodderGeneConfig_DuplicateFodderName_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "test-fodder",
+                    Content = "first test content",
+                },
+                new FodderConfig()
+                {
+                    Name = "test-fodder",
+                    Content = "second test content",
+                },
+            },
+
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder");
+                issue.Message.Should().Be("The fodder name 'test-fodder' is not unique.");
+            });
+    }
+
+    [Fact]
     public void ValidateFodderGeneConfig_FodderWithVariables_ReturnsFail()
     {
         var config = new FodderGeneConfig

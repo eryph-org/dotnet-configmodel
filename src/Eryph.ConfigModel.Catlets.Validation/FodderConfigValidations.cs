@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
-using JetBrains.Annotations;
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -16,6 +16,13 @@ namespace Eryph.ConfigModel;
 
 internal static class FodderConfigValidations
 {
+    public static Validation<ValidationIssue, Unit> ValidateFodderConfigs(
+        IHasFodderConfig toValidate,
+        string path = "") =>
+        from _ in ValidateList(toValidate, c => c.Fodder, ValidateFodderConfig, path)
+        from __ in ValidateProperty(toValidate, c => c.Fodder, ValidateNoDuplicateFodder, path)
+        select unit;
+
     public static Validation<ValidationIssue, Unit> ValidateFodderConfig(
         FodderConfig toValidate,
         string path = "") =>
@@ -96,5 +103,25 @@ internal static class FodderConfigValidations
                                path,
                                "The variable type cannot be specified when the fodder is a reference."))
                        .ToValidation()
+        select unit;
+
+    private static Validation<Error, Unit> ValidateNoDuplicateFodder(
+        FodderConfig[] fodderConfigs) =>
+        from fodderNames in fodderConfigs
+            .Map(fc => from name in FodderName.NewValidation(fc.Name)
+                      from source in Optional(fc.Source)
+                          .Filter(notEmpty)
+                          .Map(s => GeneIdentifier.NewEither(s).ToValidation())
+                          .Sequence()
+                      select (Name: name, Source: source))
+            .Sequence()
+        from _ in fodderNames
+            .GroupBy(identity)
+            .Filter(g => g.Count() > 1)
+            .Map(g => g.Key)
+            .Map(n => Fail<Error, Unit>(Error.New(n.Source.Match(
+                    Some: s => $"The fodder name '{n.Name}' for source '{s}' is not unique.",
+                    None: () =>$"The fodder name '{n.Name}' is not unique."))))
+            .Sequence()
         select unit;
 }
