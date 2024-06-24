@@ -470,44 +470,51 @@ public class BreedingTests
 
     }
 
-    [Fact]
-    public void Fodder_from_source_is_not_removed()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("fodder")]
+    public void Fodder_from_source_is_not_removed(string fodderName)
     {
         var parent = new CatletConfig
         {
             Name = "Parent",
-            Fodder = new[]
-            {
+            Fodder =
+            [
                 new FodderConfig()
                 {
-                    Source = "gene:somegene/utt/123:gene1"
-                }
-            }
+                    Name = fodderName,
+                    Source = "gene:somegene/utt/123:gene1",
+                },
+            ],
         };
 
         var child = new CatletConfig
         {
             Name = "child",
-            Fodder = new[]
-            {
+            Fodder =
+            [
                 new FodderConfig()
                 {
+                    Name = fodderName,
                     Source = "gene:somegene/utt/123:gene1",
-                    Remove = true
-                }
-            }
+                    Remove = true,
+                },
+            ],
         };
 
         var breedChild = parent.Breed(child);
 
-        breedChild.Fodder.Should().NotBeNull();
-        breedChild.Fodder.Should().HaveCount(1);
-        breedChild.Fodder?[0].Source.Should().Be("gene:somegene/utt/123:gene1");
-        breedChild.Fodder?[0].Remove.Should().BeTrue();
+        breedChild.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Name.Should().Be(fodderName);
+                fodder.Source.Should().Be("gene:somegene/utt/123:gene1");
+                fodder.Remove.Should().BeTrue();
+            });
     }
 
     [Fact]
-    public void Fodder_from_parent_with_source_is_not_removed()
+    public void Fodder_with_and_without_source_is_mixed_separately()
     {
         var parent = new CatletConfig
         {
@@ -516,6 +523,16 @@ public class BreedingTests
             [
                 new FodderConfig()
                 {
+                    Name = "fodder",
+                    Content = "parent fodder content",
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:somegene/utt/123:gene1",
+                },
+                new FodderConfig()
+                {
+                    Name = "fodder",
                     Source = "gene:somegene/utt/123:gene1",
                 },
                 new FodderConfig()
@@ -532,6 +549,19 @@ public class BreedingTests
             [
                 new FodderConfig()
                 {
+                    Name = "fodder",
+                    Content = "child fodder content",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "testVariable",
+                            Value = "child fodder value",
+                        },
+                    ],
+                },
+                new FodderConfig()
+                {
                     Source = "gene:somegene/utt/123:gene1",
                     Variables =
                     [
@@ -539,6 +569,19 @@ public class BreedingTests
                         {
                             Name = "testVariable",
                             Value = "gene 1 child fodder value",
+                        },
+                    ],
+                },
+                new FodderConfig()
+                {
+                    Name = "fodder",
+                    Source = "gene:somegene/utt/123:gene1",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "testVariable",
+                            Value = "gene 1 with name child fodder value",
                         },
                     ],
                 },
@@ -557,11 +600,23 @@ public class BreedingTests
             ],
         };
 
-        var breedChild = parent.Breed(child);
+        var breedChild = parent.Breed(child, "dbosoft/testparent");
 
         breedChild.Fodder.Should().SatisfyRespectively(
             fodder =>
             {
+                fodder.Name.Should().Be("fodder");
+                //fodder.Source.Should().Be("gene:dbosoft/testparent:fodder");
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("testVariable");
+                        variable.Value.Should().Be("child fodder value");
+                    });
+            },
+            fodder =>
+            {
+                fodder.Name.Should().BeNull();
                 fodder.Source.Should().Be("gene:somegene/utt/123:gene1");
                 fodder.Variables.Should().SatisfyRespectively(
                     variable =>
@@ -572,6 +627,18 @@ public class BreedingTests
             },
             fodder =>
             {
+                fodder.Name.Should().Be("fodder");
+                fodder.Source.Should().Be("gene:somegene/utt/123:gene1");
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("testVariable");
+                        variable.Value.Should().Be("gene 1 with name child fodder value");
+                    });
+            },
+            fodder =>
+            {
+                fodder.Name.Should().BeNull();
                 fodder.Source.Should().Be("gene:somegene/utt/123:gene2");
                 fodder.Variables.Should().SatisfyRespectively(
                     variable =>
@@ -733,6 +800,73 @@ public class BreedingTests
             fodder =>
             {
                 fodder.Content.Should().Be("child fodder content");
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("childVariable");
+                        variable.Type.Should().BeNull();
+                        variable.Value.Should().Be("string value");
+                        variable.Required.Should().BeNull();
+                        variable.Secret.Should().BeNull();
+                    });
+            });
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("fodder")]
+    public void Variables_in_fodder_are_replaced_when_source_is_specified(string fodderName)
+    {
+        var parent = new CatletConfig
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = fodderName,
+                    Source = "gene:somegene/utt/123:gene1",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "parentVariable",
+                            Type = VariableType.Number,
+                            Value = "4.2",
+                            Required = true,
+                            Secret = true,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var child = new CatletConfig
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = fodderName,
+                    Source = "gene:somegene/utt/123:gene1",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "childVariable",
+                            Value = "string value",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var breedChild = parent.Breed(child);
+
+        breedChild.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Name.Should().Be(fodderName);
+                fodder.Source.Should().Be("gene:somegene/utt/123:gene1");
                 fodder.Variables.Should().SatisfyRespectively(
                     variable =>
                     {
