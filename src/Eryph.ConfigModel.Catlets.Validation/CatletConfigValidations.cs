@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
-using Eryph.ConfigModel.Variables;
 using LanguageExt;
 using LanguageExt.Common;
 

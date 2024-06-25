@@ -1,5 +1,4 @@
 using Eryph.ConfigModel.Variables;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace Eryph.ConfigModel.Catlets.Validation.Tests;
 
@@ -51,7 +50,16 @@ public class CatletConfigValidationsTests
                 new FodderConfig()
                 {
                     Name = "my-fodder",
-                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                    Content = "my fodder content",
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder",
+                },
+                new FodderConfig()
+                {
+                    Name = "my-gene-fodder",
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder",
                 },
             },
         };

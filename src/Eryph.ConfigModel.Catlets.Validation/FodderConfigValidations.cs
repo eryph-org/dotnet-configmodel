@@ -108,20 +108,28 @@ internal static class FodderConfigValidations
     private static Validation<Error, Unit> ValidateNoDuplicateFodder(
         FodderConfig[] fodderConfigs) =>
         from fodderNames in fodderConfigs
-            .Map(fc => from name in FodderName.NewValidation(fc.Name)
-                      from source in Optional(fc.Source)
-                          .Filter(notEmpty)
-                          .Map(s => GeneIdentifier.NewEither(s).ToValidation())
-                          .Sequence()
-                      select (Name: name, Source: source))
+            .Map(fc => from name in Optional(fc.Name)
+                           .Filter(notEmpty)
+                           .Map(n => FodderName.NewEither(n).ToValidation())
+                           .Sequence()
+                       from source in Optional(fc.Source)
+                           .Filter(notEmpty)
+                           .Map(s => GeneIdentifier.NewEither(s).ToValidation())
+                           .Sequence()
+                       select (Name: name, Source: source))
             .Sequence()
         from _ in fodderNames
             .GroupBy(identity)
             .Filter(g => g.Count() > 1)
             .Map(g => g.Key)
-            .Map(n => Fail<Error, Unit>(Error.New(n.Source.Match(
-                    Some: s => $"The fodder name '{n.Name}' for source '{s}' is not unique.",
-                    None: () =>$"The fodder name '{n.Name}' is not unique."))))
+            .Map(k => k.Name.Match(
+                Some: n => k.Source.Match(
+                    Some: s => $"The fodder name '{n}' for source '{s}' is not unique.",
+                    None: () => $"The fodder name '{n}' is not unique."),
+                None: () => k.Source.Match(
+                    Some: s => $"The fodder source '{s}' is not unique.",
+                    None: () => "Fodder name and source are missing.")))
+            .Map(m => Fail<Error, Unit>(Error.New(m)))
             .Sequence()
         select unit;
 }
