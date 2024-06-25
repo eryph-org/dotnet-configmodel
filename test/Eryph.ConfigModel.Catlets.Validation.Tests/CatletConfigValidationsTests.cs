@@ -250,7 +250,7 @@ public class CatletConfigValidationsTests
             {
                 issue.Member.Should().Be("Variables[0].Name");
                 issue.Message.Should()
-                    .Be("The variable name contains invalid characters. Only latin characters and numbers are permitted.");
+                    .Be("The variable name contains invalid characters. Only latin characters, numbers and underscores are permitted.");
             },
             issue =>
             {
