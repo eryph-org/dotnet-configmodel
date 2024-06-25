@@ -20,9 +20,15 @@ public static class FodderGeneConfigValidations
     public static Validation<ValidationIssue, Unit> ValidateFodderGeneConfig(
         FodderGeneConfig toValidate,
         string path = "") =>
-        ValidateProperty(toValidate, c => c.Name, GeneName.NewValidation, path, required: true)
+        ValidateProperty(toValidate, c => c.Name, ValidateFodderGeneName, path, required: true)
         | ValidateFodderConfigs(toValidate, path)
         | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
+
+    private static Validation<Error, GeneName> ValidateFodderGeneName(string name) =>
+        from validName in GeneName.NewValidation(name)
+        from _ in guardnot(validName == GeneName.New("catlet"),
+            Error.New("The gene name 'catlet' is reserved."))
+        select validName;
 
     private static Validation<ValidationIssue, Unit> ValidateFodderConfigs(
         FodderGeneConfig toValidate,

@@ -11,6 +11,34 @@ namespace Eryph.ConfigModel.Catlets.Validation.Tests;
 
 public class FodderGeneConfigValidationsTests
 {
+    [Theory]
+    [InlineData("catlet")]
+    public void ValidateFodderGeneConfig_FodderGeneNameIsReserved_ReturnsFail(
+        string name)
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = name,
+            Fodder = new[]
+            {
+                new FodderConfig
+                {
+                    Name = "test-fodder",
+                    Content = "test content",
+                },
+            },
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Name");
+                issue.Message.Should().Be("The gene name 'catlet' is reserved.");
+            });
+    }
+
     [Fact]
     public void ValidateFodderGeneConfig_FodderWithSource_ReturnsFail()
     {

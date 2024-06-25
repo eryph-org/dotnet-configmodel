@@ -606,7 +606,7 @@ public class BreedingTests
             fodder =>
             {
                 fodder.Name.Should().Be("fodder");
-                //fodder.Source.Should().Be("gene:dbosoft/testparent:fodder");
+                fodder.Source.Should().Be("gene:dbosoft/testparent:catlet");
                 fodder.Variables.Should().SatisfyRespectively(
                     variable =>
                     {

@@ -59,6 +59,12 @@ public class FodderConfig: ICloneableConfig<FodderConfig>, IHasVariableConfig
         {
             var mergedFodder = parentFodder.Clone();
 
+            if (string.IsNullOrWhiteSpace(mergedFodder.Source)
+                && !string.IsNullOrWhiteSpace(parentReference))
+            {
+                mergedFodder.Source = $"gene:{parentReference}:catlet";
+            }
+
             if (childFodderByKey.TryGetValue(CreateFodderKey(parentFodder), out var childFodder))
             {
                 if (childFodder.Remove.GetValueOrDefault()
