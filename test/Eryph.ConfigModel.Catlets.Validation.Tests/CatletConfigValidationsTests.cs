@@ -1,5 +1,4 @@
 using Eryph.ConfigModel.Variables;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace Eryph.ConfigModel.Catlets.Validation.Tests;
 
@@ -51,7 +50,16 @@ public class CatletConfigValidationsTests
                 new FodderConfig()
                 {
                     Name = "my-fodder",
-                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                    Content = "my fodder content",
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder",
+                },
+                new FodderConfig()
+                {
+                    Name = "my-gene-fodder",
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder",
                 },
             },
         };
@@ -62,7 +70,137 @@ public class CatletConfigValidationsTests
     }
 
     [Fact]
-    public void ValidateCatletConfig_ConfigWithInvalidValues_ReturnsIssues()
+    public void ValidateCatletConfig_DuplicateFodderNameWithDifferentSources_ReturnsSuccess()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Project = "my-project",
+            Parent = "acme/acme-os/1.0.0",
+            Environment = "my-environment",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "my-fodder",
+                    Content = "test fodder content"
+                },
+                new FodderConfig()
+                {
+                    Name = "my-fodder",
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                },
+                new FodderConfig()
+                {
+                    Name = "my-fodder",
+                    Source = "gene:acme/other-fodder/1.0:my-fodder"
+                },
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeSuccess();
+    }
+
+    [Fact]
+    public void ValidateCatletConfig_DuplicateFodderNameWithSameSource_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Project = "my-project",
+            Parent = "acme/acme-os/1.0.0",
+            Environment = "my-environment",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "my-fodder",
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                },
+                new FodderConfig()
+                {
+                    Name = "my-fodder",
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                },
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder");
+                issue.Message.Should().Be("The fodder name 'my-fodder' for source 'gene:acme/acme-fodder/1.0:my-fodder' is not unique.");
+            });
+    }
+
+    [Fact]
+    public void ValidateCatletConfig_DuplicateFodderNameWithoutSource_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Project = "my-project",
+            Parent = "acme/acme-os/1.0.0",
+            Environment = "my-environment",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Name = "my-fodder",
+                    Content = "test fodder content",
+                },
+                new FodderConfig()
+                {
+                    Name = "my-fodder",
+                    Content = "other test fodder content",
+                },
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder");
+                issue.Message.Should().Be("The fodder name 'my-fodder' is not unique.");
+            });
+    }
+
+    [Fact]
+    public void ValidateCatletConfig_DuplicateFodderSourceWithoutName_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Project = "my-project",
+            Parent = "acme/acme-os/1.0.0",
+            Environment = "my-environment",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                },
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder");
+                issue.Message.Should().Be("The fodder source 'gene:acme/acme-fodder/1.0:my-fodder' is not unique.");
+            });
+    }
+
+    [Fact]
+    public void ValidateCatletConfig_ConfigWithInvalidValues_ReturnsFail()
     {
         var catletConfig = new CatletConfig()
         {
@@ -151,7 +289,7 @@ public class CatletConfigValidationsTests
             {
                 issue.Member.Should().Be("Variables[0].Name");
                 issue.Message.Should()
-                    .Be("The variable name contains invalid characters. Only latin characters and numbers are permitted.");
+                    .Be("The variable name contains invalid characters. Only latin characters, numbers and underscores are permitted.");
             },
             issue =>
             {
