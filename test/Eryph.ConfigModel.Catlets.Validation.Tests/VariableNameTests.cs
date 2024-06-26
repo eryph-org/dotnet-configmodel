@@ -39,6 +39,7 @@ public class VariableNameTests
         error => error.Message.Should().Be(
             "The variable name contains invalid characters. Only latin characters, numbers and underscores are permitted."));
     }
+
     [Fact]
     public void NewValidation_VariableNameWithLeadingDigit_ReturnsFail()
     {

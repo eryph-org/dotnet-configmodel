@@ -169,6 +169,37 @@ public class CatletConfigValidationsTests
     }
 
     [Fact]
+    public void ValidateCatletConfig_DuplicateFodderSourceWithoutName_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Project = "my-project",
+            Parent = "acme/acme-os/1.0.0",
+            Environment = "my-environment",
+            Fodder = new[]
+            {
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder"
+                },
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder");
+                issue.Message.Should().Be("The fodder source 'gene:acme/acme-fodder/1.0:my-fodder' is not unique.");
+            });
+    }
+
+    [Fact]
     public void ValidateCatletConfig_ConfigWithInvalidValues_ReturnsFail()
     {
         var catletConfig = new CatletConfig()
