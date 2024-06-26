@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
@@ -812,10 +813,24 @@ public class BreedingTests
             });
     }
 
-    [Theory]
-    [InlineData(null)]
-    [InlineData("fodder")]
-    public void Variables_in_fodder_are_replaced_when_source_is_specified(string fodderName)
+    public static readonly IEnumerable<string> fodderNames =
+    [
+        "test-fodder",
+        "TEST-FODDER"
+    ];
+
+    public static readonly IEnumerable<string> genesets =
+    [
+        "somegene/utt/123",
+        "SOMEGENE/UTT/123",
+    ];
+
+    [Theory, CombinatorialData]
+    public void Variables_in_fodder_are_replaced_when_source_and_name_are_specified(
+        [CombinatorialMemberData(nameof(fodderNames))] string parentFodderName,
+        [CombinatorialMemberData(nameof(genesets))] string parentGeneset,
+        [CombinatorialMemberData(nameof(fodderNames))] string childFodderName,
+        [CombinatorialMemberData(nameof(genesets))] string childGeneset)
     {
         var parent = new CatletConfig
         {
@@ -823,8 +838,8 @@ public class BreedingTests
             [
                 new FodderConfig
                 {
-                    Name = fodderName,
-                    Source = "gene:somegene/utt/123:gene1",
+                    Name = parentFodderName,
+                    Source = $"gene:{parentGeneset}:gene1",
                     Variables =
                     [
                         new VariableConfig
@@ -846,8 +861,8 @@ public class BreedingTests
             [
                 new FodderConfig
                 {
-                    Name = fodderName,
-                    Source = "gene:somegene/utt/123:gene1",
+                    Name = childFodderName,
+                    Source = $"gene:{childGeneset}:gene1",
                     Variables =
                     [
                         new VariableConfig
@@ -865,8 +880,73 @@ public class BreedingTests
         breedChild.Fodder.Should().SatisfyRespectively(
             fodder =>
             {
-                fodder.Name.Should().Be(fodderName);
-                fodder.Source.Should().Be("gene:somegene/utt/123:gene1");
+                fodder.Name.Should().Be(parentFodderName);
+                fodder.Source.Should().Be($"gene:{parentGeneset}:gene1");
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("childVariable");
+                        variable.Type.Should().BeNull();
+                        variable.Value.Should().Be("string value");
+                        variable.Required.Should().BeNull();
+                        variable.Secret.Should().BeNull();
+                    });
+            });
+    }
+
+    [Theory, CombinatorialData]
+    public void Variables_in_fodder_are_replaced_when_source_is_specified(
+    [CombinatorialMemberData(nameof(genesets))] string parentGeneset,
+    [CombinatorialMemberData(nameof(genesets))] string childGeneset)
+    {
+        var parent = new CatletConfig
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Source = $"gene:{parentGeneset}:gene1",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "parentVariable",
+                            Type = VariableType.Number,
+                            Value = "4.2",
+                            Required = true,
+                            Secret = true,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var child = new CatletConfig
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Source = $"gene:{childGeneset}:gene1",
+                    Variables =
+                    [
+                        new VariableConfig
+                        {
+                            Name = "childVariable",
+                            Value = "string value",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var breedChild = parent.Breed(child);
+
+        breedChild.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Name.Should().BeNull();
+                fodder.Source.Should().Be($"gene:{parentGeneset}:gene1");
                 fodder.Variables.Should().SatisfyRespectively(
                     variable =>
                     {
