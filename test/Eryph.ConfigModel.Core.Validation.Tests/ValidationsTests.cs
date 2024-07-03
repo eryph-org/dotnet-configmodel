@@ -1,14 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using LanguageExt.Common;
 
 namespace Eryph.ConfigModel.Core.Validation.Tests;
 
 public class ValidationsTests
 {
+    [Fact]
+    public void ValidateDistinct_DuplicateKeys_ReturnsFail()
+    {
+        var items = new[]
+        {
+            new TestData("John", "Doe", 42),
+            new TestData("Jane", "Doe", 41),
+            new TestData("Alice", "Adler", 52),
+            new TestData("John", "Doe", 43),
+            new TestData("Jane", "Doe", 42),
+        };
+
+        var result = Validations.ValidateDistict<TestData, TestDataKey>(
+            items, data => new TestDataKey(data.FirstName, data.LastName), "full name");
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            error => error.Message.Should().Be("The full name 'John Doe' is not unique."),
+            error => error.Message.Should().Be("The full name 'Jane Doe' is not unique."));
+    }
+
+    [Fact]
+    public void ValidateDistinct_InvalidKeys_ReturnsFail()
+    {
+        var items = new[]
+        {
+            new TestData("John", "Doe", 42),
+            new TestData("Jane", "Doe", 41),
+        };
+
+        var result = Validations.ValidateDistict<TestData, TestDataKey>(
+            items, data => Error.New($"The first name '{data.FirstName}' is invalid."), "full name");
+
+        
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            error =>
+            {
+                error.Message.Should().Be("Cannot create the full name.");
+                error.Inner.Should().BeSome().Which.Message
+                    .Should().Be("The first name 'John' is invalid.");
+            },
+            error =>
+            {
+                error.Message.Should().Be("Cannot create the full name.");
+                error.Inner.Should().BeSome().Which.Message
+                    .Should().Be("The first name 'Jane' is invalid.");
+            });
+    }
+
+    private sealed class TestData(string firstName, string lastName, int age)
+    {
+        public string FirstName { get; } = firstName;
+
+        public string LastName { get; } = lastName;
+       
+        public int Age { get; } = age;
+    };
+
+    private sealed record TestDataKey(string FirstName, string LastName)
+    {
+        public override string ToString() => $"{FirstName} {LastName}";
+    };
+
     [Theory]
     [InlineData("some..test")]
     [InlineData("some--test")]

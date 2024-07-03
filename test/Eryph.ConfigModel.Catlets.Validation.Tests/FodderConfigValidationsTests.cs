@@ -75,13 +75,13 @@ public class FodderConfigValidationsTests
             Content = "test content",
             FileName = "test-file-sh",
             Secret = true,
-            Variables = new[]
-            {
+            Variables =
+            [
                 new VariableConfig()
                 {
                     Name  = "testVariable",
-                },
-            }
+                }
+            ]
         };
 
         var result = ValidateFodderConfig(fodderConfig);
@@ -112,5 +112,86 @@ public class FodderConfigValidationsTests
                 issue.Member.Should().Be("Variables");
                 issue.Message.Should().Be("The variables must not be specified when the fodder is removed.");
             });
+    }
+
+    [Fact]
+    public void ValidateFodderConfig_MultipleUsesOfGeneSetWithSameTag_ReturnsSuccess()
+    {
+        var fodderConfigs = new TestHasFodderConfig()
+        {
+            Fodder =
+            [
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder:first-fodder-gene",
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/latest:second-fodder-gene",
+                },
+                new FodderConfig()
+                {
+                    Name = "test-fodder",
+                    Source = "gene:ACME/ACME-fodder/latest:second-fodder-gene",
+                    Remove = true,
+                },
+            ],
+        };
+
+        var result = ValidateFodderConfigs(fodderConfigs);
+
+        result.Should().BeSuccess();
+    }
+
+    [Fact]
+    public void ValidateFodderConfig_MultipleUsesOfGeneSetWithDifferentTag_ReturnsFail()
+    {
+        var fodderConfigs = new TestHasFodderConfig()
+        {
+            Fodder =
+            [
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder:first-fodder-gene",
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:second-fodder-gene",
+                },
+                new FodderConfig()
+                {
+                    Name = "test-fodder",
+                    Source = "gene:ACME/ACME-fodder/2.0:second-fodder-gene",
+                    Remove = true,
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:acme/other-fodder:other-fodder-gene",
+                },
+                new FodderConfig()
+                {
+                    Source = "gene:acme/other-fodder/1.0:other-fodder-gene",
+                },
+            ],
+        };
+
+        var result = ValidateFodderConfigs(fodderConfigs);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder");
+                issue.Message.Should().Be("The gene set 'acme/acme-fodder' is specified with different tags ('latest', '1.0', '2.0').");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder");
+                issue.Message.Should().Be("The gene set 'acme/other-fodder' is specified with different tags ('latest', '1.0').");
+            });
+    }
+
+    private sealed class TestHasFodderConfig : IHasFodderConfig
+    {
+        public FodderConfig[]? Fodder { get; set; }
     }
 }

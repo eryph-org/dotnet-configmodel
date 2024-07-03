@@ -20,17 +20,27 @@ public static  class CatletConfigValidations
         | ValidateProperty(toValidate, c => c.Environment, EnvironmentName.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Parent, GeneSetIdentifier.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Location, StorageIdentifier.NewValidation, path)
-        | ValidateList(toValidate, c => c.Drives, ValidateCatletDriveConfig, path, minCount: 0, maxCount: 64)
+        | ValidateCatletDriveConfigs(toValidate, path)
         | ValidateProperty(toValidate, c => c.Cpu, ValidateCatletCpuConfig, path)
         | ValidateProperty(toValidate, c => c.Memory, ValidateCatletMemoryConfig, path)
-        | ValidateList(toValidate, c => c.Capabilities, ValidateCatletCapabilityConfig, path)
-        | ValidateList(toValidate, c => c.Networks, ValidateCatletNetworkConfig, path)
-        // Hyper-V on Windows Server 2016 only supports up to 8 network adapters.
-        | ValidateList(toValidate, c => c.NetworkAdapters, ValidateCatletNetworkAdapterConfig, path, minCount: 0, maxCount: 8)
+        | ValidateCatletCapabilityConfigs(toValidate, path)
+        | ValidateCatletNetworkConfigs(toValidate, path)
+        | ValidateCatletNetworkAdapterConfigs(toValidate, path)
         | ValidateCatletFodderConfigs(toValidate, path)
         | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
 
-    public static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
+    private static Validation<ValidationIssue, Unit> ValidateCatletDriveConfigs(
+        CatletConfig toValidate,
+        string path = "") =>
+        from _ in ValidateList(toValidate, c => c.Drives,
+            ValidateCatletDriveConfig, path, minCount: 0, maxCount: 64)
+        from __ in ValidateProperty(toValidate, c => c.Drives,
+            drive => Validations.ValidateDistict(
+                drive, d => CatletDriveName.NewValidation(d.Name), "drive name"),
+            path)
+        select unit;
+
+    private static Validation<ValidationIssue, Unit> ValidateCatletDriveConfig(
         CatletDriveConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, CatletDriveName.NewValidation, path, required: true)
@@ -50,7 +60,7 @@ public static  class CatletConfigValidations
         guard(size > 0, Error.New("The drive size must be positive.")).ToValidation()
         | guardnot(size > 64 * 1024, Error.New("The drive size must be at most 64 TB.")).ToValidation();
 
-    public static Validation<ValidationIssue, Unit> ValidateCatletCpuConfig(
+    private static Validation<ValidationIssue, Unit> ValidateCatletCpuConfig(
         CatletCpuConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Count, ValidateCatletCpuCount, path);
@@ -59,7 +69,7 @@ public static  class CatletConfigValidations
         guard(count > 0, Error.New("The number of CPUs must be positive.")).ToValidation()
         | guardnot(count > 240, Error.New("The number of CPUs must be at most 240.")).ToValidation();
 
-    public static Validation<ValidationIssue, Unit> ValidateCatletMemoryConfig(
+    private static Validation<ValidationIssue, Unit> ValidateCatletMemoryConfig(
         CatletMemoryConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Maximum, ValidateCatletMemorySize, path)
@@ -87,19 +97,50 @@ public static  class CatletConfigValidations
               || notEmpty(toValidate.Source),
                 new ValidationIssue(path, "The content or source must be specified when adding fodder."))
             .ToValidation();
+    private static Validation<ValidationIssue, Unit> ValidateCatletCapabilityConfigs(
+        CatletConfig toValidate,
+        string path = "") =>
+        from _ in ValidateList(toValidate, c => c.Capabilities, ValidateCatletCapabilityConfig, path)
+        from __ in ValidateProperty(toValidate, c => c.Capabilities,
+            drive => Validations.ValidateDistict(
+                drive, d => CatletCapabilityName.NewValidation(d.Name), "capability name"),
+            path)
+        select unit;
 
-    public static Validation<ValidationIssue, Unit> ValidateCatletCapabilityConfig(
+    private static Validation<ValidationIssue, Unit> ValidateCatletCapabilityConfig(
         CatletCapabilityConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, CatletCapabilityName.NewValidation, path, required: true);
 
-    public static Validation<ValidationIssue, Unit> ValidateCatletNetworkConfig(
+    private static Validation<ValidationIssue, Unit> ValidateCatletNetworkConfigs(
+        CatletConfig toValidate,
+        string path = "") =>
+        from _ in ValidateList(toValidate, c => c.Networks, ValidateCatletNetworkConfig, path)
+        from __ in ValidateProperty(toValidate, c => c.Networks,
+            drive => Validations.ValidateDistict(
+                drive, d => EryphNetworkName.NewValidation(d.Name), "network name"),
+            path)
+        select unit;
+
+    private static Validation<ValidationIssue, Unit> ValidateCatletNetworkConfig(
         CatletNetworkConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, EryphNetworkName.NewValidation, path, required: true)
         | ValidateProperty(toValidate, c => c.AdapterName, CatletNetworkAdapterName.NewValidation, path);
 
-    public static Validation<ValidationIssue, Unit> ValidateCatletNetworkAdapterConfig(
+    private static Validation<ValidationIssue, Unit> ValidateCatletNetworkAdapterConfigs(
+        CatletConfig toValidate,
+        string path = "") =>
+        from _ in ValidateList(toValidate, c => c.NetworkAdapters,
+            // Hyper-V on Windows Server 2016 only supports up to 8 network adapters.
+            ValidateCatletNetworkAdapterConfig, path, minCount: 0, maxCount: 8)
+        from __ in ValidateProperty(toValidate, c => c.NetworkAdapters,
+            drive => Validations.ValidateDistict(
+                drive, d => CatletNetworkAdapterName.NewValidation(d.Name), "network adapter name"),
+            path)
+        select unit;
+
+    private static Validation<ValidationIssue, Unit> ValidateCatletNetworkAdapterConfig(
         CatletNetworkAdapterConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, CatletNetworkAdapterName.NewValidation, path, required: true);

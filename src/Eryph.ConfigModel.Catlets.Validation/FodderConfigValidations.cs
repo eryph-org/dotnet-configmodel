@@ -21,6 +21,7 @@ internal static class FodderConfigValidations
         string path = "") =>
         from _ in ValidateList(toValidate, c => c.Fodder, ValidateFodderConfig, path)
         from __ in ValidateProperty(toValidate, c => c.Fodder, ValidateNoDuplicateFodder, path)
+        from ___ in ValidateProperty(toValidate, c => c.Fodder, ValidateNoMultipleTagsForGeneSet, path)
         select unit;
 
     public static Validation<ValidationIssue, Unit> ValidateFodderConfig(
@@ -107,16 +108,17 @@ internal static class FodderConfigValidations
 
     private static Validation<Error, Unit> ValidateNoDuplicateFodder(
         FodderConfig[] fodderConfigs) =>
-        from fodderNames in fodderConfigs
-            .Map(fc => from name in Optional(fc.Name)
-                           .Filter(notEmpty)
-                           .Map(n => FodderName.NewEither(n).ToValidation())
-                           .Sequence()
-                       from source in Optional(fc.Source)
-                           .Filter(notEmpty)
-                           .Map(s => GeneIdentifier.NewEither(s).ToValidation())
-                           .Sequence()
-                       select (Name: name, Source: source))
+        from fodderNames in fodderConfigs.ToSeq()
+            .Map(fc =>
+                from name in Optional(fc.Name)
+                    .Filter(notEmpty)
+                    .Map(n => FodderName.NewEither(n).ToValidation())
+                    .Sequence()
+                from source in Optional(fc.Source)
+                    .Filter(notEmpty)
+                    .Map(s => GeneIdentifier.NewEither(s).ToValidation())
+                    .Sequence()
+                select (Name: name, Source: source))
             .Sequence()
         from _ in fodderNames
             .GroupBy(identity)
@@ -130,6 +132,32 @@ internal static class FodderConfigValidations
                     Some: s => $"The fodder source '{s}' is not unique.",
                     None: () => "Fodder name and source are missing.")))
             .Map(m => Fail<Error, Unit>(Error.New(m)))
+            .Sequence()
+        select unit;
+
+    private static Validation<Error, Unit> ValidateNoMultipleTagsForGeneSet(
+        FodderConfig[] fodderConfigs) =>
+        from geneIds in fodderConfigs.ToSeq()
+            .Map(fc => Optional(fc.Source).Filter(notEmpty))
+            .Somes()
+            .Map(s => GeneIdentifier.NewEither(s).ToValidation())
+            .Sequence()
+        from _ in ValidateNoMultipleTagsForGeneSet(geneIds)
+        select unit;
+
+    public static Validation<Error, Unit> ValidateNoMultipleTagsForGeneSet(
+        Seq<GeneIdentifier> geneIdentifiers) =>
+        from _ in Success<Error, Unit>(unit)
+        let duplicates = geneIdentifiers
+            .Map(id => id.GeneSet)
+            .Distinct()
+            .ToLookup(setId => (setId.Organization, setId.GeneSet))
+            .Filter(g => g.Count() > 1)
+        from __ in duplicates
+            .Map(g => (GeneSet: $"{g.Key.Organization}/{g.Key.GeneSet}",
+                Tags: string.Join(", ", g.Map(id => id.Tag).Distinct().Map(t => $"'{t.Value}'"))))
+            .Map(g => Fail<Error, Unit>(Error.New(
+                $"The gene set '{g.GeneSet}' is specified with different tags ({g.Tags}).")))
             .Sequence()
         select unit;
 }

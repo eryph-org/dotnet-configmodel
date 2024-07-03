@@ -16,6 +16,28 @@ public static class Validations
 {
     private static readonly Regex DriveRootRegex = new(@"^[a-zA-Z]:\\", RegexOptions.Compiled);
 
+    public static Validation<Error, Unit> ValidateDistict<TItem, TKey>(
+        TItem[] items,
+        Func<TItem, Validation<Error, TKey>> keySelector,
+        string keyName)
+        where TKey : IEquatable<TKey> =>
+        from itemsWithKeys in items
+            .Map(item =>
+                from key in keySelector(item)
+                    .ToEither()
+                    .MapLeft(errors => Error.New($"Cannot create the {keyName}.", Error.Many(errors)))
+                    .ToValidation()
+                select (Key: key, Item: item))
+            .Sequence()
+        let duplicateKeys = itemsWithKeys
+            .ToLookup(t => t.Key, t => t.Item)
+            .Filter(g => g.Count() > 1)
+            .Map(g => g.Key)
+        from _ in duplicateKeys
+            .Map(duplicateKey => Fail<Error, Unit>($"The {keyName} '{duplicateKey}' is not unique."))
+            .Sequence()
+        select unit;
+
     public static Validation<Error, string> ValidateNotEmpty(
         string? value,
         string valueName) =>
