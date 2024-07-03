@@ -35,7 +35,7 @@ public static  class CatletConfigValidations
         from _ in ValidateList(toValidate, c => c.Drives,
             ValidateCatletDriveConfig, path, minCount: 0, maxCount: 64)
         from __ in ValidateProperty(toValidate, c => c.Drives,
-            drive => Validations.ValidateDistict(
+            drive => Validations.ValidateDistinct(
                 drive, d => CatletDriveName.NewValidation(d.Name), "drive name"),
             path)
         select unit;
@@ -102,7 +102,7 @@ public static  class CatletConfigValidations
         string path = "") =>
         from _ in ValidateList(toValidate, c => c.Capabilities, ValidateCatletCapabilityConfig, path)
         from __ in ValidateProperty(toValidate, c => c.Capabilities,
-            drive => Validations.ValidateDistict(
+            drive => Validations.ValidateDistinct(
                 drive, d => CatletCapabilityName.NewValidation(d.Name), "capability name"),
             path)
         select unit;
@@ -117,7 +117,7 @@ public static  class CatletConfigValidations
         string path = "") =>
         from _ in ValidateList(toValidate, c => c.Networks, ValidateCatletNetworkConfig, path)
         from __ in ValidateProperty(toValidate, c => c.Networks,
-            drive => Validations.ValidateDistict(
+            drive => Validations.ValidateDistinct(
                 drive, d => EryphNetworkName.NewValidation(d.Name), "network name"),
             path)
         select unit;
@@ -135,7 +135,7 @@ public static  class CatletConfigValidations
             // Hyper-V on Windows Server 2016 only supports up to 8 network adapters.
             ValidateCatletNetworkAdapterConfig, path, minCount: 0, maxCount: 8)
         from __ in ValidateProperty(toValidate, c => c.NetworkAdapters,
-            drive => Validations.ValidateDistict(
+            drive => Validations.ValidateDistinct(
                 drive, d => CatletNetworkAdapterName.NewValidation(d.Name), "network adapter name"),
             path)
         select unit;

@@ -16,12 +16,18 @@ public static class Validations
 {
     private static readonly Regex DriveRootRegex = new(@"^[a-zA-Z]:\\", RegexOptions.Compiled);
 
-    public static Validation<Error, Unit> ValidateDistict<TItem, TKey>(
-        TItem[] items,
+    /// <summary>
+    /// Validates that the given <paramref name="items"/> are distinct by
+    /// the key which is produced by the <paramref name="keySelector"/>.
+    /// An error will be included for each key that is not unique.
+    /// The <paramref name="keyName"/> is used in the error message.
+    /// </summary>
+    public static Validation<Error, Unit> ValidateDistinct<TItem, TKey>(
+        IEnumerable<TItem> items,
         Func<TItem, Validation<Error, TKey>> keySelector,
         string keyName)
         where TKey : IEquatable<TKey> =>
-        from itemsWithKeys in items
+        from itemsWithKeys in items.ToSeq()
             .Map(item =>
                 from key in keySelector(item)
                     .ToEither()

@@ -21,7 +21,7 @@ public class ValidationsTests
             new TestData("Jane", "Doe", 42),
         };
 
-        var result = Validations.ValidateDistict<TestData, TestDataKey>(
+        var result = Validations.ValidateDistinct<TestData, TestDataKey>(
             items, data => new TestDataKey(data.FirstName, data.LastName), "full name");
 
         result.Should().BeFail().Which.Should().SatisfyRespectively(
@@ -38,7 +38,7 @@ public class ValidationsTests
             new TestData("Jane", "Doe", 41),
         };
 
-        var result = Validations.ValidateDistict<TestData, TestDataKey>(
+        var result = Validations.ValidateDistinct<TestData, TestDataKey>(
             items, data => Error.New($"The first name '{data.FirstName}' is invalid."), "full name");
 
         
