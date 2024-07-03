@@ -71,13 +71,11 @@ public class CatletConfig : ICloneableConfig<CatletConfig>, IHasFodderConfig, IH
             Store = Store,
             Parent = Parent,
             Cpu = Cpu?.Clone(),
-            Networks = Networks
-                ?.Select(x=>x.Clone()).ToArray(),
+            Networks = Networks?.Select(x=>x.Clone()).ToArray(),
             Capabilities = Capabilities?.Select(x=>x.Clone()).ToArray(),
             Drives = Drives?.Select(x=>x.Clone()).ToArray(),
             Fodder = Fodder?.Select(x=>x.Clone()).ToArray(),
-            NetworkAdapters = NetworkAdapters?
-                .Select(x=>x.Clone()).ToArray(),
+            NetworkAdapters = NetworkAdapters?.Select(x=>x.Clone()).ToArray(),
             Memory = Memory?.Clone(),
             Variables = Variables?.Select(x=>x.Clone()).ToArray(),
         };

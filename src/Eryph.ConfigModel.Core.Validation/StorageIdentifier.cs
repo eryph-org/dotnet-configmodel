@@ -12,6 +12,7 @@ public class StorageIdentifier : EryphName<StorageIdentifier>
                         value,
                         allowDots: true,
                         allowHyphens: true,
+                        allowUnderscores: false,
                         allowSpaces: false)
                      | Validations<StorageIdentifier>.ValidateLength(value, 1, 20));
     }

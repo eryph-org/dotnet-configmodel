@@ -22,20 +22,28 @@ public class CatletConfigValidationsTests
             Project = "my-project",
             Parent = "acme/acme-os/1.0.0",
             Environment = "my-environment",
-            Variables = new[]
-            {
+            Variables =
+            [
                 new VariableConfig()
                 {
                     Name = "myVariable",
                     Value = "my value",
+                }
+            ],
+            Capabilities = 
+            [
+                new CatletCapabilityConfig()
+                {
+                    Name = "secure_boot",
+                    Details = ["template:MicrosoftUEFICertificateAuthority"]
                 },
-            },
+            ],
             Cpu = new CatletCpuConfig()
             {
                 Count = 1,
             },
-            Drives = new[]
-            {
+            Drives =
+            [
                 new CatletDriveConfig()
                 {
                     Name = "sda"
@@ -43,10 +51,25 @@ public class CatletConfigValidationsTests
                 new CatletDriveConfig()
                 {
                     Name = "sdb"
+                }
+            ],
+            Networks = 
+            [
+                new CatletNetworkConfig()
+                {
+                    Name = "default",
+                    AdapterName = "eth0",
                 },
-            },
-            Fodder = new[]
-            {
+            ],
+            NetworkAdapters =
+            [
+                new CatletNetworkAdapterConfig()
+                {
+                    Name = "eth0",
+                },
+            ],
+            Fodder =
+            [
                 new FodderConfig()
                 {
                     Name = "my-fodder",
@@ -60,8 +83,8 @@ public class CatletConfigValidationsTests
                 {
                     Name = "my-gene-fodder",
                     Source = "gene:acme/acme-fodder/1.0:my-fodder",
-                },
-            },
+                }
+            ],
         };
 
         var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);

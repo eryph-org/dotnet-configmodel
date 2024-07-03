@@ -11,7 +11,8 @@ namespace Eryph.ConfigModel
             ValidOrThrow(Validations<CatletName>.ValidateCharacters(
                             value,
                             allowDots: true,
-                            allowHyphens:true,
+                            allowHyphens: true,
+                            allowUnderscores: false,
                             allowSpaces: false)
                         | Validations<CatletName>.ValidateLength(value, 1, 50));
         }

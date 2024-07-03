@@ -12,6 +12,7 @@ public class GeneName : EryphName<GeneName>
                          value,
                          allowDots: true,
                          allowHyphens: true,
+                         allowUnderscores: false,
                          allowSpaces: false)
                      | Validations<GeneName>.ValidateLength(value, 1, 20));
     }

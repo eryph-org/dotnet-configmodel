@@ -12,40 +12,43 @@ public class ValidationsTests
     [Theory]
     [InlineData("some..test")]
     [InlineData("some--test")]
+    [InlineData("some__test")]
     [InlineData("some  test")]
     public void ValidateCharacters_ConsecutiveSpecialCharacters_ReturnsFail(string value)
     {
-        var result = Validations.ValidateCharacters(value, "value", true, true, true);
+        var result = Validations.ValidateCharacters(value, "value", true, true, true, true);
 
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             error => error.Message.Should()
-                .Be("The value cannot contain consecutive dots, hyphens or spaces."));
+                .Be("The value cannot contain consecutive dots, hyphens, underscores or spaces."));
     }
 
     [Theory]
     [InlineData(".test")]
     [InlineData("-test")]
+    [InlineData("_test")]
     [InlineData(" test")]
     public void ValidateCharacters_SpecialCharacterInTheBeginning_ReturnsFail(string value)
     {
-        var result = Validations.ValidateCharacters(value, "value", true, true, true);
+        var result = Validations.ValidateCharacters(value, "value", true, true, true, true);
 
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             error => error.Message.Should()
-                .Be("The value cannot start with a dot, hyphen or space."));
+                .Be("The value cannot start with a dot, hyphen, underscore or space."));
     }
 
     [Theory]
     [InlineData("test.")]
     [InlineData("test-")]
+    [InlineData("test_")]
     [InlineData("test ")]
     public void ValidateCharacters_SpecialCharacterAtTheEnd_ReturnsFail(string value)
     {
-        var result = Validations.ValidateCharacters(value, "value", true, true, true);
+        var result = Validations.ValidateCharacters(value, "value", true, true, true, true);
 
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             error => error.Message.Should()
-                .Be("The value cannot end with a dot, hyphen or space."));
+                .Be("The value cannot end with a dot, hyphen, underscore or space."));
     }
 
     [Theory]

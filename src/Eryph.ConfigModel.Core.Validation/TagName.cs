@@ -12,6 +12,7 @@ public class TagName : EryphName<TagName>
                          value,
                          allowDots: true,
                          allowHyphens: true,
+                         allowUnderscores: false,
                          allowSpaces: false)
                      | Validations<TagName>.ValidateLength(value, 3, 20));
     }

@@ -12,6 +12,7 @@ public class OrganizationName : EryphName<OrganizationName>
                          value,
                          allowDots: true,
                          allowHyphens: true,
+                         allowUnderscores: false,
                          allowSpaces: false)
                      | Validations<OrganizationName>.ValidateLength(value, 3, 40));
     }
