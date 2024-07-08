@@ -33,51 +33,23 @@ public class CatletConfig : ICloneableConfig<CatletConfig>, IHasFodderConfig, IH
 
     public FodderConfig[]? Fodder { get; set; }
 
-    public CatletConfig Breed(CatletConfig child, string? parentReference= default)
+    public CatletConfig Clone() => new()
     {
-        var newConfig = Clone();
-        // always only from child
-        newConfig.Project = child.Project;
-        newConfig.Name = child.Name;
-        newConfig.Location = child.Location;
-        newConfig.Environment = child.Environment;
-        newConfig.Hostname = child.Hostname;
-            
-        // inheritance from parent
-        newConfig.Store = child.Store ?? Store;
-        newConfig.Parent = parentReference;
-        newConfig.Cpu = CatletCpuConfig.Breed(this, child);
-        newConfig.Memory = CatletMemoryConfig.Breed(this, child);
-        newConfig.Drives = CatletDriveConfig.Breed(this, child, parentReference);
-        newConfig.NetworkAdapters = CatletNetworkAdapterConfig.Breed(this, child);
-        newConfig.Capabilities = CatletCapabilityConfig.Breed(this, child);
-        newConfig.Networks = CatletNetworkConfig.Breed(this, child);
-        newConfig.Variables = VariableConfig.Breed(this, child);
-        newConfig.Fodder = FodderConfig.Breed(this, child, parentReference);
-
-        return newConfig;
-    }
-
-    public CatletConfig Clone()
-    {
-        return new CatletConfig()
-        {
-            Version = Version,
-            Project = Project,
-            Name = Name,
-            Location = Location,
-            Hostname = Hostname,
-            Environment = Environment,
-            Store = Store,
-            Parent = Parent,
-            Cpu = Cpu?.Clone(),
-            Networks = Networks?.Select(x=>x.Clone()).ToArray(),
-            Capabilities = Capabilities?.Select(x=>x.Clone()).ToArray(),
-            Drives = Drives?.Select(x=>x.Clone()).ToArray(),
-            Fodder = Fodder?.Select(x=>x.Clone()).ToArray(),
-            NetworkAdapters = NetworkAdapters?.Select(x=>x.Clone()).ToArray(),
-            Memory = Memory?.Clone(),
-            Variables = Variables?.Select(x=>x.Clone()).ToArray(),
-        };
-    }
+        Version = Version,
+        Project = Project,
+        Name = Name,
+        Location = Location,
+        Hostname = Hostname,
+        Environment = Environment,
+        Store = Store,
+        Parent = Parent,
+        Cpu = Cpu?.Clone(),
+        Networks = Networks?.Select(x=>x.Clone()).ToArray(),
+        Capabilities = Capabilities?.Select(x=>x.Clone()).ToArray(),
+        Drives = Drives?.Select(x=>x.Clone()).ToArray(),
+        Fodder = Fodder?.Select(x=>x.Clone()).ToArray(),
+        NetworkAdapters = NetworkAdapters?.Select(x=>x.Clone()).ToArray(),
+        Memory = Memory?.Clone(),
+        Variables = Variables?.Select(x=>x.Clone()).ToArray(),
+    };
 }

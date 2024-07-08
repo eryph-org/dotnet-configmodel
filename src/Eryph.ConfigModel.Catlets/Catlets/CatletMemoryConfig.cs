@@ -13,25 +13,10 @@ public class CatletMemoryConfig : ICloneableConfig<CatletMemoryConfig>
 
     public int? Maximum { get; set; }
 
-    public CatletMemoryConfig Clone()
+    public CatletMemoryConfig Clone() => new()
     {
-        return new CatletMemoryConfig
-        {
-            Startup = Startup,
-            Minimum = Minimum,
-            Maximum = Maximum
-        };
-    }
-        
-    internal static CatletMemoryConfig? Breed(CatletConfig parentConfig, CatletConfig child)
-    {
-        if (child.Memory == null)
-            return parentConfig.Memory?.Clone();
-
-        var result = child.Memory.Clone();
-        result.Startup ??= parentConfig.Memory?.Startup;
-        result.Minimum ??= parentConfig.Memory?.Minimum;
-        result.Maximum ??= parentConfig.Memory?.Maximum;
-        return result;
-    }
+        Startup = Startup,
+        Minimum = Minimum,
+        Maximum = Maximum
+    };
 }
