@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using LanguageExt;
 using LanguageExt.Common;
 using static LanguageExt.Prelude;
+using static Eryph.ConfigModel.Validations;
 using static Dbosoft.Functional.Validations.ComplexValidations;
 
 namespace Eryph.ConfigModel;
@@ -36,6 +37,9 @@ public static class FodderGeneConfigValidations
         from _ in ValidateList(toValidate, c => c.Fodder, ValidateFodderConfig, path, minCount: 1)
         from __ in FodderConfigValidations.ValidateFodderConfigs(toValidate, path)
                    | ValidateList(toValidate, c => c.Fodder, ValidateFodderConfigContent, path)
+        from ___ in ValidateProperty(toValidate, c => c.Fodder,
+            fodder => ValidateDistinct(fodder, f => FodderName.NewValidation(f.Name), "fodder name"),
+            path)
         select unit;
 
     private static Validation<ValidationIssue, Unit> ValidateFodderConfig(

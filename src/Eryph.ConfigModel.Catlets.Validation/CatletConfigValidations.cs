@@ -86,8 +86,14 @@ public static  class CatletConfigValidations
     private static Validation<ValidationIssue, Unit> ValidateCatletFodderConfigs(
         CatletConfig toValidate,
         string path = "") =>
-        FodderConfigValidations.ValidateFodderConfigs(toValidate, path)
-        | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path);
+        from _ in FodderConfigValidations.ValidateFodderConfigs(toValidate, path)
+                  | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path)
+        from __ in ValidateProperty(toValidate, c => c.Fodder,
+                       fodder => Validations.ValidateDistinct(fodder,
+                           f => FodderKey.Create(f.Name, f.Source).ToValidation(), "fodder"),
+                       path)
+                   | ValidateProperty(toValidate, c => c.Fodder, FodderConfigValidations.ValidateNoMultipleTagsForGeneSet, path)
+        select unit;
 
     private static Validation<ValidationIssue, Unit> ValidateCatletFodderConfig(
         FodderConfig toValidate,
@@ -97,6 +103,7 @@ public static  class CatletConfigValidations
               || notEmpty(toValidate.Source),
                 new ValidationIssue(path, "The content or source must be specified when adding fodder."))
             .ToValidation();
+
     private static Validation<ValidationIssue, Unit> ValidateCatletCapabilityConfigs(
         CatletConfig toValidate,
         string path = "") =>

@@ -45,13 +45,13 @@ public class ValidationsTests
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             error =>
             {
-                error.Message.Should().Be("Cannot create the full name.");
+                error.Message.Should().Be("The full name is invalid.");
                 error.Inner.Should().BeSome().Which.Message
                     .Should().Be("The first name 'John' is invalid.");
             },
             error =>
             {
-                error.Message.Should().Be("Cannot create the full name.");
+                error.Message.Should().Be("The full name is invalid.");
                 error.Inner.Should().BeSome().Which.Message
                     .Should().Be("The first name 'Jane' is invalid.");
             });

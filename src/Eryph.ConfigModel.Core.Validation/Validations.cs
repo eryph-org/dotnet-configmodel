@@ -31,7 +31,7 @@ public static class Validations
             .Map(item =>
                 from key in keySelector(item)
                     .ToEither()
-                    .MapLeft(errors => Error.New($"Cannot create the {keyName}.", Error.Many(errors)))
+                    .MapLeft(errors => Error.New($"The {keyName} is invalid.", Error.Many(errors)))
                     .ToValidation()
                 select (Key: key, Item: item))
             .Sequence()

@@ -12,6 +12,7 @@ using LanguageExt;
 using LanguageExt.Common;
 
 using static Dbosoft.Functional.Validations.ComplexValidations;
+using static Eryph.ConfigModel.Validations;
 using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel;
@@ -24,7 +25,9 @@ public static class VariableConfigValidations
         IHasVariableConfig toValidate,
         string path = "") =>
         from _  in ValidateList(toValidate, c => c.Variables, ValidateVariableConfig, path)
-        from __ in ValidateProperty(toValidate, c => c.Variables, ValidateNoDuplicateVariables, path)
+        from __ in ValidateProperty(toValidate, c => c.Variables,
+            variables => ValidateDistinct(variables, v => VariableName.NewValidation(v.Name), "variable name"),
+            path)
         select unit;
 
     private static Validation<ValidationIssue, Unit> ValidateVariableConfig(
@@ -32,19 +35,6 @@ public static class VariableConfigValidations
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, ValidateVariableName, path, required: true)
         | ValidateProperty(toValidate, c => c.Value, v => ValidateVariableValue(v, toValidate.Type), path);
-
-    private static Validation<Error, Unit> ValidateNoDuplicateVariables(
-        VariableConfig[] variableConfigs) =>
-        from variableNames in variableConfigs
-            .Map(v => VariableName.NewValidation(v.Name))
-            .Sequence()
-        from _ in variableNames
-            .GroupBy(identity)
-            .Filter(g => g.Count() > 1)
-            .Map(g => g.Key)
-            .Map(n => Fail<Error, Unit>(Error.New($"The variable name '{n}' is not unique.")))
-            .Sequence()
-        select unit;
 
     private static Validation<Error, string> ValidateVariableName(string value) =>
         from validName in VariableName.NewValidation(value)
