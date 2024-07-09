@@ -14,15 +14,15 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel;
 
-internal static class FodderConfigValidations
+public static class FodderConfigValidations
 {
-    public static Validation<ValidationIssue, Unit> ValidateFodderConfigs(
+    internal static Validation<ValidationIssue, Unit> ValidateFodderConfigs(
         IHasFodderConfig toValidate,
         string path = "") =>
         from _ in ValidateList(toValidate, c => c.Fodder, ValidateFodderConfig, path)
         select unit;
 
-    public static Validation<ValidationIssue, Unit> ValidateFodderConfig(
+    internal static Validation<ValidationIssue, Unit> ValidateFodderConfig(
         FodderConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path)
