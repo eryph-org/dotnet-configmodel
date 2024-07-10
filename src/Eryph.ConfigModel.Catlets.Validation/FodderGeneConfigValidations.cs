@@ -35,9 +35,7 @@ public static class FodderGeneConfigValidations
         FodderGeneConfig toValidate,
         string path = "") =>
         from _ in ValidateList(toValidate, c => c.Fodder, ValidateFodderConfig, path, minCount: 1)
-        from __ in FodderConfigValidations.ValidateFodderConfigs(toValidate, path)
-                   | ValidateList(toValidate, c => c.Fodder, ValidateFodderConfigContent, path)
-        from ___ in ValidateProperty(toValidate, c => c.Fodder,
+        from __ in ValidateProperty(toValidate, c => c.Fodder,
             fodder => ValidateDistinct(fodder, f => FodderName.NewValidation(f.Name), "fodder name"),
             path)
         select unit;
@@ -45,20 +43,18 @@ public static class FodderGeneConfigValidations
     private static Validation<ValidationIssue, Unit> ValidateFodderConfig(
         FodderConfig toValidate,
         string path = "") =>
-        ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path, required: true)
-        | ValidateProperty(toValidate, c => c.Source, ValidateSourceIsEmpty, path)
-        | ValidateProperty(
-            toValidate,
-            c => c.Variables,
-            _ => Fail<Error, VariableConfig[]>(Error.New("Variables are not supported here.")),
-            path);
-
-    private static Validation<ValidationIssue, Unit> ValidateFodderConfigContent(
-        FodderConfig toValidate,
-        string path = "") =>
-        guard(toValidate.Remove.GetValueOrDefault() || notEmpty(toValidate.Content),
-                new ValidationIssue(path, "The content must be specified when adding fodder."))
-            .ToValidation();
+        from _ in ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path, required: true)
+                  | ValidateProperty(toValidate, c => c.Source, ValidateSourceIsEmpty, path)
+                  | ValidateProperty(
+                      toValidate,
+                      c => c.Variables,
+                      _ => Fail<Error, VariableConfig[]>(Error.New("Variables are not supported here.")),
+                      path)
+        from __ in FodderConfigValidations.ValidateFodderConfig(toValidate, path)
+                   | guard(toValidate.Remove.GetValueOrDefault() || notEmpty(toValidate.Content),
+                           new ValidationIssue(path, "The content must be specified when adding fodder."))
+                       .ToValidation()
+        select unit;
 
     private static Validation<Error, string> ValidateSourceIsEmpty(
         string source) =>

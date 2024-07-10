@@ -106,9 +106,21 @@ public class CatletConfigValidationsTests
                     Value = "invalid value",
                 }
             ],
+            Capabilities =
+            [
+                new CatletCapabilityConfig()
+                {
+                    Name = "invalid|capability",
+                    Details = []
+                },
+            ],
             Cpu = new CatletCpuConfig()
             {
                 Count = -1,
+            },
+            Memory = new CatletMemoryConfig()
+            {
+                Startup = 129,
             },
             Drives =
             [
@@ -121,6 +133,21 @@ public class CatletConfigValidationsTests
                     Name = "def.bin"
                 }
             ],
+            Networks =
+            [
+                new CatletNetworkConfig()
+                {
+                    Name = "invalid|network",
+                    AdapterName = "invalid|adapter",
+                },
+            ],
+            NetworkAdapters =
+            [
+                new CatletNetworkAdapterConfig()
+                {
+                    Name = "invalid|adapter",
+                },
+            ],
             Fodder =
             [
                 new FodderConfig()
@@ -132,6 +159,8 @@ public class CatletConfigValidationsTests
         };
 
         var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        var errors = result.Should().BeFail().Which.ToList();
 
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             issue =>
@@ -163,6 +192,36 @@ public class CatletConfigValidationsTests
                 issue.Member.Should().Be("Cpu.Count");
                 issue.Message.Should()
                     .Be("The number of CPUs must be positive.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Memory.Startup");
+                issue.Message.Should()
+                    .Be("The memory size must be a multiple of 128 MiB.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Capabilities[0].Name");
+                issue.Message.Should()
+                    .Be("The catlet capability name contains invalid characters. Only latin characters, numbers and underscores are permitted.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Networks[0].Name");
+                issue.Message.Should()
+                    .Be("The eryph network name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Networks[0].AdapterName");
+                issue.Message.Should()
+                    .Be("The catlet network adapter name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("NetworkAdapters[0].Name");
+                issue.Message.Should()
+                    .Be("The catlet network adapter name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
             },
             issue =>
             {

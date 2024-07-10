@@ -16,12 +16,6 @@ namespace Eryph.ConfigModel;
 
 public static class FodderConfigValidations
 {
-    internal static Validation<ValidationIssue, Unit> ValidateFodderConfigs(
-        IHasFodderConfig toValidate,
-        string path = "") =>
-        from _ in ValidateList(toValidate, c => c.Fodder, ValidateFodderConfig, path)
-        select unit;
-
     internal static Validation<ValidationIssue, Unit> ValidateFodderConfig(
         FodderConfig toValidate,
         string path = "") =>

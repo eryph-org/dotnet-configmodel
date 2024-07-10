@@ -58,7 +58,7 @@ public static  class CatletConfigValidations
     
     private static Validation<Error, Unit> ValidateCatletDriveSize(int size) =>
         guard(size > 0, Error.New("The drive size must be positive.")).ToValidation()
-        | guardnot(size > 64 * 1024, Error.New("The drive size must be at most 64 TB.")).ToValidation();
+        | guardnot(size > 64 * 1024, Error.New("The drive size must be at most 64 TiB.")).ToValidation();
 
     private static Validation<ValidationIssue, Unit> ValidateCatletCpuConfig(
         CatletCpuConfig toValidate,
@@ -77,16 +77,16 @@ public static  class CatletConfigValidations
         | ValidateProperty(toValidate, c => c.Startup, ValidateCatletMemorySize, path);
 
     private static Validation<Error, Unit> ValidateCatletMemorySize(int memorySize) =>
-        guard(memorySize >= 128, Error.New("The memory size must be least 128 MB.")).ToValidation()
-        // For Linux guests, dynamic memory only works reliably when the memory size is a multiple of 128 MB.
-        | guard(memorySize % 128 == 0, Error.New("The memory size must be a multiple of 128 MB.")).ToValidation()
-        | guardnot(memorySize > 12 * 1024 * 1024, Error.New("The memory size must be at most 12 TB."))
+        guard(memorySize >= 128, Error.New("The memory size must be least 128 MiB.")).ToValidation()
+        // For Linux guests, dynamic memory only works reliably when the memory size is a multiple of 128 MiB.
+        | guard(memorySize % 128 == 0, Error.New("The memory size must be a multiple of 128 MiB.")).ToValidation()
+        | guardnot(memorySize > 12 * 1024 * 1024, Error.New("The memory size must be at most 12 TiB."))
             .ToValidation();
 
     private static Validation<ValidationIssue, Unit> ValidateCatletFodderConfigs(
         CatletConfig toValidate,
         string path = "") =>
-        from _ in FodderConfigValidations.ValidateFodderConfigs(toValidate, path)
+        from _ in ValidateList(toValidate, c => c.Fodder, FodderConfigValidations.ValidateFodderConfig, path)
                   | ValidateList(toValidate, c => c.Fodder, ValidateCatletFodderConfig, path)
         from __ in ValidateProperty(toValidate, c => c.Fodder,
                        fodder => Validations.ValidateDistinct(fodder,
