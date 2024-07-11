@@ -47,18 +47,25 @@ public static  class CatletConfigValidations
         | ValidateProperty(toValidate, c => c.Store, DataStoreName.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Location, StorageIdentifier.NewValidation, path)
         | ValidateProperty(toValidate, c => c.Size, ValidateCatletDriveSize, path)
-        | ValidateProperty(toValidate, c => c.Source, source =>
-            source.StartsWith("gene:")
-                ? GeneIdentifier.NewValidation(source).Map(_ => unit)
-                : Validations.ValidateWindowsPath(source, "source").Map(_ => unit)
-                    .ToEither()
-                    .MapLeft(errors => Error.New("The source must be a valid gene identifier or path.", Error.Many(errors)))
-                    .ToValidation(),
-            path);
+        | ValidateProperty(toValidate, c => c.Source, s => ValidateCatletDriveSource(s, toValidate.Type), path);
     
     private static Validation<Error, Unit> ValidateCatletDriveSize(int size) =>
         guard(size > 0, Error.New("The drive size must be positive.")).ToValidation()
         | guardnot(size > 64 * 1024, Error.New("The drive size must be at most 64 TiB.")).ToValidation();
+
+    private static Validation<Error, Unit> ValidateCatletDriveSource(
+        string source,
+        CatletDriveType? driveType) =>
+        source.StartsWith("gene:")
+            ? from _ in guard((driveType ?? CatletDriveType.VHD) == CatletDriveType.VHD,
+                  Error.New("The drive must be plain VHD when using a gene pool source."))
+              from __ in GeneIdentifier.NewValidation(source)
+              select unit
+            : from _ in Validations.ValidateWindowsPath(source, "source")
+                .ToEither()
+                .MapLeft(errors => Error.New("The source must be a valid gene identifier or path.", Error.Many(errors)))
+                .ToValidation()
+              select unit;
 
     private static Validation<ValidationIssue, Unit> ValidateCatletCpuConfig(
         CatletCpuConfig toValidate,

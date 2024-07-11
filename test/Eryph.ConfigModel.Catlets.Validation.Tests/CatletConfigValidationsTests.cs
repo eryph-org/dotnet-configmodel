@@ -160,8 +160,6 @@ public class CatletConfigValidationsTests
 
         var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
 
-        var errors = result.Should().BeFail().Which.ToList();
-
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             issue =>
             {
@@ -308,6 +306,32 @@ public class CatletConfigValidationsTests
             {
                 issue.Member.Should().Be("Variables");
                 issue.Message.Should().Be("The variable name 'test_variable' is not unique.");
+            });
+    }
+
+    [Fact]
+    public void ValidateCatletConfig_DriveWithGenePoolSourceButNotVHD_ReturnsError()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Drives =
+            [
+                new CatletDriveConfig
+                {
+                    Name = "sda",
+                    Source = "gene:acme/acme-os/1.0:my-drive",
+                    Type = CatletDriveType.PHD,
+                },
+            ],
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Drives[0].Source");
+                issue.Message.Should().Be("The drive must be plain VHD when using a gene pool source.");
             });
     }
 
