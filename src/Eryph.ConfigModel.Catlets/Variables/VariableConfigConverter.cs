@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Eryph.ConfigModel.Converters;
 
@@ -26,8 +27,11 @@ public class VariableConfigConverter<TConfig> : DictionaryConverterBase<Variable
     private static string? GetVariableValue(IDictionary<object, object> dictionary)
     {
         var value = GetValueCaseInvariant(dictionary, nameof(VariableConfig.Value));
-        return value is bool
-            ? value.ToString().ToLowerInvariant()
-            : value?.ToString().TrimEnd(char.MinValue);
+        return value switch
+        {
+            bool b => b.ToString().ToLowerInvariant(),
+            double d => d.ToString(CultureInfo.InvariantCulture),
+            _ => value?.ToString().TrimEnd(char.MinValue),
+        };
     }
 }
