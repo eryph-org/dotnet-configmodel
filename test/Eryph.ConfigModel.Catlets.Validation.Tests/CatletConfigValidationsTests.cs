@@ -620,4 +620,37 @@ public class CatletConfigValidationsTests
                 issue.Message.Should().Be("The gene set 'acme/other-fodder' is used with different tags ('latest', '1.0').");
             });
     }
+
+    [Fact]
+    public void ValidateCatletConfig_MemorySizesMismatched_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Memory = new CatletMemoryConfig()
+            {
+                Minimum = 512,
+                Startup = 256,
+                Maximum = 128,
+            },
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Memory.Maximum");
+                issue.Message.Should().Be("The maximum memory must be greater than or equal to the startup memory.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Memory.Minimum");
+                issue.Message.Should().Be("The minimum memory must be less than or equal to the startup memory.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Memory.Minimum");
+                issue.Message.Should().Be("The minimum memory must be less than or equal to the maximum memory.");
+            });
+    }
 }

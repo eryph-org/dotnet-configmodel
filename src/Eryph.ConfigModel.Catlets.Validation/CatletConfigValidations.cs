@@ -79,9 +79,30 @@ public static  class CatletConfigValidations
     private static Validation<ValidationIssue, Unit> ValidateCatletMemoryConfig(
         CatletMemoryConfig toValidate,
         string path = "") =>
-        ValidateProperty(toValidate, c => c.Maximum, ValidateCatletMemorySize, path)
-        | ValidateProperty(toValidate, c => c.Minimum, ValidateCatletMemorySize, path)
+        ValidateProperty(toValidate, c => c.Maximum,
+            m => ValidateCatletMaximumMemory(m, toValidate.Startup),
+            path)
+        | ValidateProperty(toValidate, c => c.Minimum,
+            m => ValidateCatletMinimumMemory(m, toValidate.Maximum, toValidate.Startup),
+            path)
         | ValidateProperty(toValidate, c => c.Startup, ValidateCatletMemorySize, path);
+
+    private static Validation<Error, Unit> ValidateCatletMinimumMemory(
+        int minimumMemory, int? maximumMemory, int? startupMemory) =>
+        ValidateCatletMemorySize(minimumMemory)
+        | guardnot(minimumMemory > startupMemory,
+                Error.New("The minimum memory must be less than or equal to the startup memory."))
+            .ToValidation()
+        | guardnot(minimumMemory > maximumMemory, 
+                Error.New("The minimum memory must be less than or equal to the maximum memory."))
+            .ToValidation();
+
+    private static Validation<Error, Unit> ValidateCatletMaximumMemory(
+        int maximumMemory, int? startupMemory) =>
+        ValidateCatletMemorySize(maximumMemory)
+        | guardnot(maximumMemory < startupMemory,
+                Error.New("The maximum memory must be greater than or equal to the startup memory."))
+            .ToValidation();
 
     private static Validation<Error, Unit> ValidateCatletMemorySize(int memorySize) =>
         guard(memorySize >= 128, Error.New("The memory size must be least 128 MiB.")).ToValidation()
