@@ -1,7 +1,6 @@
-using Eryph.ConfigModel.Networks;
 using FluentAssertions;
 
-namespace Eryph.ConfigModel.Catlet.Tests;
+namespace Eryph.ConfigModel.Networks.Tests;
 
 public class ConverterTestBase
 {

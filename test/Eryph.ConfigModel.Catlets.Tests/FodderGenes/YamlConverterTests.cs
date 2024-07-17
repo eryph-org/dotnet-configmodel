@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Yaml;
@@ -48,7 +49,7 @@ public class YamlConverterTests : ConverterTestBase
         
         """;
 
-    [Fact]
+    [CulturedFact("en-US", "de-DE")]
     public void Converts_from_yaml()
     {
         var serializer = new DeserializerBuilder()
@@ -59,7 +60,7 @@ public class YamlConverterTests : ConverterTestBase
         AssertSample1(config);
     }
 
-    [Fact]
+    [CulturedFact("en-US", "de-DE")]
     public void Converts_native_variable_values_from_yaml()
     {
         var serializer = new DeserializerBuilder()
@@ -70,12 +71,11 @@ public class YamlConverterTests : ConverterTestBase
         AssertNativeVariableValuesSample(config);
     }
 
-    [Theory()]
-    [InlineData(SampleYaml1, SampleYaml1)]
-    public void Converts_To_yaml(string input, string expected)
+    [CulturedFact("en-US", "de-DE")]
+    public void Converts_To_yaml()
     {
-        var config = FodderGeneConfigYamlSerializer.Deserialize(input);
+        var config = FodderGeneConfigYamlSerializer.Deserialize(SampleYaml1);
         var act = FodderGeneConfigYamlSerializer.Serialize(config);
-        act.Should().Be(expected);
+        act.Should().Be(SampleYaml1);
     }
 }
