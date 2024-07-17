@@ -30,7 +30,7 @@ public class VariableConfigConverter<TConfig> : DictionaryConverterBase<Variable
         return value switch
         {
             bool b => b.ToString().ToLowerInvariant(),
-            double d => d.ToString(),
+            double d => d.ToString(CultureInfo.InvariantCulture),
             _ => value?.ToString().TrimEnd(char.MinValue),
         };
     }
