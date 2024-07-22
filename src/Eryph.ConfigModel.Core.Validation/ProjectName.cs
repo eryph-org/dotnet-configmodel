@@ -14,6 +14,7 @@ public class ProjectName : EryphName<ProjectName>
                          value,
                          allowDots: true,
                          allowHyphens: true,
+                         allowUnderscores: false,
                          allowSpaces: false)
                      | Validations<ProjectName>.ValidateLength(value, 1, 20)
                      | Optional(value).Filter(s => !s.StartsWith("p_", StringComparison.OrdinalIgnoreCase))

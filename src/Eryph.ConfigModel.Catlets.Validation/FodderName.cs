@@ -12,6 +12,7 @@ public class FodderName : EryphName<FodderName>
                          value,
                          allowDots: true,
                          allowHyphens: true,
+                         allowUnderscores: false,
                          allowSpaces: false)
                      | Validations<FodderName>.ValidateLength(value, 1, 50));
     }

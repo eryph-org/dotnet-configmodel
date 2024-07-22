@@ -15,6 +15,7 @@ public class EnvironmentName : EryphName<EnvironmentName>
                         value,
                         allowDots: true,
                         allowHyphens: true,
+                        allowUnderscores: false,
                         allowSpaces: false)
                      | Validations<EnvironmentName>.ValidateLength(value, 1, 50));
     }

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
+using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Catlets;
-using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
-using Xunit;
 using YamlDotNet.Serialization;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets
@@ -117,7 +116,7 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
             
             """;
 
-        [Fact]
+        [CulturedFact("en-US", "de-DE")]
         public void Converts_from_yaml()
         {
             var serializer = new DeserializerBuilder()
@@ -128,7 +127,7 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
             AssertSample1(config);
         }
 
-        [Fact]
+        [CulturedFact("en-US", "de-DE")]
         public void Converts_native_variable_values_from_yaml()
         {
             var serializer = new DeserializerBuilder()
@@ -139,17 +138,16 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
             AssertNativeVariableValuesSample(config);
         }
 
-        [Theory()]
-        [InlineData(SampleYaml1, SampleYaml1)]
-        public void Converts_To_yaml(string input, string expected)
+        [CulturedFact("en-US", "de-DE")]
+        public void Converts_To_yaml()
         {
-            var config = CatletConfigYamlSerializer.Deserialize(input);
+            var config = CatletConfigYamlSerializer.Deserialize(SampleYaml1);
             var act = CatletConfigYamlSerializer.Serialize(config);
-            act.Should().Be(expected);
+            act.Should().Be(SampleYaml1);
 
         }
 
-        [Fact]
+        [CulturedFact("en-US", "de-DE")]
         public void Convert_from_minimal_yaml()
         {
             var config = CatletConfigYamlSerializer.Deserialize(SampleYaml2);
@@ -159,7 +157,7 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
 
         }
 
-        [Fact]
+        [CulturedFact("en-US", "de-DE")]
         public void Convert_from_short_cpu_yaml()
         {
             var config = CatletConfigYamlSerializer.Deserialize(SampleYaml3);
@@ -170,7 +168,7 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets
 
         }
 
-        [Fact]
+        [CulturedFact("en-US", "de-DE")]
         public void Convert_from_short_features_yaml()
         {
             var config = CatletConfigYamlSerializer.Deserialize(SampleYaml4);

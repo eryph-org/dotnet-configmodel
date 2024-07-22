@@ -16,6 +16,7 @@ public class CatletDriveName : EryphName<CatletDriveName>
                          value,
                          allowDots: false,
                          allowHyphens: true,
+                         allowUnderscores: false,
                          allowSpaces: false)
                      | Validations<CatletDriveName>.ValidateLength(value, 1, 50));
     }

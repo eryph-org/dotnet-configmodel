@@ -75,13 +75,13 @@ public class FodderConfigValidationsTests
             Content = "test content",
             FileName = "test-file-sh",
             Secret = true,
-            Variables = new[]
-            {
+            Variables =
+            [
                 new VariableConfig()
                 {
                     Name  = "testVariable",
-                },
-            }
+                }
+            ]
         };
 
         var result = ValidateFodderConfig(fodderConfig);

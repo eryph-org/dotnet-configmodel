@@ -16,6 +16,34 @@ public static class Validations
 {
     private static readonly Regex DriveRootRegex = new(@"^[a-zA-Z]:\\", RegexOptions.Compiled);
 
+    /// <summary>
+    /// Validates that the given <paramref name="items"/> are distinct by
+    /// the key which is produced by the <paramref name="keySelector"/>.
+    /// An error will be included for each key that is not unique.
+    /// The <paramref name="keyName"/> is used in the error message.
+    /// </summary>
+    public static Validation<Error, Unit> ValidateDistinct<TItem, TKey>(
+        IEnumerable<TItem> items,
+        Func<TItem, Validation<Error, TKey>> keySelector,
+        string keyName)
+        where TKey : IEquatable<TKey> =>
+        from itemsWithKeys in items.ToSeq()
+            .Map(item =>
+                from key in keySelector(item)
+                    .ToEither()
+                    .MapLeft(errors => Error.New($"The {keyName} is invalid.", Error.Many(errors)))
+                    .ToValidation()
+                select (Key: key, Item: item))
+            .Sequence()
+        let duplicateKeys = itemsWithKeys
+            .ToLookup(t => t.Key, t => t.Item)
+            .Filter(g => g.Count() > 1)
+            .Map(g => g.Key)
+        from _ in duplicateKeys
+            .Map(duplicateKey => Fail<Error, Unit>($"The {keyName} '{duplicateKey}' is not unique."))
+            .Sequence()
+        select unit;
+
     public static Validation<Error, string> ValidateNotEmpty(
         string? value,
         string valueName) =>
@@ -40,12 +68,14 @@ public static class Validations
         string? value,
         string valueName,
         bool allowHyphens,
+        bool allowUnderscores,
         bool allowDots,
         bool allowSpaces) =>
         from _ in guard(value.ToSeq().All(c =>
                     c is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9'
                     || allowDots && c == '.'
                     || allowHyphens && c == '-'
+                    || allowUnderscores && c == '_'
                     || allowSpaces && c == ' '),
                 Error.New($"The {valueName} contains invalid characters. Only "
                           + JoinItems("and", Seq(
@@ -53,30 +83,34 @@ public static class Validations
                               Some("numbers"),
                               Some("dots").Filter(_ => allowDots),
                               Some("hyphens").Filter(_ => allowHyphens),
+                              Some("underscores").Filter(_ => allowUnderscores),
                               Some("spaces").Filter(_ => allowSpaces)))
                           + " are permitted."))
             .ToValidation()
-        from __ in guardnot(notEmpty(value) && (value.Contains("..") || value.Contains("--") || value.Contains("  ")),
+        from __ in guardnot(notEmpty(value) && (value.Contains("..") || value.Contains("--") || value.Contains("__") || value.Contains("  ")),
                            Error.New($"The {valueName} cannot contain consecutive "
                               + JoinItems("or", Seq(
                                   Some("dots").Filter(_ => allowDots),
                                   Some("hyphens").Filter(_ => allowHyphens),
+                                  Some("underscores").Filter(_ => allowUnderscores),
                                   Some("spaces").Filter(_ => allowSpaces)))
                               + "."))
                        .ToValidation()
-                   | guardnot(notEmpty(value) && value[0] is '.' or '-' or ' ',
+                   | guardnot(notEmpty(value) && value[0] is '.' or '-' or '_' or ' ',
                            Error.New($"The {valueName} cannot start with a "
                               + JoinItems("or", Seq(
                                   Some("dot").Filter(_ => allowDots),
                                   Some("hyphen").Filter(_ => allowHyphens),
+                                  Some("underscore").Filter(_ => allowUnderscores),
                                   Some("space").Filter(_ => allowSpaces)))
                               + "."))
                        .ToValidation()
-                   | guardnot(notEmpty(value) && value.Last() is '.' or '-' or ' ',
+                   | guardnot(notEmpty(value) && value.Last() is '.' or '-' or '_' or ' ',
                            Error.New($"The {valueName} cannot end with a "
                               + JoinItems("or", Seq(
                                   Some("dot").Filter(_ => allowDots),
                                   Some("hyphen").Filter(_ => allowHyphens),
+                                  Some("underscore").Filter(_ => allowUnderscores),
                                   Some("space").Filter(_ => allowSpaces)))
                               + "."))
                        .ToValidation()
@@ -144,8 +178,8 @@ public static class Validations<T>
         Validations.ValidateLength(value, Name, minLength, maxLength);
 
     public static Validation<Error, string> ValidateCharacters(
-        string value, bool allowHyphens, bool allowDots, bool allowSpaces) =>
-        Validations.ValidateCharacters(value, Name, allowHyphens, allowDots, allowSpaces);
+        string value, bool allowHyphens, bool allowUnderscores, bool allowDots, bool allowSpaces) =>
+        Validations.ValidateCharacters(value, Name, allowHyphens, allowUnderscores, allowDots, allowSpaces);
 
     public static Validation<Error, string> ValidateWindowsPath(string? value) =>
         Validations.ValidateWindowsPath(value, Name);

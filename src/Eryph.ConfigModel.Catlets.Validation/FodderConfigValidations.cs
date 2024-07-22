@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Dbosoft.Functional.Validations;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
-using JetBrains.Annotations;
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -14,9 +14,9 @@ using static LanguageExt.Prelude;
 
 namespace Eryph.ConfigModel;
 
-internal static class FodderConfigValidations
+public static class FodderConfigValidations
 {
-    public static Validation<ValidationIssue, Unit> ValidateFodderConfig(
+    internal static Validation<ValidationIssue, Unit> ValidateFodderConfig(
         FodderConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, FodderName.NewValidation, path)
@@ -96,5 +96,31 @@ internal static class FodderConfigValidations
                                path,
                                "The variable type cannot be specified when the fodder is a reference."))
                        .ToValidation()
+        select unit;
+
+    internal static Validation<Error, Unit> ValidateNoMultipleTagsForGeneSet(
+        FodderConfig[] fodderConfigs) =>
+        from geneIds in fodderConfigs.ToSeq()
+            .Map(fc => Optional(fc.Source).Filter(notEmpty))
+            .Somes()
+            .Map(s => GeneIdentifier.NewEither(s).ToValidation())
+            .Sequence()
+        from _ in ValidateNoMultipleTagsForGeneSet(geneIds)
+        select unit;
+
+    public static Validation<Error, Unit> ValidateNoMultipleTagsForGeneSet(
+        Seq<GeneIdentifier> geneIdentifiers) =>
+        from _ in Success<Error, Unit>(unit)
+        let duplicates = geneIdentifiers
+            .Map(id => id.GeneSet)
+            .Distinct()
+            .ToLookup(setId => (setId.Organization, setId.GeneSet))
+            .Filter(g => g.Count() > 1)
+        from __ in duplicates
+            .Map(g => (GeneSet: $"{g.Key.Organization}/{g.Key.GeneSet}",
+                Tags: string.Join(", ", g.Map(id => id.Tag).Distinct().Map(t => $"'{t.Value}'"))))
+            .Map(g => Fail<Error, Unit>(Error.New(
+                $"The gene set '{g.GeneSet}' is used with different tags ({g.Tags}).")))
+            .Sequence()
         select unit;
 }

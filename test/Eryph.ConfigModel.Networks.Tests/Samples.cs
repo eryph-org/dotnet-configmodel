@@ -1,4 +1,4 @@
-namespace Eryph.ConfigModel.Catlet.Tests;
+namespace Eryph.ConfigModel.Networks.Tests;
 
 public static class Samples
 {

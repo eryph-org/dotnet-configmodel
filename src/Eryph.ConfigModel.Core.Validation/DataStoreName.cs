@@ -13,6 +13,7 @@ public class DataStoreName : EryphName<DataStoreName>
         ValidOrThrow(Validations<DataStoreName>.ValidateCharacters(value,
                          allowDots:true,
                          allowHyphens:true,
+                         allowUnderscores: false,
                          allowSpaces:false)
                      | Validations<DataStoreName>.ValidateLength(value, 1, 50));
     }

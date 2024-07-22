@@ -1,4 +1,5 @@
 using System.Text.Json;
+using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Json;
@@ -63,7 +64,7 @@ public class JsonConverterTests : ConverterTestBase
         }
         """;
 
-    [Fact]
+    [CulturedFact("en-US", "de-DE")]
     public void Converts_from_json()
     {
         var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
@@ -71,7 +72,7 @@ public class JsonConverterTests : ConverterTestBase
         AssertSample1(config);
     }
 
-    [Fact]
+    [CulturedFact("en-US", "de-DE")]
     public void Converts_native_variable_values_from_json()
     {
         var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleNativeVariableValuesJson);
@@ -79,11 +80,10 @@ public class JsonConverterTests : ConverterTestBase
         AssertNativeVariableValuesSample(config);
     }
 
-    [Theory]
-    [InlineData(SampleJson1, SampleJson1)]
-    public void Converts_to_json(string input, string expected)
+    [CulturedFact("en-US", "de-DE")]
+    public void Converts_to_json()
     {
-        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(input);
+        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
         var config = FodderGeneConfigDictionaryConverter.Convert(dictionary, false);
 
         var copyOptions = new JsonSerializerOptions(ConfigModelJsonSerializer.DefaultOptions)
@@ -91,6 +91,6 @@ public class JsonConverterTests : ConverterTestBase
             WriteIndented = true
         };
         var act = ConfigModelJsonSerializer.Serialize(config, copyOptions);
-        act.Should().Be(expected);
+        act.Should().Be(SampleJson1);
     }
 }
