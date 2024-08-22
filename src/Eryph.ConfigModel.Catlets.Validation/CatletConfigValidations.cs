@@ -49,11 +49,11 @@ public static  class CatletConfigValidations
         | ValidateProperty(toValidate, c => c.Size, ValidateCatletDriveSize, path)
         | ValidateProperty(toValidate, c => c.Source, s => ValidateCatletDriveSource(s, toValidate.Type), path);
     
-    private static Validation<Error, Unit> ValidateCatletDriveSize(int size) =>
+    public static Validation<Error, Unit> ValidateCatletDriveSize(int size) =>
         guard(size > 0, Error.New("The drive size must be positive.")).ToValidation()
         | guardnot(size > 64 * 1024, Error.New("The drive size must be at most 64 TiB.")).ToValidation();
 
-    private static Validation<Error, Unit> ValidateCatletDriveSource(
+    public static Validation<Error, Unit> ValidateCatletDriveSource(
         string source,
         CatletDriveType? driveType) =>
         source.StartsWith("gene:")
