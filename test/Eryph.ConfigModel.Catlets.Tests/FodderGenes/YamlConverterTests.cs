@@ -28,7 +28,33 @@ public class YamlConverterTests : ConverterTestBase
           content: >-
             users:
               - name: Admin
-                groups: [ ""Administrators"" ]
+                groups: [ "Administrators" ]
+                passwd: InitialPassw0rd
+          file_name: filename
+          secret: true
+        - name: super-dupa
+          type: cloud-config
+        
+        """;
+
+    private const string SampleYaml2 =
+        """
+        name: fodder1
+        variables:
+        - name: first
+          value: first value
+        - name: second
+          type: Boolean
+          value: true
+          secret: true
+          required: true
+        fodder:
+        - name: admin-windows
+          type: cloud-config
+          content:
+            users:
+              - name: Admin
+                groups: [ "Administrators" ]
                 passwd: InitialPassw0rd
           file_name: filename
           secret: true
@@ -77,5 +103,13 @@ public class YamlConverterTests : ConverterTestBase
         var config = FodderGeneConfigYamlSerializer.Deserialize(SampleYaml1);
         var act = FodderGeneConfigYamlSerializer.Serialize(config);
         act.Should().Be(SampleYaml1);
+    }
+
+    [Fact]
+    public void Fact()
+    {
+        var config = FodderGeneConfigYamlSerializer.Deserialize(SampleYaml2);
+        var yaml = FodderGeneConfigYamlSerializer.Serialize(config);
+        yaml.Should().Be(SampleYaml2);
     }
 }

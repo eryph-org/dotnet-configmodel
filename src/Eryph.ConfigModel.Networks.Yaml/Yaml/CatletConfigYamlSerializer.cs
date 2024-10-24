@@ -25,7 +25,7 @@ namespace Eryph.ConfigModel.Yaml
 
         public static ProjectNetworksConfig Deserialize(string yaml)
         {
-            if(_deSerializer == null)
+            if (_deSerializer == null)
                 _deSerializer = new DeserializerBuilder()
                 .Build();
           

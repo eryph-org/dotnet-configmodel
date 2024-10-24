@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Converters;
 using Eryph.ConfigModel.FodderGenes;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -16,6 +19,7 @@ public static class FodderGeneConfigYamlSerializer
         {
             _serializer = new SerializerBuilder()
                 .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                .WithAttributeOverride<FodderConfig>(c => c.Content!, new YamlMemberAttribute { ScalarStyle = ScalarStyle.Literal})
                 .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
                 .Build();
         }
@@ -26,10 +30,14 @@ public static class FodderGeneConfigYamlSerializer
     public static FodderGeneConfig Deserialize(string yaml)
     {
         if (_deSerializer == null)
-            _deSerializer = new DeserializerBuilder()
+        {
+            var builder = new DeserializerBuilder();
+            _deSerializer = builder
+                .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                .WithTypeConverter(new FodderConfigConverter(UnderscoredNamingConvention.Instance))
                 .Build();
+        }
 
-        var dictionary = _deSerializer.Deserialize<Dictionary<object, object>>(yaml);
-        return FodderGeneConfigDictionaryConverter.Convert(dictionary, true);
+        return _deSerializer.Deserialize<FodderGeneConfig>(new CustomParser(yaml));
     }
 }
