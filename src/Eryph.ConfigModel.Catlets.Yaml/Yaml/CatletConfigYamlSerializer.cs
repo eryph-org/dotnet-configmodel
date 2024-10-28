@@ -38,6 +38,6 @@ public static class CatletConfigYamlSerializer
                 .Build();
         }
           
-        return _deserializer.Deserialize<CatletConfig>(new CustomParser(yaml));
+        return _deserializer.Deserialize<CatletConfig>(new StringParser(yaml));
     }
 }

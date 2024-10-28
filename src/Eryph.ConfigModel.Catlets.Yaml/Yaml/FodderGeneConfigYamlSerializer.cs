@@ -38,6 +38,6 @@ public static class FodderGeneConfigYamlSerializer
                 .Build();
         }
 
-        return _deSerializer.Deserialize<FodderGeneConfig>(new CustomParser(yaml));
+        return _deSerializer.Deserialize<FodderGeneConfig>(new StringParser(yaml));
     }
 }

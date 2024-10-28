@@ -8,7 +8,7 @@ using YamlDotNet.Core.Events;
 
 namespace Eryph.ConfigModel.Converters;
 
-internal class CustomParser(string yaml) : IParser
+internal class StringParser(string yaml) : IParser
 {
     private readonly IParser _innerParser = new Parser(new Scanner(new StringReader(yaml)));
 
@@ -20,6 +20,9 @@ internal class CustomParser(string yaml) : IParser
     {
         if (!this.Accept<MappingStart>(out var mappingStart))
             throw new InvalidOperationException("Expected mapping start");
+
+        if (mappingStart.Style is not MappingStyle.Block)
+            throw new InvalidOperationException("Expected block mapping");
 
         var endEvent = ConsumeThisAndNestedEvents();
         if (endEvent is not MappingEnd mappingEnd)
@@ -33,8 +36,11 @@ internal class CustomParser(string yaml) : IParser
         if (!this.Accept<SequenceStart>(out var sequenceStart))
             throw new InvalidOperationException("Expected mapping start");
 
+        if (sequenceStart.Style is not SequenceStyle.Block)
+            throw new InvalidOperationException("Sequences are only supported with indentation style");
+
         var endEvent = ConsumeThisAndNestedEvents();
-        if (endEvent is not SequenceStart sequenceEnd)
+        if (endEvent is not SequenceEnd sequenceEnd)
             throw new InvalidOperationException("Expected mapping end");
 
         return ExtractYaml(sequenceStart.Start, sequenceEnd.End);
@@ -42,7 +48,7 @@ internal class CustomParser(string yaml) : IParser
 
     private ParsingEvent ConsumeThisAndNestedEvents()
     {
-        int depth = 0;
+        var depth = 0;
         ParsingEvent parsingEvent;
         do
         {

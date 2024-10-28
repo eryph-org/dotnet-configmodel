@@ -16,7 +16,7 @@ internal class FodderConfigConverter(INamingConvention namingConvention) : IYaml
 
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
-        if (parser is not CustomParser customParser)
+        if (parser is not StringParser customParser)
             throw new ArgumentException("This converter requires a custom parser", nameof(parser));
 
         parser.Consume<MappingStart>();
