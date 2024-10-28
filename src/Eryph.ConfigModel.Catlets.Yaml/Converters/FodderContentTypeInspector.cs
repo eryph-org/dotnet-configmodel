@@ -9,62 +9,73 @@ using YamlDotNet.Serialization.TypeInspectors;
 
 namespace Eryph.ConfigModel.Yaml.Converters;
 
-internal class FodderContentTypeInspector(ITypeInspector innerTypeDescriptor)
+/// <summary>
+/// The only purpose of this <see cref="ITypeInspector"/> is to apply
+/// the <see cref="FodderContentYamlTypeConverter"/> to the property
+/// <see cref="FodderConfig.Content"/>.
+/// </summary>
+/// <remarks>
+/// Unfortunately, <see cref="BuilderSkeleton{TBuilder}.WithAttributeOverride{TClass}"/>
+/// cannot be used to apply a <see cref="YamlConverterAttribute"/> to a property. Hence,
+/// we need to force our custom <see cref="FodderContentYamlTypeConverter"/> with this
+/// <see cref="ITypeInspector"/>.
+/// </remarks>
+internal class FodderContentTypeInspector(ITypeInspector innerTypeInspector)
     : TypeInspectorSkeleton
 {
     public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object? container) =>
         type != typeof(FodderConfig)
-            ? innerTypeDescriptor.GetProperties(type, container)
-            : innerTypeDescriptor.GetProperties(type, container)
+            ? innerTypeInspector.GetProperties(type, container)
+            : innerTypeInspector.GetProperties(type, container)
                 .Select(pd => pd.Name == nameof(FodderConfig.Content)
                     ? new FodderContentPropertyDescriptor(pd, typeof(FodderContentYamlTypeConverter))
                     : pd);
 
 
     public override string GetEnumName(Type enumType, string name) =>
-        innerTypeDescriptor.GetEnumName(enumType, name);
+        innerTypeInspector.GetEnumName(enumType, name);
 
     public override string GetEnumValue(object enumValue) =>
-        innerTypeDescriptor.GetEnumValue(enumValue);
-}
+        innerTypeInspector.GetEnumValue(enumValue);
 
-internal class FodderContentPropertyDescriptor(
-    IPropertyDescriptor innerDescriptor,
-    Type converterType)
-    : IPropertyDescriptor
-{
-    public string Name => innerDescriptor.Name;
-
-    public bool AllowNulls => innerDescriptor.AllowNulls;
-
-    public Type Type => innerDescriptor.Type;
-    
-    public Type? TypeOverride
+    private class FodderContentPropertyDescriptor(
+        IPropertyDescriptor innerDescriptor,
+        Type converterType)
+        : IPropertyDescriptor
     {
-        get => innerDescriptor.TypeOverride;
-        set => innerDescriptor.TypeOverride = value;
+        public string Name => innerDescriptor.Name;
+
+        public bool AllowNulls => innerDescriptor.AllowNulls;
+
+        public Type Type => innerDescriptor.Type;
+
+        public Type? TypeOverride
+        {
+            get => innerDescriptor.TypeOverride;
+            set => innerDescriptor.TypeOverride = value;
+        }
+
+        public int Order { get; set; }
+
+        public ScalarStyle ScalarStyle
+        {
+            get => innerDescriptor.ScalarStyle;
+            set => innerDescriptor.ScalarStyle = value;
+        }
+
+        public bool Required => innerDescriptor.Required;
+
+        public Type? ConverterType => converterType;
+
+        public bool CanWrite => innerDescriptor.CanWrite;
+
+        public void Write(object target, object? value) =>
+            innerDescriptor.Write(target, value);
+
+        public T? GetCustomAttribute<T>() where T : Attribute =>
+            innerDescriptor.GetCustomAttribute<T>();
+
+        public IObjectDescriptor Read(object target) =>
+            innerDescriptor.Read(target);
     }
-    
-    public int Order { get; set; }
-    
-    public ScalarStyle ScalarStyle
-    {
-        get => innerDescriptor.ScalarStyle;
-        set => innerDescriptor.ScalarStyle = value;
-    }
-    
-    public bool Required => innerDescriptor.Required;
-
-    public Type? ConverterType => converterType;
-
-    public bool CanWrite => innerDescriptor.CanWrite;
-
-    public void Write(object target, object? value) =>
-        innerDescriptor.Write(target, value);
-
-    public T? GetCustomAttribute<T>() where T : Attribute =>
-        innerDescriptor.GetCustomAttribute<T>();
-
-    public IObjectDescriptor Read(object target) =>
-        innerDescriptor.Read(target);
 }

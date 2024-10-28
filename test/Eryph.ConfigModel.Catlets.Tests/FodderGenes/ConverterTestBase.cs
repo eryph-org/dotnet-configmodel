@@ -7,6 +7,37 @@ namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
 
 public class ConverterTestBase
 {
+    protected static FodderGeneConfig ComplexConfig => new()
+    {
+        Name = "test-fodder",
+        Version = "1.0",
+        Fodder =
+        [
+            new FodderConfig()
+            {
+                Name = "first-food",
+                Type = "cloud-config",
+                Content = "abc\ndef",
+                FileName = "first-food.txt",
+                Remove = true,
+                Secret = true,
+            },
+            new FodderConfig(),
+        ],
+        Variables =
+        [
+            new VariableConfig()
+            {
+                Name = "first-variable",
+                Required = true,
+                Secret = true,
+                Type = VariableType.String,
+                Value = "abc",
+            },
+            new VariableConfig(),
+        ],
+    };
+
     protected static void AssertSample1(FodderGeneConfig config)
     {
         config.Should().NotBeNull();

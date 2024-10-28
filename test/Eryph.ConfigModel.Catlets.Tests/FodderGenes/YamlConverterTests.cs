@@ -96,6 +96,17 @@ public class YamlConverterTests : ConverterTestBase
         act.Should().Be(SampleYaml1);
     }
 
+    [CulturedFact("en-US", "de-DE")]
+    public void Serialize_AfterRoundtrip_ReturnsSameConfig()
+    {
+        var yaml = FodderGeneConfigYamlSerializer.Serialize(ComplexConfig);
+        var result = FodderGeneConfigYamlSerializer.Deserialize(yaml);
+
+        var yaml2 = FodderGeneConfigYamlSerializer.Serialize(result);
+
+        result.Should().BeEquivalentTo(ComplexConfig);
+    }
+
     /*
     [Fact]
     public void Fact()

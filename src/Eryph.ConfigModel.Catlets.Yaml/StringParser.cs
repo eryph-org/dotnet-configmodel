@@ -70,7 +70,12 @@ internal class StringParser(string yaml) : IParser
         var indentSpaces = new string(' ', startIndent);
 
         var substring = yaml.Substring(startIndex, endIndex - startIndex);
-        var lines = substring.Split('\n').ToList();
+        // Apply the same sanitization to the line breaks as YamlDotNet.
+        var sanitized = substring.Replace("\r\n", "\n")
+            .Replace("\r", "\n")
+            .Replace("\x85", "\n");
+
+        var lines = sanitized.Split('\n').ToList();
         var linesToTake = lines[lines.Count - 1] == indentSpaces ? lines.Count - 1 : lines.Count;
 
         var fixesLines = lines.Take(linesToTake)
