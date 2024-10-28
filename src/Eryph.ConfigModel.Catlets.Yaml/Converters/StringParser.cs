@@ -19,7 +19,7 @@ internal class StringParser(string yaml) : IParser
     public string ConsumeMappingAsString()
     {
         if (!this.Accept<MappingStart>(out var mappingStart))
-            throw new InvalidOperationException("Expected mapping start");
+            throw new InvalidOperationException("A mapping should start at this point.");
 
         if (mappingStart.Style is not MappingStyle.Block)
             throw new InvalidOperationException("Expected block mapping");
