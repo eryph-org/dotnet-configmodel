@@ -8,18 +8,9 @@ using YamlDotNet.Core.Events;
 
 namespace Eryph.ConfigModel.Converters;
 
-internal class CustomParser : IParser
+internal class CustomParser(string yaml) : IParser
 {
-    private readonly IParser _innerParser;
-    private readonly IScanner _scanner;
-    private readonly string _yaml;
-
-    public CustomParser(string yaml)
-    {
-        _yaml = yaml;
-        _scanner = new Scanner(new StringReader(yaml));
-        _innerParser = new Parser(_scanner);
-    }
+    private readonly IParser _innerParser = new Parser(new Scanner(new StringReader(yaml)));
 
     public bool MoveNext() => _innerParser.MoveNext();
 
@@ -49,30 +40,6 @@ internal class CustomParser : IParser
         return ExtractYaml(sequenceStart.Start, sequenceEnd.End);
     }
 
-    public string SkipAndReturnString()
-    {
-        if (!this.TryConsume<MappingStart>(out var mappingStart))
-            throw new InvalidOperationException("Expected mapping start");
-
-        int depth = mappingStart.NestingIncrease;
-        ParsingEvent parsingEvent;
-        do
-        {
-            parsingEvent = this.Consume<ParsingEvent>();
-            depth += parsingEvent.NestingIncrease;
-        } while (depth > 0);
-
-        if (parsingEvent is not MappingEnd mappingEnd)
-            throw new InvalidOperationException("Expected mapping end");
-
-        var begin = (int)mappingStart.Start.Index;
-        var end = (int)mappingEnd.End.Index;
-
-        var indent = (int)mappingStart.Start.Column - 1;
-
-        return AdjustIndentation(_yaml.Substring(begin, end - begin), indent);
-    }
-
     private ParsingEvent ConsumeThisAndNestedEvents()
     {
         int depth = 0;
@@ -86,14 +53,6 @@ internal class CustomParser : IParser
         return parsingEvent;
     }
 
-
-    private string AdjustIndentation(string yaml, int indent)
-    {
-        var lines = yaml.Split('\n');
-
-        return string.Join("\n", yaml.Split('\n').Select(l => l.Substring(indent)));
-    }
-
     private string ExtractYaml(Mark start, Mark end)
     {
         var startIndex = (int)start.Index;
@@ -102,7 +61,8 @@ internal class CustomParser : IParser
 
         var indentSpaces = new string(' ', startIndent);
 
-        var lines = _yaml.Substring(startIndex, endIndex - startIndex).Split('\n').ToList();
+        var substring = yaml.Substring(startIndex, endIndex - startIndex);
+        var lines = substring.Split('\n').ToList();
         var linesToTake = lines[lines.Count - 1] == indentSpaces ? lines.Count - 1 : lines.Count;
 
         var fixesLines = lines.Take(linesToTake)

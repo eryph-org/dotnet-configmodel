@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
-public class ConverterTestBase
+public abstract class ConverterTestBase
 {
     protected static void AssertSample1(CatletConfig config)
     {

@@ -7,7 +7,6 @@ using Eryph.ConfigModel.Catlets;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
-using ArgumentException = System.ArgumentException;
 
 namespace Eryph.ConfigModel.Converters;
 

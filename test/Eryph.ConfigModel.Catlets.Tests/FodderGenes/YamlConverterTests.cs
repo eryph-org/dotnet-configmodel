@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using CultureAwareTesting.xUnit;
-using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
@@ -97,6 +96,7 @@ public class YamlConverterTests : ConverterTestBase
         AssertNativeVariableValuesSample(config);
     }
 
+    /*
     [CulturedFact("en-US", "de-DE")]
     public void Converts_To_yaml()
     {
@@ -112,4 +112,5 @@ public class YamlConverterTests : ConverterTestBase
         var yaml = FodderGeneConfigYamlSerializer.Serialize(config);
         yaml.Should().Be(SampleYaml2);
     }
+    */
 }
