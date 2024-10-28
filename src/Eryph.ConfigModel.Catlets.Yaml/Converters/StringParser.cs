@@ -34,14 +34,14 @@ internal class StringParser(string yaml) : IParser
     public string ConsumeSequenceAsString()
     {
         if (!this.Accept<SequenceStart>(out var sequenceStart))
-            throw new InvalidOperationException("Expected mapping start");
+            throw new InvalidOperationException("Expected sequence start");
 
         if (sequenceStart.Style is not SequenceStyle.Block)
             throw new InvalidOperationException("Sequences are only supported with indentation style");
 
         var endEvent = ConsumeThisAndNestedEvents();
         if (endEvent is not SequenceEnd sequenceEnd)
-            throw new InvalidOperationException("Expected mapping end");
+            throw new InvalidOperationException("Expected sequence end");
 
         return ExtractYaml(sequenceStart.Start, sequenceEnd.End);
     }
