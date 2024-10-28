@@ -11,27 +11,25 @@ public class JsonConverterTests: ConverterTestBase
     [CulturedFact("en-US", "de-DE")]
     public void Converts_from_json()
     {
-        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(Samples.Json1) ??
-                         new Dictionary<object, object>();
-        var config = ProjectNetworksConfigDictionaryConverter.Convert(dictionary, false);
+        var config = ProjectNetworksConfigJsonSerializer.Deserialize(Samples.Json1);
         
-        AssertSample1(config);
+        config.Should().NotBeNull();
+        AssertSample1(config!);
     }
 
     [CulturedFact("en-US", "de-DE")]
     public void Converts_to_json()
     {
-        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(Samples.Json1) ??
-                       new Dictionary<object, object>();
-        var config = ProjectNetworksConfigDictionaryConverter.Convert(dictionary, false);
-        
-        var copyOptions = new JsonSerializerOptions(ConfigModelJsonSerializer.DefaultOptions)
+        var config = ProjectNetworksConfigJsonSerializer.Deserialize(Samples.Json1);
+
+        config.Should().NotBeNull();
+
+        var options = new JsonSerializerOptions(ProjectNetworksConfigJsonSerializer.Options)
         {
             WriteIndented = true
         };
-        
-        var act = ConfigModelJsonSerializer.Serialize(config,copyOptions );
-        
-        act.Should().Be(Samples.Json1);
+        var result = ProjectNetworksConfigJsonSerializer.Serialize(config!, options);
+
+        result.Should().Be(Samples.Json1);
     }
 }

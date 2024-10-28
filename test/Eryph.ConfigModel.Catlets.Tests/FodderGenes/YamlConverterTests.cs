@@ -24,7 +24,7 @@ public class YamlConverterTests : ConverterTestBase
         fodder:
         - name: admin-windows
           type: cloud-config
-          content: >-
+          content: |-
             users:
               - name: Admin
                 groups: [ "Administrators" ]
@@ -59,7 +59,6 @@ public class YamlConverterTests : ConverterTestBase
           secret: true
         - name: super-dupa
           type: cloud-config
-        
         """;
 
     private const string SampleNativeVariableValuesYaml =
@@ -96,7 +95,7 @@ public class YamlConverterTests : ConverterTestBase
         AssertNativeVariableValuesSample(config);
     }
 
-    /*
+    
     [CulturedFact("en-US", "de-DE")]
     public void Converts_To_yaml()
     {
@@ -105,6 +104,7 @@ public class YamlConverterTests : ConverterTestBase
         act.Should().Be(SampleYaml1);
     }
 
+    /*
     [Fact]
     public void Fact()
     {

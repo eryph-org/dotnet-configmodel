@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Eryph.ConfigModel.Catlets.Json\Eryph.ConfigModel.Catlets.Json.csproj" />
     <ProjectReference Include="..\..\src\Eryph.ConfigModel.Catlets.Yaml\Eryph.ConfigModel.Catlets.Yaml.csproj" />
     <ProjectReference Include="..\..\src\Eryph.ConfigModel.Catlets\Eryph.ConfigModel.Catlets.csproj" />
     <ProjectReference Include="..\..\src\Eryph.ConfigModel.System.Json\Eryph.ConfigModel.System.Json.csproj" />

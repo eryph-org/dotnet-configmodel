@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime;
-using System.Text;
 using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Converters;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace Eryph.ConfigModel.Converters;
+namespace Eryph.ConfigModel.Yaml.Converters;
 
-internal class FodderConfigConverter(INamingConvention namingConvention) : IYamlTypeConverter
+internal class FodderConfigYamlTypeConverter(INamingConvention namingConvention) : IYamlTypeConverter
 {
     public bool Accepts(Type type) => type == typeof(FodderConfig);
 

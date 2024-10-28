@@ -83,14 +83,16 @@ public class JsonConverterTests : ConverterTestBase
     [CulturedFact("en-US", "de-DE")]
     public void Converts_to_json()
     {
-        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
-        var config = FodderGeneConfigDictionaryConverter.Convert(dictionary, false);
+        var config = FodderGeneConfigJsonSerializer.Deserialize(SampleJson1);
 
-        var copyOptions = new JsonSerializerOptions(ConfigModelJsonSerializer.DefaultOptions)
+        config.Should().NotBeNull();
+
+        var options = new JsonSerializerOptions(FodderGeneConfigJsonSerializer.Options)
         {
             WriteIndented = true
         };
-        var act = ConfigModelJsonSerializer.Serialize(config, copyOptions);
-        act.Should().Be(SampleJson1);
+        var result = ConfigModelJsonSerializer.Serialize(config, options);
+
+        result.Should().Be(SampleJson1);
     }
 }

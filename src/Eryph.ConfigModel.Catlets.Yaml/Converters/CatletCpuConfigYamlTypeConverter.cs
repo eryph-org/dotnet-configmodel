@@ -6,20 +6,21 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace Eryph.ConfigModel.Converters;
+namespace Eryph.ConfigModel.Yaml.Converters;
 
-internal class CatletCapabilityConfigYamlConverter : IYamlTypeConverter
+internal class CatletCpuConfigYamlTypeConverter : IYamlTypeConverter
 {
-    public bool Accepts(Type type) => type == typeof(CatletCapabilityConfig);
+    public bool Accepts(Type type) => type == typeof(CatletCpuConfig);
 
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
-        if (!parser.TryConsume<Scalar>(out var scalar))
+        if (!parser.Accept<Scalar>(out _))
             return rootDeserializer(type);
 
-        return new CatletCapabilityConfig
+        var cpuCount = (int)rootDeserializer(typeof(int))!;
+        return new CatletCpuConfig
         {
-            Name = scalar.Value,
+            Count = cpuCount,
         };
     }
 

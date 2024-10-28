@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using System.Text;
+using System.Linq;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 
-namespace Eryph.ConfigModel.Converters;
+namespace Eryph.ConfigModel.Yaml;
 
+/// <summary>
+/// This class wraps the actual <see cref="IParser"/> for a <see cref="string"/>.
+/// 
+/// </summary>
 internal class StringParser(string yaml) : IParser
 {
-    private readonly IParser _innerParser = new Parser(new Scanner(new StringReader(yaml)));
+    private readonly IParser _innerParser = new Parser(new StringReader(yaml));
 
     public bool MoveNext() => _innerParser.MoveNext();
 
@@ -73,7 +75,7 @@ internal class StringParser(string yaml) : IParser
 
         var fixesLines = lines.Take(linesToTake)
             .Select(l => l.StartsWith(indentSpaces) ? l.Substring(indentSpaces.Length) : l)
-            .Select(l => l.All(c => c == ' ') ? "" :l)
+            .Select(l => l.All(c => c == ' ') ? "" : l)
             .ToList();
 
         return string.Join("\n", fixesLines);

@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Eryph.ConfigModel.Catlets;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace Eryph.ConfigModel.Converters;
+namespace Eryph.ConfigModel.Yaml.Converters;
 
-internal class CatletMemoryConfigConverter : IYamlTypeConverter
+internal class CatletCapabilityConfigYamlTypeConverter : IYamlTypeConverter
 {
-    public bool Accepts(Type type) => type == typeof(CatletMemoryConfig);
+    public bool Accepts(Type type) => type == typeof(CatletCapabilityConfig);
 
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
-        if (!parser.Accept<Scalar>(out _))
-        {
+        if (!parser.TryConsume<Scalar>(out var scalar))
             return rootDeserializer(type);
-        }
 
-        var startup = (int)rootDeserializer(typeof(int))!;
-        return new CatletMemoryConfig()
+        return new CatletCapabilityConfig
         {
-            Startup = startup,
+            Name = scalar.Value,
         };
     }
 
