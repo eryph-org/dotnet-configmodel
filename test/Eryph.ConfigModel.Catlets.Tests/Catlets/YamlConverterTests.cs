@@ -177,22 +177,16 @@ public class YamlConverterTests : ConverterTestBase
     [CulturedFact("en-US", "de-DE")]
     public void Converts_from_yaml()
     {
-        var serializer = new DeserializerBuilder()
-            .Build();
-
-        var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml1);
-        var config = CatletConfigDictionaryConverter.Convert(dictionary, true);
+        var config = CatletConfigYamlSerializer.Deserialize(SampleYaml1);
+        
         AssertSample1(config);
     }
 
     [CulturedFact("en-US", "de-DE")]
     public void Converts_native_variable_values_from_yaml()
     {
-        var serializer = new DeserializerBuilder()
-            .Build();
-
-        var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleNativeVariableValuesYaml);
-        var config = CatletConfigDictionaryConverter.Convert(dictionary);
+        var config = CatletConfigYamlSerializer.Deserialize(SampleNativeVariableValuesYaml);
+        
         AssertNativeVariableValuesSample(config);
     }
 

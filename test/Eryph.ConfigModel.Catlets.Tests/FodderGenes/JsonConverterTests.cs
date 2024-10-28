@@ -60,7 +60,7 @@ public class JsonConverterTests : ConverterTestBase
         {
             WriteIndented = true
         };
-        var result = ConfigModelJsonSerializer.Serialize(config, options);
+        var result = FodderGeneConfigJsonSerializer.Serialize(config!, options);
 
         result.Should().Be(SampleJson1);
     }

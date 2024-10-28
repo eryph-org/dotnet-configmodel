@@ -75,25 +75,18 @@ public class YamlConverterTests : ConverterTestBase
     [CulturedFact("en-US", "de-DE")]
     public void Converts_from_yaml()
     {
-        var serializer = new DeserializerBuilder()
-            .Build();
+        var config = FodderGeneConfigYamlSerializer.Deserialize(SampleYaml1);
 
-        var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleYaml1);
-        var config = FodderGeneConfigDictionaryConverter.Convert(dictionary, true);
         AssertSample1(config);
     }
 
     [CulturedFact("en-US", "de-DE")]
     public void Converts_native_variable_values_from_yaml()
     {
-        var serializer = new DeserializerBuilder()
-            .Build();
-
-        var dictionary = serializer.Deserialize<Dictionary<object, object>>(SampleNativeVariableValuesYaml);
-        var config = FodderGeneConfigDictionaryConverter.Convert(dictionary);
+        var config = FodderGeneConfigYamlSerializer.Deserialize(SampleNativeVariableValuesYaml);
+        
         AssertNativeVariableValuesSample(config);
     }
-
     
     [CulturedFact("en-US", "de-DE")]
     public void Converts_To_yaml()

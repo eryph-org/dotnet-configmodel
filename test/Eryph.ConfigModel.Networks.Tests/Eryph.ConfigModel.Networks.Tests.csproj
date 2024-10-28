@@ -27,7 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Eryph.ConfigModel.Networks.Json\Eryph.ConfigModel.Networks.Json.csproj" />
     <ProjectReference Include="..\..\src\Eryph.ConfigModel.Networks.Yaml\Eryph.ConfigModel.Networks.Yaml.csproj" />
-    <ProjectReference Include="..\..\src\Eryph.ConfigModel.System.Json\Eryph.ConfigModel.System.Json.csproj" />
   </ItemGroup>
 
 </Project>

@@ -130,7 +130,7 @@ public class JsonConverterTests : ConverterTestBase
 
         config.Should().NotBeNull();
 
-        var options = new JsonSerializerOptions(ConfigModelJsonSerializer.DefaultOptions)
+        var options = new JsonSerializerOptions(CatletConfigJsonSerializer.Options)
         {
             WriteIndented = true
         };
