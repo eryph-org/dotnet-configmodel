@@ -70,7 +70,6 @@ public class YamlConverterTests : ConverterTestBase
           value: -4.2
         fodder:
         - name: fodder
-        
         """;
 
     [CulturedFact("en-US", "de-DE")]

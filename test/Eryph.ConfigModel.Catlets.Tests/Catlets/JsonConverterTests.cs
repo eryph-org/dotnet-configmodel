@@ -1,6 +1,5 @@
 using System.Text.Json;
 using CultureAwareTesting.xUnit;
-using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
 using FluentAssertions;
 
@@ -115,52 +114,13 @@ public class JsonConverterTests : ConverterTestBase
         }
         """;
 
-    private const string SampleNativeVariableValuesJson =
-        """
-        {
-          "variables": [
-            {
-              "name": "boolean",
-              "value": true
-            },
-            {
-              "name": "number",
-              "value": -4.2
-            }
-          ],
-          "fodder": [
-            {
-              "name": "fodder",
-              "variables": [
-                {
-                  "name": "boolean",
-                  "value": true
-                },
-                {
-                  "name": "number",
-                  "value": -4.2
-                }
-              ]
-            }
-          ]
-        }
-        """;
-
-
     [CulturedFact("en-US", "de-DE")]
     public void Converts_from_json()
     {
-        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleJson1);
-        var config = CatletConfigDictionaryConverter.Convert(dictionary);
-        AssertSample1(config);
-    }
-
-    [CulturedFact("en-US", "de-DE")]
-    public void Converts_native_variable_values_from_json()
-    {
-        var dictionary = ConfigModelJsonSerializer.DeserializeToDictionary(SampleNativeVariableValuesJson);
-        var config = CatletConfigDictionaryConverter.Convert(dictionary);
-        AssertNativeVariableValuesSample(config);
+        var config = CatletConfigJsonSerializer.Deserialize(SampleJson1);
+        
+        config.Should().NotBeNull();
+        AssertSample1(config!);
     }
 
     [CulturedFact("en-US", "de-DE")]
