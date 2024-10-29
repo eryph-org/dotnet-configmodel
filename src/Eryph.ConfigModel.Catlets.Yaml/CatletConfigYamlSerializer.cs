@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Eryph.ConfigModel.Catlets;
-using Eryph.ConfigModel.Converters;
 using Eryph.ConfigModel.Yaml.Converters;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
