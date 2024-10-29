@@ -4,7 +4,7 @@ using Eryph.ConfigModel.Json;
 using FluentAssertions;
 using Xunit;
 
-namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
+namespace Eryph.ConfigModel.Catlet.Tests;
 
 public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTestBase
 {

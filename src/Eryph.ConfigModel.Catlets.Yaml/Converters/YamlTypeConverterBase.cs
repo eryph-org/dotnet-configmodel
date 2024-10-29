@@ -8,6 +8,17 @@ using YamlDotNet.Serialization;
 
 namespace Eryph.ConfigModel.Yaml.Converters;
 
+/// <summary>
+/// This base class provides a default implementation for
+/// <see cref="IYamlTypeConverter"/> which populates the
+/// properties of an object of type <typeparamref name="T"/> .
+/// </summary>
+/// <remarks>
+/// The provided <paramref name="typeInspector"/> should be
+/// build by the same <see cref="DeserializerBuilder"/> which
+/// will use this converter to ensure a consistent mapping of
+/// the properties.
+/// </remarks>
 internal abstract class YamlTypeConverterBase<T>(
     ITypeInspector typeInspector)
     : IYamlTypeConverter

@@ -5,7 +5,7 @@ using Eryph.ConfigModel.Variables;
 using FluentAssertions;
 using Xunit;
 
-namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
+namespace Eryph.ConfigModel.Catlet.Tests;
 
 public class CatletConfigCloneableTests
 {
@@ -20,7 +20,7 @@ public class CatletConfigCloneableTests
         [
             new CatletDriveConfig { Name = "sda" }
         ],
-        Fodder = 
+        Fodder =
         [
             new FodderConfig
             {

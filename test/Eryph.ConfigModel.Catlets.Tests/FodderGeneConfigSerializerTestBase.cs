@@ -3,7 +3,7 @@ using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Variables;
 using FluentAssertions;
 
-namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
+namespace Eryph.ConfigModel.Catlet.Tests;
 
 public abstract class FodderGeneConfigSerializerTestBase
 {

@@ -5,7 +5,7 @@ using FluentAssertions;
 using Xunit;
 using YamlDotNet.Core;
 
-namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
+namespace Eryph.ConfigModel.Catlet.Tests;
 
 public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTestBase
 {
