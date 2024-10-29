@@ -68,7 +68,7 @@ public class YamlConverterTests : ConverterTestBase
         - name: first
         - name: admin-windows
           type: cloud-config
-          content: >-
+          content: |-
             users:
               - name: Admin
                 groups: [ "Administrators" ]
@@ -250,7 +250,7 @@ public class YamlConverterTests : ConverterTestBase
 
         config.Should().NotBeNull();
         config.Fodder.Should().SatisfyRespectively(
-            fodder => fodder.Content.Should().Be(FodderContentIndentationStyleObjectYaml));
+            fodder => fodder.Content.Should().Be(FodderContentIndentationStyleObjectYaml.ReplaceLineEndings("\n")));
     }
 
     /*

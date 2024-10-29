@@ -20,17 +20,15 @@ namespace Eryph.ConfigModel.Yaml.Converters;
 /// we need to force our custom <see cref="FodderContentYamlTypeConverter"/> with this
 /// <see cref="ITypeInspector"/>.
 /// </remarks>
-internal class FodderContentTypeInspector(ITypeInspector innerTypeInspector)
+internal class TypeConverterOverridesInspector(
+    ITypeInspector innerTypeInspector,
+    IReadOnlyDictionary<(Type Type, string PropertyName), Type> converters)
     : TypeInspectorSkeleton
 {
     public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object? container) =>
-        type != typeof(FodderConfig)
-            ? innerTypeInspector.GetProperties(type, container)
-            : innerTypeInspector.GetProperties(type, container)
-                .Select(pd => pd.Name == nameof(FodderConfig.Content)
-                    ? new FodderContentPropertyDescriptor(pd, typeof(FodderContentYamlTypeConverter))
-                    : pd);
-
+        innerTypeInspector.GetProperties(type, container)
+            .Select(pd => new TypeConverterOverridesPropertyDescriptor(
+                pd, converters, type));
 
     public override string GetEnumName(Type enumType, string name) =>
         innerTypeInspector.GetEnumName(enumType, name);
@@ -38,9 +36,10 @@ internal class FodderContentTypeInspector(ITypeInspector innerTypeInspector)
     public override string GetEnumValue(object enumValue) =>
         innerTypeInspector.GetEnumValue(enumValue);
 
-    private class FodderContentPropertyDescriptor(
+    private sealed class TypeConverterOverridesPropertyDescriptor(
         IPropertyDescriptor innerDescriptor,
-        Type converterType)
+        IReadOnlyDictionary<(Type Type, string PropertyName), Type> converters,
+        Type classType)
         : IPropertyDescriptor
     {
         public string Name => innerDescriptor.Name;
@@ -65,7 +64,10 @@ internal class FodderContentTypeInspector(ITypeInspector innerTypeInspector)
 
         public bool Required => innerDescriptor.Required;
 
-        public Type? ConverterType => converterType;
+        public Type? ConverterType =>
+            converters.TryGetValue((classType, Name), out var converterType)
+                ? converterType
+                : innerDescriptor.ConverterType;
 
         public bool CanWrite => innerDescriptor.CanWrite;
 

@@ -6,23 +6,18 @@ using YamlDotNet.Serialization;
 
 namespace Eryph.ConfigModel.Yaml.Converters;
 
-internal class CatletCapabilityConfigYamlTypeConverter : IYamlTypeConverter
+internal class CatletCapabilityConfigYamlTypeConverter(
+    INamingConvention namingConvention)
+    : ReflectionYamlTypeConverterBase<CatletCapabilityConfig>(namingConvention)
 {
-    public bool Accepts(Type type) => type == typeof(CatletCapabilityConfig);
-
-    public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
+    public override object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         if (!parser.TryConsume<Scalar>(out var scalar))
-            return rootDeserializer(type);
+            return base.ReadYaml(parser, type, rootDeserializer);
 
         return new CatletCapabilityConfig
         {
             Name = scalar.Value,
         };
-    }
-
-    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
-    {
-        serializer(value, type);
     }
 }

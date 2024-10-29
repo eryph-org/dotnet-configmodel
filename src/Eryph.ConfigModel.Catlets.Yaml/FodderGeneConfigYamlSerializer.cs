@@ -16,7 +16,12 @@ public static class FodderGeneConfigYamlSerializer
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithTypeConverter(new FodderContentYamlTypeConverter())
             .WithTypeInspector(
-                ti => new FodderContentTypeInspector(ti),
+                ti => new TypeConverterOverridesInspector(
+                    ti,
+                    new Dictionary<(Type Type, string PropertyName), Type>
+                    {
+                        [(typeof(FodderConfig), nameof(FodderConfig.Content))] = typeof(FodderContentYamlTypeConverter),
+                    }),
                 where => where.OnBottom())
             .Build());
 

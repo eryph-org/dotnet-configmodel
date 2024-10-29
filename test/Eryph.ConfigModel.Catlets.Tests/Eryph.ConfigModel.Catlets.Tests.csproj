@@ -7,6 +7,7 @@
     <RootNamespace>Eryph.ConfigModel.Catlet.Tests</RootNamespace>
     <Nullable>enable</Nullable>
     <LangVersion>12</LangVersion>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>

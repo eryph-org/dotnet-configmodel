@@ -8,24 +8,19 @@ using YamlDotNet.Serialization;
 
 namespace Eryph.ConfigModel.Yaml.Converters;
 
-internal class CatletCpuConfigYamlTypeConverter : IYamlTypeConverter
+internal class CatletCpuConfigYamlTypeConverter(
+    INamingConvention namingConvention)
+    : ReflectionYamlTypeConverterBase<CatletCpuConfig>(namingConvention)
 {
-    public bool Accepts(Type type) => type == typeof(CatletCpuConfig);
-
-    public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
+    public override object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         if (!parser.Accept<Scalar>(out _))
-            return rootDeserializer(type);
+            return base.ReadYaml(parser, type, rootDeserializer);
 
-        var cpuCount = (int)rootDeserializer(typeof(int))!;
+        var cpuCount = (int?)rootDeserializer(typeof(int));
         return new CatletCpuConfig
         {
             Count = cpuCount,
         };
-    }
-
-    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
-    {
-        serializer(value, type);
     }
 }

@@ -15,7 +15,9 @@ internal class FodderContentYamlTypeConverter : IYamlTypeConverter
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         if (parser is not StringParser customParser)
-            throw new ArgumentException("This converter requires a custom parser", nameof(parser));
+            throw new ArgumentException(
+                $"This converter requires the {typeof(StringParser).FullName}",
+                nameof(parser));
 
         if (parser.Accept<MappingStart>(out _))
             return customParser.ConsumeMappingAsString();
