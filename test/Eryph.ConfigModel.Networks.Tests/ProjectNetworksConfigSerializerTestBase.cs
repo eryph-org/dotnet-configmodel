@@ -2,7 +2,7 @@ using FluentAssertions;
 
 namespace Eryph.ConfigModel.Networks.Tests;
 
-public class ConverterTestBase
+public abstract class ProjectNetworksConfigSerializerTestBase
 {
     protected static void AssertSample1(ProjectNetworksConfig config)
     {

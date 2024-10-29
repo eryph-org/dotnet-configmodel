@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
-public class CloneableTests
+public class CatletConfigCloneableTests
 {
     private static readonly CatletConfig TestData = new()
     {

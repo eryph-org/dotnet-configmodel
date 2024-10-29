@@ -1,14 +1,11 @@
 using System.Collections.Generic;
 using CultureAwareTesting.xUnit;
-using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
-using Xunit;
-using YamlDotNet.Serialization;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
-public class YamlConverterTests : ConverterTestBase
+public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
 {
     private const string SampleYaml1 =
         """

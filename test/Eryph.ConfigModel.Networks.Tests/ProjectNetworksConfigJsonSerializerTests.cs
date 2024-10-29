@@ -6,7 +6,7 @@ using FluentAssertions;
 
 namespace Eryph.ConfigModel.Networks.Tests;
 
-public class JsonConverterTests: ConverterTestBase
+public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSerializerTestBase
 {
     private const string ComplexConfig =
         """

@@ -4,20 +4,21 @@ using FluentAssertions;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
-public abstract class ConverterTestBase
+public abstract class CatletConfigSerializerTestBase
 {
     protected static void AssertSample1(CatletConfig config)
     {
+        config.Should().NotBeNull();
+
         config.Name.Should().Be("cinc-windows");
         config.Project.Should().Be("homeland");
         config.Environment.Should().Be("world");
-
-        config.Should().NotBeNull();
+        
         config.Parent.Should().Be("dbosoft/winsrv2019-standard/20220324");
         config.Location.Should().Be("cinc");
         config.Store.Should().Be("home");
         config.Cpu.Should().NotBeNull();
-        config.Cpu?.Count.Should().Be(4);
+        config.Cpu!.Count.Should().Be(4);
 
         config.Drives.Should().HaveCount(1);
         config.Drives?[0].Name.Should().Be("data");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
 
 namespace Eryph.ConfigModel.Json;
@@ -19,12 +20,19 @@ public static class FodderGeneConfigJsonSerializer
 
     public static JsonSerializerOptions Options => LazyOptions.Value;
 
-    public static string Serialize(FodderGeneConfig config, JsonSerializerOptions? options = default) =>
-        JsonSerializer.Serialize(config, options ?? Options);
-
     public static FodderGeneConfig? Deserialize(JsonElement json) =>
         json.Deserialize<FodderGeneConfig>(Options);
 
     public static FodderGeneConfig? Deserialize(string json) =>
         JsonSerializer.Deserialize<FodderGeneConfig>(json, Options);
+
+    public static string Serialize(
+        FodderGeneConfig config,
+        JsonSerializerOptions? options = default) =>
+        JsonSerializer.Serialize(config, options ?? Options);
+
+    public static JsonElement SerializeToElement(
+        FodderGeneConfig config,
+        JsonSerializerOptions? options = default) =>
+        JsonSerializer.SerializeToElement(config, options ?? Options);
 }

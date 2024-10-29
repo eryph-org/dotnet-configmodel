@@ -5,7 +5,7 @@ using FluentAssertions;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
-public class JsonConverterTests : ConverterTestBase
+public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
 {
     private const string SampleJson1 =
         """

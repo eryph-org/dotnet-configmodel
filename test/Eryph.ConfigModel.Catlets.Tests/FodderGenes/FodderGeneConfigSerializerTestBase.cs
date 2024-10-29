@@ -5,7 +5,7 @@ using FluentAssertions;
 
 namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
 
-public class ConverterTestBase
+public abstract class FodderGeneConfigSerializerTestBase
 {
     protected static FodderGeneConfig ComplexConfig => new()
     {
