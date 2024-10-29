@@ -2,6 +2,7 @@ using System.Text.Json;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Json;
 using FluentAssertions;
+using Xunit;
 
 namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
 
@@ -63,5 +64,28 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
         var result = FodderGeneConfigJsonSerializer.Serialize(config!, options);
 
         result.Should().Be(SampleJson1);
+    }
+
+    [Fact]
+    public void Deserialize_JsonRepresentsNull_ThrowsException()
+    {
+        var act = () => FodderGeneConfigJsonSerializer.Deserialize("null");
+
+        act.Should().Throw<JsonException>()
+            .WithMessage("The config must not be null.");
+    }
+
+    [Fact]
+    public void Deserialize_JsonElementRepresentsNull_ThrowsException()
+    {
+        var element = JsonDocument.Parse("null").RootElement;
+
+        element.Should().NotBeNull();
+        element.ValueKind.Should().Be(JsonValueKind.Null);
+
+        var act = () => FodderGeneConfigJsonSerializer.Deserialize(element);
+
+        act.Should().Throw<JsonException>()
+            .WithMessage("The config must not be null.");
     }
 }

@@ -3,6 +3,7 @@ using System.Text.Json;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Json;
 using FluentAssertions;
+using Xunit;
 
 namespace Eryph.ConfigModel.Networks.Tests;
 
@@ -78,5 +79,28 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
         var result = ProjectNetworksConfigJsonSerializer.Serialize(config!, options);
 
         result.Should().Be(ComplexConfig);
+    }
+
+    [Fact]
+    public void Deserialize_JsonRepresentsNull_ThrowsException()
+    {
+        var act = () => ProjectNetworksConfigJsonSerializer.Deserialize("null");
+
+        act.Should().Throw<JsonException>()
+            .WithMessage("The config must not be null.");
+    }
+
+    [Fact]
+    public void Deserialize_JsonElementRepresentsNull_ThrowsException()
+    {
+        var element = JsonDocument.Parse("null").RootElement;
+
+        element.Should().NotBeNull();
+        element.ValueKind.Should().Be(JsonValueKind.Null);
+
+        var act = () => ProjectNetworksConfigJsonSerializer.Deserialize(element);
+
+        act.Should().Throw<JsonException>()
+            .WithMessage("The config must not be null.");
     }
 }

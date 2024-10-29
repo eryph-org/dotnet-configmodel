@@ -19,11 +19,13 @@ public static class CatletConfigJsonSerializer
 
     public static JsonSerializerOptions Options => LazyOptions.Value;
 
-    public static CatletConfig? Deserialize(JsonElement json) =>
-        json.Deserialize<CatletConfig>(Options);
+    public static CatletConfig Deserialize(JsonElement json) =>
+        json.Deserialize<CatletConfig>(Options)
+            ?? throw new JsonException("The config must not be null.");
 
-    public static CatletConfig? Deserialize(string json) =>
-        JsonSerializer.Deserialize<CatletConfig>(json, Options);
+    public static CatletConfig Deserialize(string json) =>
+        JsonSerializer.Deserialize<CatletConfig>(json, Options)
+            ?? throw new JsonException("The config must not be null.");
 
     public static string Serialize(
         CatletConfig config,

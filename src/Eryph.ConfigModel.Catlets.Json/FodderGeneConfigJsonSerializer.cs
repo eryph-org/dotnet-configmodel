@@ -20,11 +20,13 @@ public static class FodderGeneConfigJsonSerializer
 
     public static JsonSerializerOptions Options => LazyOptions.Value;
 
-    public static FodderGeneConfig? Deserialize(JsonElement json) =>
-        json.Deserialize<FodderGeneConfig>(Options);
+    public static FodderGeneConfig Deserialize(JsonElement json) =>
+        json.Deserialize<FodderGeneConfig>(Options)
+            ?? throw new JsonException("The config must not be null.");
 
-    public static FodderGeneConfig? Deserialize(string json) =>
-        JsonSerializer.Deserialize<FodderGeneConfig>(json, Options);
+    public static FodderGeneConfig Deserialize(string json) =>
+        JsonSerializer.Deserialize<FodderGeneConfig>(json, Options)
+            ?? throw new JsonException("The config must not be null.");
 
     public static string Serialize(
         FodderGeneConfig config,

@@ -1,7 +1,9 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Json;
 using FluentAssertions;
+using Xunit;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
@@ -137,5 +139,28 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
         var result = CatletConfigJsonSerializer.Serialize(config!, options);
         
         result.Should().Be(SampleJson1);
+    }
+
+    [Fact]
+    public void Deserialize_JsonRepresentsNull_ThrowsException()
+    {
+        var act = () => CatletConfigJsonSerializer.Deserialize("null");
+        
+        act.Should().Throw<JsonException>()
+            .WithMessage("The config must not be null.");
+    }
+
+    [Fact]
+    public void Deserialize_JsonElementRepresentsNull_ThrowsException()
+    {
+        var element = JsonDocument.Parse("null").RootElement;
+
+        element.Should().NotBeNull();
+        element.ValueKind.Should().Be(JsonValueKind.Null);
+
+        var act = () => CatletConfigJsonSerializer.Deserialize(element);
+
+        act.Should().Throw<JsonException>()
+            .WithMessage("The config must not be null.");
     }
 }
