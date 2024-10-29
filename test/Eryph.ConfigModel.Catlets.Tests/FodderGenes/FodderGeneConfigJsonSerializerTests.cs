@@ -47,7 +47,7 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
         var config = FodderGeneConfigJsonSerializer.Deserialize(SampleJson1);
 
         config.Should().NotBeNull();
-        AssertSample1(config!);
+        AssertComplexConfig(config!);
     }
 
     [CulturedFact("en-US", "de-DE")]

@@ -38,21 +38,26 @@ public abstract class FodderGeneConfigSerializerTestBase
         ],
     };
 
-    protected static void AssertSample1(FodderGeneConfig config)
+    protected static void AssertComplexConfig(FodderGeneConfig config)
     {
         config.Should().NotBeNull();
         config.Name.Should().Be("fodder1");
-        config.Fodder.Should().NotBeNull();
-        config.Fodder.Should().HaveCount(2);
-        config.Fodder?[0].Name.Should().Be("admin-windows");
-        config.Fodder?[0].Type.Should().Be("cloud-config");
-        config.Fodder?[0].FileName.Should().Be("filename");
-        config.Fodder?[0].Secret.Should().Be(true);
-        config.Fodder?[0].Content.Should().Contain("- name: Admin");
-        config.Fodder?[0].Content.Should().NotEndWith("\0");
 
-        config.Fodder?[1].Name.Should().Be("super-dupa");
-        config.Fodder?[1].Type.Should().Be("cloud-config");
+        config.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Name.Should().Be("admin-windows");
+                fodder.Type.Should().Be("cloud-config");
+                fodder.FileName.Should().Be("filename");
+                fodder.Secret.Should().Be(true);
+                fodder.Content.Should().Contain("- name: Admin");
+                fodder.Content.Should().NotEndWith("\0");
+            },
+            fodder =>
+            {
+                fodder.Should().Be("super-dupa");
+                fodder.Should().Be("cloud-config");
+            });
 
         config.Variables.Should().SatisfyRespectively(
             variable =>

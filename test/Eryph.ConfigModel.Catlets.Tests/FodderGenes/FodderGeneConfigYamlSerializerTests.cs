@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
+using Xunit;
 
 namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
 
@@ -74,7 +75,7 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
     {
         var config = FodderGeneConfigYamlSerializer.Deserialize(SampleYaml1);
 
-        AssertSample1(config);
+        AssertComplexConfig(config);
     }
 
     [CulturedFact("en-US", "de-DE")]
@@ -104,7 +105,15 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
         result.Should().BeEquivalentTo(ComplexConfig);
     }
 
-    /*
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_ConfigWithNativeFodderContent_ReturnsConfig()
+    {
+        var config = FodderGeneConfigYamlSerializer.Deserialize(SampleYaml2);
+
+        AssertComplexConfig(config);
+    }
+
+    
     [Fact]
     public void Fact()
     {
@@ -112,5 +121,4 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
         var yaml = FodderGeneConfigYamlSerializer.Serialize(config);
         yaml.Should().Be(SampleYaml2);
     }
-    */
 }

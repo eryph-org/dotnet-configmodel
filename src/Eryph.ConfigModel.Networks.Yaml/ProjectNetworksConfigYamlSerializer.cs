@@ -11,6 +11,7 @@ public static class ProjectNetworksConfigYamlSerializer
 {
     private static readonly Lazy<IDeserializer> Deserializer = new(() =>
         new DeserializerBuilder()
+            .WithCaseInsensitivePropertyMatching()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build());
 

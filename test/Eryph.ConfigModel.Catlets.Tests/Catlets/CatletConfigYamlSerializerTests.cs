@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
@@ -176,7 +177,7 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
     {
         var config = CatletConfigYamlSerializer.Deserialize(SampleYaml1);
         
-        AssertSample1(config);
+        AssertComplexConfig(config);
     }
 
     [CulturedFact("en-US", "de-DE")]
@@ -285,4 +286,18 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
             fodder => fodder.Content.Should().Be(FodderContentFlowStyleSequenceYaml));
     }
     */
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Convert_foos()
+    {
+        var yaml = """
+                   name: 42
+                   name: 42
+                   """;
+
+        var config = CatletConfigYamlSerializer.Deserialize(yaml);
+
+        config.Should().NotBeNull();
+    }
+
 }

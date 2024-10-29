@@ -7,8 +7,8 @@ using YamlDotNet.Serialization;
 namespace Eryph.ConfigModel.Yaml.Converters;
 
 internal class CatletMemoryConfigYamlTypeConverter(
-    INamingConvention namingConvention)
-    : ReflectionYamlTypeConverterBase<CatletMemoryConfig>(namingConvention)
+    ITypeInspector typeInspector)
+    : YamlTypeConverterBase<CatletMemoryConfig>(typeInspector)
 {
     public override object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {

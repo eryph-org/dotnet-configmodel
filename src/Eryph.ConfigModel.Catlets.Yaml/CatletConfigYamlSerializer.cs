@@ -1,27 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Yaml.Converters;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization.NodeDeserializers;
 
 namespace Eryph.ConfigModel.Yaml;
 
 public static class CatletConfigYamlSerializer
 {
     private static readonly Lazy<IDeserializer> Deserializer = new(() =>
-        new DeserializerBuilder()
+    {
+        var builder = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .WithTypeConverter(new CatletCapabilityConfigYamlTypeConverter(
-                UnderscoredNamingConvention.Instance))
-            .WithTypeConverter(new CatletCpuConfigYamlTypeConverter(
-                UnderscoredNamingConvention.Instance))
-            .WithTypeConverter(new CatletMemoryConfigYamlTypeConverter(
-                UnderscoredNamingConvention.Instance))
-            .WithTypeConverter(new FodderContentYamlTypeConverter())
+            .WithCaseInsensitivePropertyMatching()
             .WithTypeInspector(
                 ti => new TypeConverterOverridesInspector(
                     ti,
@@ -29,8 +22,20 @@ public static class CatletConfigYamlSerializer
                     {
                         [(typeof(FodderConfig), nameof(FodderConfig.Content))] = typeof(FodderContentYamlTypeConverter),
                     }),
-                where => where.OnBottom())
-            .Build());
+                where => where.OnBottom());
+
+        // Build the type inspector first as some of our type converters require it.
+        // You must update YamlTypeConverterBase accordingly if you change the
+        // configuration of the deserializer.
+        var typeInspector = builder.BuildTypeInspector();
+
+        return builder
+            .WithTypeConverter(new CatletCapabilityConfigYamlTypeConverter(typeInspector))
+            .WithTypeConverter(new CatletCpuConfigYamlTypeConverter(typeInspector))
+            .WithTypeConverter(new CatletMemoryConfigYamlTypeConverter(typeInspector))
+            .WithTypeConverter(new FodderContentYamlTypeConverter())
+            .Build();
+    });
 
     private static readonly Lazy<ISerializer> Serializer = new(() =>
         new SerializerBuilder()
