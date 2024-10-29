@@ -8,39 +8,52 @@ public class ConverterTestBase
     {
         config.Should().NotBeNull();
         config.Version.Should().Be("1.0");
-        config.Project.Should().Be("cinc");
-        config.Networks.Should().NotBeNull();
-        config.Networks.Should().HaveCount(2);
-        config.Networks?[0].Name.Should().Be("default");
-        config.Networks?[0].Environment.Should().BeNull();
-        config.Networks?[0].Address.Should().Be("192.168.2.0/24");
+        config.Project.Should().Be("acme-services");
 
-        config.Networks?[0].Subnets.Should().NotBeNull();
-        config.Networks?[0].Subnets.Should().HaveCount(1);
-        config.Networks?[0].Subnets?[0].Name.Should().Be("subnet_name");
-        config.Networks?[0].Subnets?[0].Address.Should().Be("192.168.2.0/23");
-        config.Networks?[0].Subnets?[0].DnsServers.Should().NotBeNull();
-        config.Networks?[0].Subnets?[0].DnsServers.Should().HaveCount(2);
-        config.Networks?[0].Subnets?[0].Mtu.Should().Be(1300);
-        // ReSharper disable StringLiteralTypo
-        config.Networks?[0].Subnets?[0].DnsDomain.Should().Be("jabba.beng");
-        // ReSharper restore StringLiteralTypo
+        config.Networks.Should().SatisfyRespectively(
+            network =>
+            {
+                network.Name.Should().Be("default");
+                network.Environment.Should().BeNull();
+                network.Address.Should().Be("192.168.2.0/24");
 
-        config.Networks?[0].Subnets?[0].IpPools.Should().NotBeNull();
-        config.Networks?[0].Subnets?[0].IpPools.Should().HaveCount(1);
-        config.Networks?[0].Subnets?[0].IpPools?[0].Name.Should().Be("pool_name");
-        config.Networks?[0].Subnets?[0].IpPools?[0].FirstIp.Should().Be("192.168.2.10");
-        config.Networks?[0].Subnets?[0].IpPools?[0].LastIp.Should().Be("192.168.2.100");
-        config.Networks?[0].Subnets?[0].IpPools?[0].NextIp.Should().Be("192.168.2.20");
+                network.Subnets.Should().SatisfyRespectively(
+                    subnet =>
+                    {
+                        subnet.Name.Should().Be("subnet_name");
+                        subnet.Address.Should().Be("192.168.2.0/23");
+                        subnet.DnsServers.Should().NotBeNull();
+                        subnet.DnsServers.Should().HaveCount(2);
+                        subnet.Mtu.Should().Be(1300);
+                        subnet.DnsDomain.Should().Be("acme.test");
 
-        config.Networks?[0].Provider.Should().NotBeNull();
-        config.Networks?[0].Provider?.Name.Should().Be("default");
-        config.Networks?[0].Provider?.Subnet.Should().Be("provider_subnet");
-        config.Networks?[0].Provider?.IpPool.Should().Be("other_pool");
-
-        config.Networks?[1].Environment.Should().Be("dev");
-        config.Networks?[1].Provider.Should().NotBeNull();
-        config.Networks?[1].Provider?.Name.Should().Be("default");
-        config.Networks?[1].Address.Should().Be("192.168.3.0/24");
+                        subnet.IpPools.Should().SatisfyRespectively(
+                            ipPool =>
+                            {
+                                ipPool.Name.Should().Be("pool_name");
+                                ipPool.FirstIp.Should().Be("192.168.2.10");
+                                ipPool.LastIp.Should().Be("192.168.2.100");
+                                ipPool.NextIp.Should().Be("192.168.2.20");
+                            });
+                    });
+                
+                network.Provider.Should().NotBeNull();
+                network.Provider!.Name.Should().Be("default");
+                network.Provider!.Subnet.Should().Be("provider_subnet");
+                network.Provider!.IpPool.Should().Be("other_pool");
+            },
+            network =>
+            {
+                network.Environment.Should().Be("dev");
+                
+                network.Provider.Should().NotBeNull();
+                network.Provider!.Name.Should().Be("default");
+                network.Provider.IpPool.Should().BeNull();
+                network.Provider.Subnet.Should().BeNull();
+                
+                network.Address.Should().Be("192.168.3.0/24");
+                
+                network.Subnets.Should().BeNull();
+            });
     }
 }
