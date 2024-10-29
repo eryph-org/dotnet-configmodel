@@ -9,7 +9,7 @@ namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
 public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
 {
-    private const string SampleJson1 =
+    private const string ComplexConfigJson =
         """
         {
           "project": "homeland",
@@ -99,7 +99,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
             {
               "name": "admin-windows",
               "type": "cloud-config",
-              "content": "users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: {{password}}",
+              "content": "users:\n  - name: Admin\n    groups: [ \u0022Administrators\u0022 ]\n    passwd: \u0022{{password}}\u0022\n",
               "fileName": "filename",
               "secret": true,
               "variables": [
@@ -117,28 +117,11 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
         """;
 
     [CulturedFact("en-US", "de-DE")]
-    public void Converts_from_json()
+    public void Deserialize_ComplexConfig_ReturnsConfig()
     {
-        var config = CatletConfigJsonSerializer.Deserialize(SampleJson1);
+        var config = CatletConfigJsonSerializer.Deserialize(ComplexConfigJson);
         
-        config.Should().NotBeNull();
-        AssertComplexConfig(config!);
-    }
-
-    [CulturedFact("en-US", "de-DE")]
-    public void Converts_to_json()
-    {
-        var config = CatletConfigJsonSerializer.Deserialize(SampleJson1);
-
-        config.Should().NotBeNull();
-
-        var options = new JsonSerializerOptions(CatletConfigJsonSerializer.Options)
-        {
-            WriteIndented = true
-        };
-        var result = CatletConfigJsonSerializer.Serialize(config!, options);
-        
-        result.Should().Be(SampleJson1);
+        AssertComplexConfig(config);
     }
 
     [Fact]
@@ -162,5 +145,21 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
 
         act.Should().Throw<JsonException>()
             .WithMessage("The config must not be null.");
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Serialize_AfterRoundTrip_ReturnsSameConfig()
+    {
+        var config = CatletConfigJsonSerializer.Deserialize(ComplexConfigJson);
+
+        config.Should().NotBeNull();
+
+        var options = new JsonSerializerOptions(CatletConfigJsonSerializer.Options)
+        {
+            WriteIndented = true
+        };
+        var result = CatletConfigJsonSerializer.Serialize(config!, options);
+
+        result.Should().Be(ComplexConfigJson);
     }
 }

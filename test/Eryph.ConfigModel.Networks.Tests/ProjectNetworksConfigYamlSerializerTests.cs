@@ -6,7 +6,7 @@ namespace Eryph.ConfigModel.Networks.Tests;
 
 public class ProjectNetworksConfigYamlSerializerTests : ProjectNetworksConfigSerializerTestBase
 {
-    private const string ComplexConfig =
+    private const string ComplexConfigYaml =
         """
         version: 1.0
         project: acme-services
@@ -39,19 +39,19 @@ public class ProjectNetworksConfigYamlSerializerTests : ProjectNetworksConfigSer
         """;
 
     [CulturedFact("en-US", "de-DE")]
-    public void Converts_from_yaml()
+    public void Deserialize_ComplexConfig_ReturnsConfig()
     {
-        var config = ProjectNetworksConfigYamlSerializer.Deserialize(ComplexConfig);
+        var config = ProjectNetworksConfigYamlSerializer.Deserialize(ComplexConfigYaml);
             
         AssertSample1(config);
     }
 
     [CulturedFact("en-US", "de-DE")]
-    public void Converts_To_yaml()
+    public void Serialize_AfterRoundTrip_ReturnsSameConfig()
     {
-        var config = ProjectNetworksConfigYamlSerializer.Deserialize(ComplexConfig);
-        var act = ProjectNetworksConfigYamlSerializer.Serialize(config);
+        var config = ProjectNetworksConfigYamlSerializer.Deserialize(ComplexConfigYaml);
+        var result = ProjectNetworksConfigYamlSerializer.Serialize(config);
 
-        act.Should().Be(ComplexConfig);
+        result.Should().Be(ComplexConfigYaml);
     }
 }

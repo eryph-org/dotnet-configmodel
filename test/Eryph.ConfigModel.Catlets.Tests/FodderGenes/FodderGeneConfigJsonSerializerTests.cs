@@ -8,7 +8,7 @@ namespace Eryph.ConfigModel.Catlet.Tests.FodderGenes;
 
 public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTestBase
 {
-    private const string SampleJson1 =
+    private const string ComplexConfigJson =
         """
         {
           "name": "fodder1",
@@ -28,6 +28,7 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
           "fodder": [
             {
               "name": "admin-windows",
+              "remove": true,
               "type": "cloud-config",
               "content": "users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd",
               "fileName": "filename",
@@ -42,28 +43,12 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
         """;
 
     [CulturedFact("en-US", "de-DE")]
-    public void Converts_from_json()
+    public void Deserialize_ComplexConfig_ReturnsConfig()
     {
-        var config = FodderGeneConfigJsonSerializer.Deserialize(SampleJson1);
+        var config = FodderGeneConfigJsonSerializer.Deserialize(ComplexConfigJson);
 
         config.Should().NotBeNull();
         AssertComplexConfig(config!);
-    }
-
-    [CulturedFact("en-US", "de-DE")]
-    public void Converts_to_json()
-    {
-        var config = FodderGeneConfigJsonSerializer.Deserialize(SampleJson1);
-
-        config.Should().NotBeNull();
-
-        var options = new JsonSerializerOptions(FodderGeneConfigJsonSerializer.Options)
-        {
-            WriteIndented = true
-        };
-        var result = FodderGeneConfigJsonSerializer.Serialize(config!, options);
-
-        result.Should().Be(SampleJson1);
     }
 
     [Fact]
@@ -87,5 +72,19 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
 
         act.Should().Throw<JsonException>()
             .WithMessage("The config must not be null.");
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Serialize_AfterRoundtrip_ReturnsSameConfig()
+    {
+        var config = FodderGeneConfigJsonSerializer.Deserialize(ComplexConfigJson);
+
+        var options = new JsonSerializerOptions(FodderGeneConfigJsonSerializer.Options)
+        {
+            WriteIndented = true
+        };
+        var result = FodderGeneConfigJsonSerializer.Serialize(config, options);
+
+        result.Should().Be(ComplexConfigJson);
     }
 }

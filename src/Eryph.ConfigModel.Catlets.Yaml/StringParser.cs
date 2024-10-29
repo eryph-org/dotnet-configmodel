@@ -23,12 +23,16 @@ internal class StringParser(string yaml) : IParser
         if (!this.Accept<MappingStart>(out var mappingStart))
             throw new InvalidOperationException("A mapping should start at this point.");
 
-        if (mappingStart.Style is not MappingStyle.Block)
-            throw new InvalidOperationException("Expected block mapping");
-
         var endEvent = ConsumeThisAndNestedEvents();
+
         if (endEvent is not MappingEnd mappingEnd)
-            throw new InvalidOperationException("Expected mapping end");
+            throw new InvalidOperationException("The mapping should end at this point.");
+
+        if (mappingStart.Style is not MappingStyle.Block)
+            throw new YamlException(
+                mappingStart.Start,
+                mappingEnd.End,
+                "Only indentation style mappings are supported at this point.");
 
         return ExtractYaml(mappingStart.Start, mappingEnd.End);
     }
@@ -36,14 +40,18 @@ internal class StringParser(string yaml) : IParser
     public string ConsumeSequenceAsString()
     {
         if (!this.Accept<SequenceStart>(out var sequenceStart))
-            throw new InvalidOperationException("Expected sequence start");
-
-        if (sequenceStart.Style is not SequenceStyle.Block)
-            throw new InvalidOperationException("Sequences are only supported with indentation style");
+            throw new InvalidOperationException("A sequence should start at this point.");
 
         var endEvent = ConsumeThisAndNestedEvents();
+
         if (endEvent is not SequenceEnd sequenceEnd)
-            throw new InvalidOperationException("Expected sequence end");
+            throw new InvalidOperationException("The sequence should end at this point.");
+
+        if (sequenceStart.Style is not SequenceStyle.Block)
+            throw new YamlException(
+                sequenceStart.Start,
+                sequenceEnd.End,
+                "Only indentation style sequences are supported at this point.");
 
         return ExtractYaml(sequenceStart.Start, sequenceEnd.End);
     }
@@ -69,20 +77,23 @@ internal class StringParser(string yaml) : IParser
 
         var indentSpaces = new string(' ', startIndent);
 
-        var substring = yaml.Substring(startIndex, endIndex - startIndex);
-        // Apply the same sanitization to the line breaks as YamlDotNet.
-        var sanitized = substring.Replace("\r\n", "\n")
+        // Apply the same sanitization to the line breaks as YamlDotNet does.
+        var yamlSlice = yaml.Substring(startIndex, endIndex - startIndex)
+            .Replace("\r\n", "\n")
             .Replace("\r", "\n")
             .Replace("\x85", "\n");
 
-        var lines = sanitized.Split('\n').ToList();
-        var linesToTake = lines[lines.Count - 1] == indentSpaces ? lines.Count - 1 : lines.Count;
-
-        var fixesLines = lines.Take(linesToTake)
+        var lines = yamlSlice.Split('\n')
+            // Remove the part of the indentation which belongs to the mapping or
+            // sequence which we are consuming.
             .Select(l => l.StartsWith(indentSpaces) ? l.Substring(indentSpaces.Length) : l)
-            .Select(l => l.All(c => c == ' ') ? "" : l)
-            .ToList();
+            // Trim any lines which exclusively consist of spaces (from the indentation).
+            .Select(l => l.All(c => c == ' ') ? "" : l);
 
-        return string.Join("\n", fixesLines);
+        var result = string.Join("\n", lines);
+
+        // Always terminate the result with a line break. This way, the correct
+        // multiline string literal is used when serializing the data again.
+        return result.EndsWith("\n") ? result : $"{result}\n";
     }
 }

@@ -1,14 +1,16 @@
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
+using Xunit;
+using YamlDotNet.Core;
 
 namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
 
 public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
 {
-    private const string SampleYaml1 =
+    private const string ComplexConfigYaml =
         """
         project: homeland
         name: cinc-windows
@@ -66,7 +68,7 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
         - name: first
         - name: admin-windows
           type: cloud-config
-          content: |-
+          content: |
             users:
               - name: Admin
                 groups: [ "Administrators" ]
@@ -74,154 +76,136 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
           file_name: filename
           secret: true
           variables:
-          - name: first
+          - name: password
             type: String
             value: InitialPassw0rd
             secret: true
             required: true
 
         """;
-
-    private const string SampleYaml2 = "parent: dbosoft/winsrv2019-standard/20220324";
-
-    private const string SampleYaml3 =
-        """
-        parent: dbosoft/winsrv2019-standard/20220324  
-        cpu: 4
-        """;
-
-    private const string SampleYaml4 = 
-        """
-        capabilities:
-        - nested_virtualization                         
-        """;
-
-    private const string SampleNativeVariableValuesYaml =
-        """
-        variables:
-        - name: boolean
-          value: true
-        - name: number
-          value: -4.2
-        fodder:
-        - name: fodder
-          variables:
-          - name: boolean
-            value: true
-          - name: number
-            value: -4.2
-        """;
-
-    private const string FodderContentIndentationStyleObjectCatletYaml =
-        """
-        fodder:
-        - name: fodder
-          content:
-            users:
-            - name: Admin
-              groups: [ "Administrators" ]
-              passwd: '{{password}}'
-        """;
-
-    private const string FodderContentIndentationStyleObjectYaml =
-        """
-        users:
-        - name: Admin
-          groups: [ "Administrators" ]
-          passwd: '{{password}}'
-        """;
-
-    private const string FodderContentFlowStyleObjectCatletYaml =
-        """
-        fodder:
-        - name: fodder
-          content: { users: [ { name: Admin, groups: ["Administrators"], passwd: '{{ passwd }}' } ] }
-        """;
-
-    private const string FodderContentFlowStyleObjectYaml =
-        """
-        { users: [ { name: Admin, groups: ["Administrators"], passwd: '{{ passwd }}' } ] }
-        """;
-
-    private const string FodderContentIndentationStyleSequenceCatletYaml =
-        """
-        fodder:
-        - name: fodder
-          content:
-          - name: first_task
-          - name: second_task
-        """;
-
-    private const string FodderContentIndentationStyleSequenceYaml =
-        """
-        - name: first_task
-        - name: second_task
-        """;
-
-    private const string FodderContentFlowStyleSequenceCatletYaml =
-        """
-        fodder:
-        - name: fodder
-          content: [ { name: "first_task" }, { name: "second_task" } ]
-        """;
-
-    private const string FodderContentFlowStyleSequenceYaml =
-        """
-        [ { name: "first_task" }, { name: "second_task" } ]
-        """;
-
-    private const string MemoryShorthandSampleYaml = "memory: 512";
-
+    
     [CulturedFact("en-US", "de-DE")]
-    public void Converts_from_yaml()
+    public void Deserialize_ComplexConfig_ReturnsConfig()
     {
-        var config = CatletConfigYamlSerializer.Deserialize(SampleYaml1);
+        var config = CatletConfigYamlSerializer.Deserialize(ComplexConfigYaml);
         
         AssertComplexConfig(config);
     }
 
     [CulturedFact("en-US", "de-DE")]
-    public void Converts_native_variable_values_from_yaml()
+    public void Deserialize_ConfigWithNativeVariableValues_ReturnsConfig()
     {
-        var config = CatletConfigYamlSerializer.Deserialize(SampleNativeVariableValuesYaml);
+        const string yaml = """
+                            variables:
+                            - name: boolean
+                              value: true
+                            - name: number
+                              value: -4.2
+                            fodder:
+                            - name: fodder
+                              variables:
+                              - name: boolean
+                                value: true
+                              - name: number
+                                value: -4.2
+                            """;
+
+        var config = CatletConfigYamlSerializer.Deserialize(yaml);
+
+        config.Fodder.Should().SatisfyRespectively(
+            fodder => fodder.Variables.Should().SatisfyRespectively(
+                variable =>
+                {
+                    variable.Name.Should().Be("boolean");
+                    variable.Type.Should().BeNull();
+                    variable.Value.Should().Be("true");
+                    variable.Required.Should().BeNull();
+                    variable.Secret.Should().BeNull();
+                },
+                variable =>
+                {
+                    variable.Name.Should().Be("number");
+                    variable.Type.Should().BeNull();
+                    variable.Value.Should().Be("-4.2");
+                    variable.Required.Should().BeNull();
+                    variable.Secret.Should().BeNull();
+                }));
+
+        config.Variables.Should().SatisfyRespectively(
+            variable =>
+            {
+                variable.Name.Should().Be("boolean");
+                variable.Type.Should().BeNull();
+                variable.Value.Should().Be("true");
+                variable.Required.Should().BeNull();
+                variable.Secret.Should().BeNull();
+            },
+            variable =>
+            {
+                variable.Name.Should().Be("number");
+                variable.Type.Should().BeNull();
+                variable.Value.Should().Be("-4.2");
+                variable.Required.Should().BeNull();
+                variable.Secret.Should().BeNull();
+            });
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_MinimalConfig_ReturnsConfig()
+    {
+        const string yaml = "parent: acme/acme-os/1.0";
         
-        AssertNativeVariableValuesSample(config);
-    }
-
-    [CulturedFact("en-US", "de-DE")]
-    public void Converts_To_yaml()
-    {
-        var config = CatletConfigYamlSerializer.Deserialize(SampleYaml1);
-        var act = CatletConfigYamlSerializer.Serialize(config);
-        act.Should().Be(SampleYaml1);
-
-    }
-
-    [CulturedFact("en-US", "de-DE")]
-    public void Convert_from_minimal_yaml()
-    {
-        var config = CatletConfigYamlSerializer.Deserialize(SampleYaml2);
+        var config = CatletConfigYamlSerializer.Deserialize(yaml);
 
         config.Should().NotBeNull();
-        config.Parent.Should().Be("dbosoft/winsrv2019-standard/20220324");
-
+        config.Parent.Should().Be("acme/acme-os/1.0");
     }
 
     [CulturedFact("en-US", "de-DE")]
-    public void Convert_from_short_cpu_yaml()
+    public void Deserialize_CapabilitiesShorthandConfig_ReturnsConfig()
     {
-        var config = CatletConfigYamlSerializer.Deserialize(SampleYaml3);
+        const string yaml = """
+                            capabilities:
+                            - nested_virtualization
+                            - secure_boot
+                            """;
+
+        var config = CatletConfigYamlSerializer.Deserialize(yaml);
+
+        config.Should().NotBeNull();
+        config.Capabilities.Should().SatisfyRespectively(
+            capability =>
+            {
+                capability.Name.Should().Be("nested_virtualization");
+                capability.Details.Should().BeNull();
+                capability.Mutation.Should().BeNull();
+            },
+            capability =>
+            {
+                capability.Name.Should().Be("secure_boot");
+                capability.Details.Should().BeNull();
+                capability.Mutation.Should().BeNull();
+            });
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_CpuShorthandConfig_ReturnsConfig()
+    {
+        const string yaml = "cpu: 4";
+
+        var config = CatletConfigYamlSerializer.Deserialize(yaml);
 
         config.Should().NotBeNull();
         config.Cpu.Should().NotBeNull();
-        config.Cpu?.Count.Should().Be(4);
-
+        config.Cpu!.Count.Should().Be(4);
     }
 
     [CulturedFact("en-US", "de-DE")]
-    public void Convert_from_shorthand_memory_yaml()
+    public void Deserialize_MemoryShorthandConfig_ReturnsConfig()
     {
-        var config = CatletConfigYamlSerializer.Deserialize(MemoryShorthandSampleYaml);
+        const string yaml = "memory: 512";
+        
+        var config = CatletConfigYamlSerializer.Deserialize(yaml);
 
         config.Should().NotBeNull();
         config.Memory.Should().NotBeNull();
@@ -230,74 +214,122 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
         config.Memory.Maximum.Should().BeNull();
     }
 
-    [CulturedFact("en-US", "de-DE")]
-    public void Convert_from_short_features_yaml()
+    [Fact]
+    public void Deserialize_FodderContentIsFlowStyleMapping_ThrowsException()
     {
-        var config = CatletConfigYamlSerializer.Deserialize(SampleYaml4);
+        const string yaml = """
+                            fodder:
+                            - name: fodder
+                              content: { first_key: first_value, second_key: second_value }
+                            """;
 
-        config.Should().NotBeNull();
-        config.Capabilities.Should().SatisfyRespectively(
-            capability => capability.Name.Should().Be("nested_virtualization"));
+        var act = () => CatletConfigYamlSerializer.Deserialize(yaml);
+        act.Should().Throw<YamlException>()
+            .WithMessage("Only indentation style mappings are supported at this point.");
+    }
+
+    [Fact]
+    public void Deserialize_FodderContentIsFlowStyleSequence_ThrowsException()
+    {
+        const string yaml = """
+                            fodder:
+                            - name: fodder
+                              content: [ "first_value", "second_task" ]
+                            """;
+
+        var act = () => CatletConfigYamlSerializer.Deserialize(yaml);
+        act.Should().Throw<YamlException>()
+            .WithMessage("Only indentation style sequences are supported at this point.");
     }
 
     [CulturedFact("en-US", "de-DE")]
-    public void Convert_from_indentation_style_object_fodder_content_yaml()
+    public void Deserialize_FodderContentIsIndentationStyleMapping_ReturnsConfig()
     {
-        var config = CatletConfigYamlSerializer.Deserialize(
-            FodderContentIndentationStyleObjectCatletYaml);
-
-        config.Should().NotBeNull();
-        config.Fodder.Should().SatisfyRespectively(
-            fodder => fodder.Content.Should().Be(FodderContentIndentationStyleObjectYaml.ReplaceLineEndings("\n")));
-    }
-
-    /*
-    [CulturedFact("en-US", "de-DE")]
-    public void Convert_from_flow_style_object_fodder_content_yaml()
-    {
-        var config = CatletConfigYamlSerializer.Deserialize(
-            FodderContentFlowStyleObjectCatletYaml);
-
-        config.Should().NotBeNull();
-        config.Fodder.Should().SatisfyRespectively(
-            fodder => fodder.Content.Should().Be(FodderContentFlowStyleObjectYaml));
-    }
-
-    [CulturedFact("en-US", "de-DE")]
-    public void Convert_from_indentation_style_sequence_fodder_content_yaml()
-    {
-        var config = CatletConfigYamlSerializer.Deserialize(
-            FodderContentIndentationStyleSequenceCatletYaml);
-
-        config.Should().NotBeNull();
-        config.Fodder.Should().SatisfyRespectively(
-            fodder => fodder.Content.Should().Be(FodderContentIndentationStyleSequenceYaml));
-    }
-
-    [CulturedFact("en-US", "de-DE")]
-    [InlineData(FodderContentIndentationStyleObjectCatletYaml, FodderContentIndentationStyleObjectYaml)]
-    public void Convert_from_flow_style_sequence_fodder_content_yaml()
-    {
-        var config = CatletConfigYamlSerializer.Deserialize(
-            FodderContentFlowStyleSequenceCatletYaml);
-
-        config.Should().NotBeNull();
-        config.Fodder.Should().SatisfyRespectively(
-            fodder => fodder.Content.Should().Be(FodderContentFlowStyleSequenceYaml));
-    }
-    */
-
-    [CulturedFact("en-US", "de-DE")]
-    public void Convert_foos()
-    {
-        var yaml = """
-                   name: 42
-                   name: 42
-                   """;
+        const string yaml = """
+                            fodder:
+                            - name: first-food
+                              content:
+                                first_key: first-food-first-value
+                                second_key: first-food-second-value
+                              secret: true
+                            - name : second-food
+                              content:
+                                first_key: second-food-first-value
+                                second_key: second-food-second-value
+                            - name : third-food
+                              content:
+                                first_key: third-food-first-value
+                                second_key: third-food-second-value
+                            """;
 
         var config = CatletConfigYamlSerializer.Deserialize(yaml);
 
-        config.Should().NotBeNull();
+        config.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Name.Should().Be("first-food");
+                fodder.Content.Should().Be("first_key: first-food-first-value\nsecond_key: first-food-second-value\n");
+                fodder.Secret.Should().BeTrue();
+            },
+            fodder =>
+            {
+                fodder.Name.Should().Be("second-food");
+                fodder.Content.Should().Be("first_key: second-food-first-value\nsecond_key: second-food-second-value\n");
+            },
+            fodder =>
+            {
+                fodder.Name.Should().Be("third-food");
+                fodder.Content.Should().Be("first_key: third-food-first-value\nsecond_key: third-food-second-value\n");
+            });
     }
 
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_FodderContentIsIndentationStyleSequence_ReturnsConfig()
+    {
+        const string yaml = """
+                            fodder:
+                            - name: first-food
+                              content:
+                                - first-food-first-value
+                                - first-food-second-value
+                              secret: true
+                            - name : second-food
+                              content:
+                                - second-food-first-value
+                                - second-food-second-value
+                            - name : third-food
+                              content:
+                              - third-food-first-value
+                              - third-food-second-value
+                            """;
+
+        var config = CatletConfigYamlSerializer.Deserialize(yaml);
+
+        config.Fodder.Should().SatisfyRespectively(
+            fodder =>
+            {
+                fodder.Name.Should().Be("first-food");
+                fodder.Content.Should().Be("- first-food-first-value\n- first-food-second-value\n");
+                fodder.Secret.Should().BeTrue();
+            },
+            fodder =>
+            {
+                fodder.Name.Should().Be("second-food");
+                fodder.Content.Should().Be("- second-food-first-value\n- second-food-second-value\n");
+            },
+            fodder =>
+            {
+                fodder.Name.Should().Be("third-food");
+                fodder.Content.Should().Be("- third-food-first-value\n- third-food-second-value\n");
+            });
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Serialize_AfterRoundTrip_ReturnsSameConfig()
+    {
+        var config = CatletConfigYamlSerializer.Deserialize(ComplexConfigYaml);
+        var result = CatletConfigYamlSerializer.Serialize(config);
+
+        result.Should().Be(ComplexConfigYaml);
+    }
 }

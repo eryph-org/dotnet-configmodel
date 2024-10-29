@@ -9,7 +9,7 @@ namespace Eryph.ConfigModel.Networks.Tests;
 
 public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSerializerTestBase
 {
-    private const string ComplexConfig =
+    private const string ComplexConfigJson =
         """
         {
           "version": "1.0",
@@ -57,30 +57,14 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
         """;
 
     [CulturedFact("en-US", "de-DE")]
-    public void Converts_from_json()
+    public void Deserialize_ComplexConfig_ReturnsConfig()
     {
-        var config = ProjectNetworksConfigJsonSerializer.Deserialize(ComplexConfig);
+        var config = ProjectNetworksConfigJsonSerializer.Deserialize(ComplexConfigJson);
         
         config.Should().NotBeNull();
         AssertSample1(config!);
     }
-
-    [CulturedFact("en-US", "de-DE")]
-    public void Converts_to_json()
-    {
-        var config = ProjectNetworksConfigJsonSerializer.Deserialize(ComplexConfig);
-
-        config.Should().NotBeNull();
-
-        var options = new JsonSerializerOptions(ProjectNetworksConfigJsonSerializer.Options)
-        {
-            WriteIndented = true
-        };
-        var result = ProjectNetworksConfigJsonSerializer.Serialize(config!, options);
-
-        result.Should().Be(ComplexConfig);
-    }
-
+    
     [Fact]
     public void Deserialize_JsonRepresentsNull_ThrowsException()
     {
@@ -102,5 +86,21 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
 
         act.Should().Throw<JsonException>()
             .WithMessage("The config must not be null.");
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Serialize_AfterRoundTrip_ReturnsSameConfig()
+    {
+        var config = ProjectNetworksConfigJsonSerializer.Deserialize(ComplexConfigJson);
+
+        config.Should().NotBeNull();
+
+        var options = new JsonSerializerOptions(ProjectNetworksConfigJsonSerializer.Options)
+        {
+            WriteIndented = true
+        };
+        var result = ProjectNetworksConfigJsonSerializer.Serialize(config!, options);
+
+        result.Should().Be(ComplexConfigJson);
     }
 }

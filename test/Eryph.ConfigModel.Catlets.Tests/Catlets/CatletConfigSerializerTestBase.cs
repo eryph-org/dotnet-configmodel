@@ -110,9 +110,17 @@ public abstract class CatletConfigSerializerTestBase
                 fodder.Remove.Should().BeNull();
                 fodder.Secret.Should().Be(true);
                 fodder.Source.Should().BeNull();
-                fodder.Content.Should().Contain("- name: Admin");
+                fodder.Content.Should().Be("users:\n  - name: Admin\n    groups: [ \"Administrators\" ]\n    passwd: \"{{password}}\"\n");
                 fodder.Content.Should().NotEndWith("\0");
-                fodder.Variables.Should().BeNull();
+                fodder.Variables.Should().SatisfyRespectively(
+                    variable =>
+                    {
+                        variable.Name.Should().Be("password");
+                        variable.Type.Should().Be(VariableType.String);
+                        variable.Value.Should().Be("InitialPassw0rd");
+                        variable.Required.Should().BeTrue();
+                        variable.Secret.Should().BeTrue();
+                    });
             });
 
         config.Variables.Should().SatisfyRespectively(
@@ -131,46 +139,6 @@ public abstract class CatletConfigSerializerTestBase
                 variable.Value.Should().Be("-4.2");
                 variable.Required.Should().BeTrue();
                 variable.Secret.Should().BeTrue();
-            });
-    }
-
-    protected static void AssertNativeVariableValuesSample(CatletConfig config)
-    {
-        config.Fodder.Should().SatisfyRespectively(
-            fodder => fodder.Variables.Should().SatisfyRespectively(
-                variable =>
-                {
-                    variable.Name.Should().Be("boolean");
-                    variable.Type.Should().BeNull();
-                    variable.Value.Should().Be("true");
-                    variable.Required.Should().BeNull();
-                    variable.Secret.Should().BeNull();
-                },
-                variable =>
-                {
-                    variable.Name.Should().Be("number");
-                    variable.Type.Should().BeNull();
-                    variable.Value.Should().Be("-4.2");
-                    variable.Required.Should().BeNull();
-                    variable.Secret.Should().BeNull();
-                }));
-
-        config.Variables.Should().SatisfyRespectively(
-            variable =>
-            {
-                variable.Name.Should().Be("boolean");
-                variable.Type.Should().BeNull();
-                variable.Value.Should().Be("true");
-                variable.Required.Should().BeNull();
-                variable.Secret.Should().BeNull();
-            },
-            variable =>
-            {
-                variable.Name.Should().Be("number");
-                variable.Type.Should().BeNull();
-                variable.Value.Should().Be("-4.2");
-                variable.Required.Should().BeNull();
-                variable.Secret.Should().BeNull();
             });
     }
 }
