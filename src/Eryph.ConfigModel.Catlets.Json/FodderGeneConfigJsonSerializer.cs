@@ -22,6 +22,9 @@ public static class FodderGeneConfigJsonSerializer
     public static string Serialize(FodderGeneConfig config, JsonSerializerOptions? options = default) =>
         JsonSerializer.Serialize(config, options ?? Options);
 
+    public static FodderGeneConfig? Deserialize(JsonElement json) =>
+        json.Deserialize<FodderGeneConfig>(Options);
+
     public static FodderGeneConfig? Deserialize(string json) =>
         JsonSerializer.Deserialize<FodderGeneConfig>(json, Options);
 }

@@ -22,6 +22,9 @@ public static class CatletConfigJsonSerializer
     public static string Serialize(CatletConfig config, JsonSerializerOptions? options = default) =>
         JsonSerializer.Serialize(config, options ?? Options);
 
+    public static CatletConfig? Deserialize(JsonElement json) =>
+        json.Deserialize<CatletConfig>(Options);
+
     public static CatletConfig? Deserialize(string json) =>
         JsonSerializer.Deserialize<CatletConfig>(json, Options);
 }

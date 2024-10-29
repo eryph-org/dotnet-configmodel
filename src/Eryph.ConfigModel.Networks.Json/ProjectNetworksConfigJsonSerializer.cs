@@ -22,6 +22,9 @@ public static class ProjectNetworksConfigJsonSerializer
     public static string Serialize(ProjectNetworksConfig config, JsonSerializerOptions? options = default) =>
         JsonSerializer.Serialize(config, options ?? Options);
 
+    public static ProjectNetworksConfig? Deserialize(JsonElement json) =>
+        json.Deserialize<ProjectNetworksConfig>(Options);
+
     public static ProjectNetworksConfig? Deserialize(string json) =>
         JsonSerializer.Deserialize<ProjectNetworksConfig>(json, Options);
 }
