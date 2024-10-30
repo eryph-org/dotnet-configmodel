@@ -19,13 +19,31 @@ public static class ProjectNetworksConfigJsonSerializer
 
     public static JsonSerializerOptions Options => LazyOptions.Value;
 
-    public static ProjectNetworksConfig Deserialize(JsonElement json) =>
-        json.Deserialize<ProjectNetworksConfig>(Options)
-            ?? throw new JsonException("The config must not be null.");
+    public static ProjectNetworksConfig Deserialize(JsonElement json)
+    {
+        try
+        {
+            return json.Deserialize<ProjectNetworksConfig>(Options)
+                   ?? throw new JsonException("The config must not be null.");
+        }
+        catch (Exception ex)
+        {
+            throw InvalidConfigExceptionFactory.Create(ex);
+        }
+    }
 
-    public static ProjectNetworksConfig Deserialize(string json) =>
-        JsonSerializer.Deserialize<ProjectNetworksConfig>(json, Options)
-            ?? throw new JsonException("The config must not be null.");
+    public static ProjectNetworksConfig Deserialize(string json)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<ProjectNetworksConfig>(json, Options)
+                   ?? throw new JsonException("The config must not be null.");
+        }
+        catch (Exception ex)
+        {
+            throw InvalidConfigExceptionFactory.Create(ex);
+        }
+    }
 
     public static string Serialize(
         ProjectNetworksConfig config,

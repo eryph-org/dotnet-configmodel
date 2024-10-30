@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using CultureAwareTesting.xUnit;
@@ -82,8 +83,10 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
     {
         var act = () => ProjectNetworksConfigJsonSerializer.Deserialize("null");
 
-        act.Should().Throw<JsonException>()
-            .WithMessage("The config must not be null.");
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The JSON is invalid (line 1, column 1):"
+                         + $"{Environment.NewLine}The config must not be null.")
+            .WithInnerException<JsonException>();
     }
 
     [Fact]
@@ -96,8 +99,27 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
 
         var act = () => ProjectNetworksConfigJsonSerializer.Deserialize(element);
 
-        act.Should().Throw<JsonException>()
-            .WithMessage("The config must not be null.");
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The JSON is invalid (line 1, column 1):"
+                         + $"{Environment.NewLine}The config must not be null.")
+            .WithInnerException<JsonException>();
+    }
+
+    [Fact]
+    public void Deserialize_InvalidJson_ThrowsException()
+    {
+        const string json = """
+                            {
+                              "test": ]
+                            }
+                            """;
+
+        var act = () => ProjectNetworksConfigJsonSerializer.Deserialize(json);
+
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The JSON is invalid (line 2, column 11):"
+                         + $"{Environment.NewLine}']' is an invalid start of a value.*")
+            .WithInnerException<JsonException>();
     }
 
     [CulturedFact("en-US", "de-DE")]

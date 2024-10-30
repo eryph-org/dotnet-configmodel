@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Eryph.ConfigModel.Networks;
 using Eryph.ConfigModel.Yaml.Converters;
 using YamlDotNet.Serialization;
@@ -31,8 +30,17 @@ public static class ProjectNetworksConfigYamlSerializer
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
             .Build());
 
-    public static ProjectNetworksConfig Deserialize(string yaml) =>
-        Deserializer.Value.Deserialize<ProjectNetworksConfig>(yaml);
+    public static ProjectNetworksConfig Deserialize(string yaml)
+    {
+        try
+        {
+            return Deserializer.Value.Deserialize<ProjectNetworksConfig>(yaml);
+        }
+        catch (Exception ex)
+        {
+            throw InvalidConfigExceptionFactory.Create(ex);
+        }
+    }
 
     public static string Serialize(ProjectNetworksConfig config) =>
         Serializer.Value.Serialize(config);

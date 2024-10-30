@@ -1,6 +1,9 @@
+using System;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
+using Xunit;
+using YamlDotNet.Core;
 
 namespace Eryph.ConfigModel.Networks.Tests;
 
@@ -73,6 +76,23 @@ public class ProjectNetworksConfigYamlSerializerTests : ProjectNetworksConfigSer
                 network.Subnets.Should().SatisfyRespectively(
                     subnet => { subnet.Name.Should().Be("subnet_name"); });
             });
+    }
+
+    [Fact]
+    public void Deserialize_InvalidYaml_ThrowsException()
+    {
+        const string yaml = """
+                            networks:
+                            - name: ]
+                            """;
+
+        var act = () => ProjectNetworksConfigYamlSerializer.Deserialize(yaml);
+
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The YAML is invalid (line 2, column 9):"
+                         + $"{Environment.NewLine}While parsing a node, did not find expected node content."
+                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithInnerException<YamlException>();
     }
 
     [CulturedFact("en-US", "de-DE")]

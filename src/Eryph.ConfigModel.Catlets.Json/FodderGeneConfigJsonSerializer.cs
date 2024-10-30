@@ -14,20 +14,39 @@ public static class FodderGeneConfigJsonSerializer
         new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+            PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
             Converters = { new JsonStringEnumConverter() },
         });
 
     public static JsonSerializerOptions Options => LazyOptions.Value;
 
-    public static FodderGeneConfig Deserialize(JsonElement json) =>
-        json.Deserialize<FodderGeneConfig>(Options)
-            ?? throw new JsonException("The config must not be null.");
+    public static FodderGeneConfig Deserialize(JsonElement json)
+    {
+        try
+        {
+            return json.Deserialize<FodderGeneConfig>(Options)
+                ?? throw new JsonException("The config must not be null.");
+        }
+        catch (Exception ex)
+        {
+            throw InvalidConfigExceptionFactory.Create(ex);
+        }
+    }
 
-    public static FodderGeneConfig Deserialize(string json) =>
-        JsonSerializer.Deserialize<FodderGeneConfig>(json, Options)
-            ?? throw new JsonException("The config must not be null.");
+    public static FodderGeneConfig Deserialize(string json)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<FodderGeneConfig>(json, Options)
+                ?? throw new JsonException("The config must not be null.");
 
+        } catch (Exception ex)
+        {
+            throw InvalidConfigExceptionFactory.Create(ex);
+        }
+    }
+        
     public static string Serialize(
         FodderGeneConfig config,
         JsonSerializerOptions? options = default) =>

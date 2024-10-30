@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Json;
@@ -140,8 +141,10 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
     {
         var act = () => CatletConfigJsonSerializer.Deserialize("null");
         
-        act.Should().Throw<JsonException>()
-            .WithMessage("The config must not be null.");
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The JSON is invalid (line 1, column 1):"
+                         + $"{Environment.NewLine}The config must not be null.")
+            .WithInnerException<JsonException>();
     }
 
     [Fact]
@@ -154,8 +157,27 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
 
         var act = () => CatletConfigJsonSerializer.Deserialize(element);
 
-        act.Should().Throw<JsonException>()
-            .WithMessage("The config must not be null.");
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The JSON is invalid (line 1, column 1):"
+                         + $"{Environment.NewLine}The config must not be null.")
+            .WithInnerException<JsonException>();
+    }
+
+    [Fact]
+    public void Deserialize_InvalidJson_ThrowsException()
+    {
+        const string json = """
+                            {
+                              "test": ]
+                            }
+                            """;
+
+        var act = () => CatletConfigJsonSerializer.Deserialize(json);
+
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The JSON is invalid (line 2, column 11):"
+                         + $"{Environment.NewLine}']' is an invalid start of a value.*")
+            .WithInnerException<JsonException>();
     }
 
     [CulturedFact("en-US", "de-DE")]

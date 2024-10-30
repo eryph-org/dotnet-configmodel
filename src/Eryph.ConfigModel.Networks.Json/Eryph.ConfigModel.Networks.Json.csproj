@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Eryph.ConfigModel.Json\Eryph.ConfigModel.Json.csproj" />
     <ProjectReference Include="..\Eryph.ConfigModel.Networks\Eryph.ConfigModel.Networks.csproj" />
   </ItemGroup>
 

@@ -46,9 +46,18 @@ public static class CatletConfigYamlSerializer
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
             .Build());
 
-    public static CatletConfig Deserialize(string yaml) =>
-        Deserializer.Value.Deserialize<CatletConfig>(new StringParser(yaml));
-
+    public static CatletConfig Deserialize(string yaml)
+    {
+        try
+        {
+            return Deserializer.Value.Deserialize<CatletConfig>(new StringParser(yaml));
+        }
+        catch (Exception ex)
+        {
+            throw InvalidConfigExceptionFactory.Create(ex);
+        }
+    }
+    
     public static string Serialize(CatletConfig config) =>
         Serializer.Value.Serialize(config);
 }

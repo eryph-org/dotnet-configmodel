@@ -35,8 +35,17 @@ public static class FodderGeneConfigYamlSerializer
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
             .Build());
 
-    public static FodderGeneConfig Deserialize(string yaml) =>
-        Deserializer.Value.Deserialize<FodderGeneConfig>(new StringParser(yaml));
+    public static FodderGeneConfig Deserialize(string yaml)
+    {
+        try
+        {
+            return Deserializer.Value.Deserialize<FodderGeneConfig>(new StringParser(yaml));
+        }
+        catch (Exception ex)
+        {
+            throw InvalidConfigExceptionFactory.Create(ex);
+        }
+    }
 
     public static string Serialize(FodderGeneConfig config) =>
         Serializer.Value.Serialize(config);

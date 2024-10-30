@@ -1,4 +1,6 @@
+using System;
 using CultureAwareTesting.xUnit;
+using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
 using Xunit;
@@ -111,8 +113,11 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
                             """;
 
         var act = () => FodderGeneConfigYamlSerializer.Deserialize(yaml);
-        act.Should().Throw<YamlException>()
-            .WithMessage("Only indentation style mappings are supported at this point.");
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The YAML is invalid (line 3, column 12):"
+                         + $"{Environment.NewLine}Only indentation style mappings are supported at this point."
+                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithInnerException<YamlException>();
     }
 
     [Fact]
@@ -125,8 +130,11 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
                             """;
 
         var act = () => FodderGeneConfigYamlSerializer.Deserialize(yaml);
-        act.Should().Throw<YamlException>()
-            .WithMessage("Only indentation style sequences are supported at this point.");
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The YAML is invalid (line 3, column 12):"
+                         + $"{Environment.NewLine}Only indentation style sequences are supported at this point."
+                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithInnerException<YamlException>();
     }
 
     [CulturedFact("en-US", "de-DE")]
@@ -209,6 +217,23 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
                 fodder.Name.Should().Be("third-food");
                 fodder.Content.Should().Be("- third-food-first-value\n- third-food-second-value\n");
             });
+    }
+
+    [Fact]
+    public void Deserialize_InvalidYaml_ThrowsException()
+    {
+        const string yaml = """
+                            fodder:
+                            - name: ]
+                            """;
+
+        var act = () => FodderGeneConfigYamlSerializer.Deserialize(yaml);
+
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The YAML is invalid (line 2, column 9):"
+                         + $"{Environment.NewLine}While parsing a node, did not find expected node content."
+                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithInnerException<YamlException>();
     }
 
     [CulturedFact("en-US", "de-DE")]

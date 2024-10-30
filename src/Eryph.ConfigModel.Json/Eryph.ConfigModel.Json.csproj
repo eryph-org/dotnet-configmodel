@@ -3,13 +3,16 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Eryph.ConfigModel.Json</RootNamespace>
-    <NoWarn>1591</NoWarn>
     <Nullable>enable</Nullable>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Eryph.ConfigModel.Catlets\Eryph.ConfigModel.Catlets.csproj" />
-    <ProjectReference Include="..\Eryph.ConfigModel.Json\Eryph.ConfigModel.Json.csproj" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Eryph.ConfigModel.Core\Eryph.ConfigModel.Core.csproj" />
   </ItemGroup>
 
 </Project>
