@@ -2,7 +2,7 @@ using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
 using FluentAssertions;
 
-namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
+namespace Eryph.ConfigModel.Catlet.Tests;
 
 public abstract class CatletConfigSerializerTestBase
 {

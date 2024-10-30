@@ -109,7 +109,7 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
         {
             WriteIndented = true
         };
-        var result = ProjectNetworksConfigJsonSerializer.Serialize(config!, options);
+        var result = ProjectNetworksConfigJsonSerializer.Serialize(config, options);
 
         result.Should().Be(ComplexConfigJson);
     }

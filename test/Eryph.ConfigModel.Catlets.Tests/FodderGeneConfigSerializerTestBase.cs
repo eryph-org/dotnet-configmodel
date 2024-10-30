@@ -1,4 +1,3 @@
-using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Variables;
 using FluentAssertions;

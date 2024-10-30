@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;

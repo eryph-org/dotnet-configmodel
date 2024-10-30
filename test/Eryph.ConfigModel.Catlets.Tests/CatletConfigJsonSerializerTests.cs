@@ -1,11 +1,10 @@
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Json;
 using FluentAssertions;
 using Xunit;
 
-namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
+namespace Eryph.ConfigModel.Catlet.Tests;
 
 public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
 {
@@ -170,7 +169,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
         {
             WriteIndented = true
         };
-        var result = CatletConfigJsonSerializer.Serialize(config!, options);
+        var result = CatletConfigJsonSerializer.Serialize(config, options);
 
         result.Should().Be(ComplexConfigJson);
     }

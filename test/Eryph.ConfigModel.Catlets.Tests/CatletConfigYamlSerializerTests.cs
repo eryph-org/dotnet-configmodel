@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
 using Xunit;
 using YamlDotNet.Core;
 
-namespace Eryph.ConfigModel.Catlet.Tests.Catlets;
+namespace Eryph.ConfigModel.Catlet.Tests;
 
 public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
 {
