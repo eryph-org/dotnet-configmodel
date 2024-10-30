@@ -13,8 +13,8 @@ public static class CatletConfigYamlSerializer
     private static readonly Lazy<IDeserializer> Deserializer = new(() =>
     {
         var builder = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithCaseInsensitivePropertyMatching()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithTypeInspector(
                 ti => new TypeConverterOverridesInspector(
                     ti,

@@ -13,8 +13,8 @@ public static class FodderGeneConfigYamlSerializer
 {
     private static readonly Lazy<IDeserializer> Deserializer = new(() => 
         new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithCaseInsensitivePropertyMatching()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithTypeConverter(new FodderContentYamlTypeConverter())
             .WithTypeInspector(
                 ti => new TypeConverterOverridesInspector(

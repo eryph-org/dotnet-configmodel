@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Eryph.ConfigModel.Networks;
-using YamlDotNet.Core;
+using Eryph.ConfigModel.Yaml.Converters;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -10,10 +10,20 @@ namespace Eryph.ConfigModel.Yaml;
 public static class ProjectNetworksConfigYamlSerializer
 {
     private static readonly Lazy<IDeserializer> Deserializer = new(() =>
-        new DeserializerBuilder()
+    {
+        var builder = new DeserializerBuilder()
             .WithCaseInsensitivePropertyMatching()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .Build());
+            .WithNamingConvention(UnderscoredNamingConvention.Instance);
+
+        // Build the type inspector first as some of our type converters require it.
+        // You must update YamlTypeConverterBase accordingly if you change the
+        // configuration of the deserializer.
+        var typeInspector = builder.BuildTypeInspector();
+
+        return builder
+            .WithTypeConverter(new ProviderConfigYamlTypeConverter(typeInspector))
+            .Build();
+    });
 
     private static readonly Lazy<ISerializer> Serializer = new(() =>
         new SerializerBuilder()

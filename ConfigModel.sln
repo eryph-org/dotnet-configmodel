@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eryph.ConfigModel.Catlets.J
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eryph.ConfigModel.Networks.Json", "src\Eryph.ConfigModel.Networks.Json\Eryph.ConfigModel.Networks.Json.csproj", "{5E4668FE-8AE2-44E3-B697-2688B2E82BA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ConfigModel.Yaml", "src\Eryph.ConfigModel.Yaml\Eryph.ConfigModel.Yaml.csproj", "{8A0C077A-3DC0-4B8E-B8EF-2BFF284FFBE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{5E4668FE-8AE2-44E3-B697-2688B2E82BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E4668FE-8AE2-44E3-B697-2688B2E82BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E4668FE-8AE2-44E3-B697-2688B2E82BA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A0C077A-3DC0-4B8E-B8EF-2BFF284FFBE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A0C077A-3DC0-4B8E-B8EF-2BFF284FFBE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A0C077A-3DC0-4B8E-B8EF-2BFF284FFBE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A0C077A-3DC0-4B8E-B8EF-2BFF284FFBE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,9 +8,10 @@ namespace Eryph.ConfigModel.Yaml;
 
 /// <summary>
 /// This class wraps the actual <see cref="IParser"/> for a <see cref="string"/>.
-/// 
+/// Its purpose is to provide access to slices of parsed string while it
+/// is processed by the YAML parser.
 /// </summary>
-internal class StringParser(string yaml) : IParser
+public class StringParser(string yaml) : IParser
 {
     private readonly IParser _innerParser = new Parser(new StringReader(yaml));
 
@@ -18,6 +19,10 @@ internal class StringParser(string yaml) : IParser
 
     public ParsingEvent? Current => _innerParser.Current;
 
+    /// <summary>
+    /// Consumes the mapping at the current location and returns the
+    /// corresponding slice from the input string.
+    /// </summary>
     public string ConsumeMappingAsString()
     {
         if (!this.Accept<MappingStart>(out var mappingStart))
@@ -37,6 +42,10 @@ internal class StringParser(string yaml) : IParser
         return ExtractYaml(mappingStart.Start, mappingEnd.End);
     }
 
+    /// <summary>
+    /// Consumes the sequence at the current location and returns the
+    /// corresponding slice from the input string.
+    /// </summary>
     public string ConsumeSequenceAsString()
     {
         if (!this.Accept<SequenceStart>(out var sequenceStart))

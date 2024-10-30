@@ -47,6 +47,35 @@ public class ProjectNetworksConfigYamlSerializerTests : ProjectNetworksConfigSer
     }
 
     [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_ProviderShorthandConfig_ReturnsConfig()
+    {
+        const string yaml = """
+                            networks:
+                            - name: default
+                              provider: default
+                              subnets:
+                              - name: subnet_name
+                            """;
+
+        var config = ProjectNetworksConfigYamlSerializer.Deserialize(yaml);
+
+        config.Should().NotBeNull();
+        config.Networks.Should().SatisfyRespectively(
+            network =>
+            {
+                network.Name.Should().Be("default");
+
+                network.Provider.Should().NotBeNull();
+                network.Provider!.Name.Should().Be("default");
+                network.Provider.Subnet.Should().BeNull();
+                network.Provider.IpPool.Should().BeNull();
+
+                network.Subnets.Should().SatisfyRespectively(
+                    subnet => { subnet.Name.Should().Be("subnet_name"); });
+            });
+    }
+
+    [CulturedFact("en-US", "de-DE")]
     public void Serialize_AfterRoundTrip_ReturnsSameConfig()
     {
         var config = ProjectNetworksConfigYamlSerializer.Deserialize(ComplexConfigYaml);

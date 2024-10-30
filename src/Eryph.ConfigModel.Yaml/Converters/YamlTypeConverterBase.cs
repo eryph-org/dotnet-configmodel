@@ -19,7 +19,7 @@ namespace Eryph.ConfigModel.Yaml.Converters;
 /// will use this converter to ensure a consistent mapping of
 /// the properties.
 /// </remarks>
-internal abstract class YamlTypeConverterBase<T>(
+public abstract class YamlTypeConverterBase<T>(
     ITypeInspector typeInspector)
     : IYamlTypeConverter
     where T : class, new()
