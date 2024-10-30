@@ -20,7 +20,7 @@ public class FodderConfig: ICloneableConfig<FodderConfig>, IHasVariableConfig
     [PrivateIdentifier(Critical = true)]
     public string? Content { get; set; }
     
-    public string? FileName { get; set; }
+    public string? Filename { get; set; }
         
     public bool? Secret { get; set; }
 
@@ -33,7 +33,7 @@ public class FodderConfig: ICloneableConfig<FodderConfig>, IHasVariableConfig
         Source = Source,
         Type = Type,
         Content = Content,
-        FileName = FileName,
+        Filename = Filename,
         Secret = Secret,
         Variables = Variables?.Select(x => x.Clone()).ToArray(),
     };

@@ -95,7 +95,7 @@ public abstract class CatletConfigSerializerTestBase
             {
                 fodder.Name.Should().Be("first");
                 fodder.Type.Should().BeNull();
-                fodder.FileName.Should().BeNull();
+                fodder.Filename.Should().BeNull();
                 fodder.Remove.Should().BeNull();
                 fodder.Secret.Should().BeNull();
                 fodder.Source.Should().BeNull();
@@ -106,7 +106,7 @@ public abstract class CatletConfigSerializerTestBase
             {
                 fodder.Name.Should().Be("admin-windows");
                 fodder.Type.Should().Be("cloud-config");
-                fodder.FileName.Should().Be("filename");
+                fodder.Filename.Should().Be("filename");
                 fodder.Remove.Should().BeNull();
                 fodder.Secret.Should().Be(true);
                 fodder.Source.Should().BeNull();

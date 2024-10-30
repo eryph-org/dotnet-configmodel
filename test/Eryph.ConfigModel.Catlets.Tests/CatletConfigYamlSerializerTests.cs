@@ -71,7 +71,7 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
               - name: Admin
                 groups: [ "Administrators" ]
                 passwd: "{{password}}"
-          file_name: filename
+          filename: filename
           secret: true
           variables:
           - name: password

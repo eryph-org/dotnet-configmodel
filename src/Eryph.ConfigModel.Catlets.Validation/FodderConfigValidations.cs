@@ -28,7 +28,7 @@ public static class FodderConfigValidations
             s => ValidateWhenAllowed(s, toValidate, ValidateFodderType, "fodder type"), path)
         | ValidateProperty(toValidate, c => c.Content,
             s => ValidateWhenAllowed(s, toValidate, Success<Error, string>, "content"), path)
-        | ValidateProperty(toValidate, c => c.FileName,
+        | ValidateProperty(toValidate, c => c.Filename,
             s => ValidateWhenAllowed(s, toValidate, s2 => ValidateFileName(s2, "file name"), "file name"), path)
         | ValidateProperty(toValidate, c => c.Secret,
             s => ValidateWhenAllowed(s, toValidate, Success<Error, bool?>, "secret flag"), path)

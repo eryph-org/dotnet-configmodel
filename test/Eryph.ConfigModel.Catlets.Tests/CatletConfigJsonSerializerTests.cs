@@ -99,7 +99,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
               "name": "admin-windows",
               "type": "cloud-config",
               "content": "users:\n  - name: Admin\n    groups: [ \u0022Administrators\u0022 ]\n    passwd: \u0022{{password}}\u0022\n",
-              "file_name": "filename",
+              "filename": "filename",
               "secret": true,
               "variables": [
                 {

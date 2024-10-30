@@ -28,7 +28,7 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
               - name: Admin
                 groups: [ "Administrators" ]
                 passwd: InitialPassw0rd
-          file_name: filename
+          filename: filename
           secret: true
         - name: super-dupa
           type: cloud-config

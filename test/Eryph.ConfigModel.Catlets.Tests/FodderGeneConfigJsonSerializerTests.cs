@@ -31,7 +31,7 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
               "remove": true,
               "type": "cloud-config",
               "content": "users:\n  - name: Admin\ngroups: [ \u0022Administrators\u0022 ]\n  passwd: InitialPassw0rd",
-              "file_name": "filename",
+              "filename": "filename",
               "secret": true
             },
             {
