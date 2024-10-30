@@ -14,6 +14,7 @@ public static class CatletConfigJsonSerializer
         {
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
             Converters = { new JsonStringEnumConverter() },
         });
 

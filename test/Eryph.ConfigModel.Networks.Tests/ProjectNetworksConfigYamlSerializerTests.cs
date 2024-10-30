@@ -2,7 +2,6 @@ using System;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
-using Xunit;
 using YamlDotNet.Core;
 
 namespace Eryph.ConfigModel.Networks.Tests;
@@ -78,7 +77,7 @@ public class ProjectNetworksConfigYamlSerializerTests : ProjectNetworksConfigSer
             });
     }
 
-    [Fact]
+    [CulturedFact("en-US")]
     public void Deserialize_InvalidYaml_ThrowsException()
     {
         const string yaml = """
@@ -91,6 +90,20 @@ public class ProjectNetworksConfigYamlSerializerTests : ProjectNetworksConfigSer
         act.Should().Throw<InvalidConfigException>()
             .WithMessage("The YAML is invalid (line 2, column 9):"
                          + $"{Environment.NewLine}While parsing a node, did not find expected node content."
+                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithInnerException<YamlException>();
+    }
+
+    [CulturedFact("en-US")]
+    public void Deserialize_UnmappedMember_ThrowsException()
+    {
+        const string yaml = "unknown_key: test-value";
+
+        var act = () => ProjectNetworksConfigYamlSerializer.Deserialize(yaml);
+
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The YAML is invalid (line 1, column 1):"
+                         + $"{Environment.NewLine}Property 'unknown_key' not found on type 'Eryph.ConfigModel.Networks.ProjectNetworksConfig'."
                          + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
             .WithInnerException<YamlException>();
     }

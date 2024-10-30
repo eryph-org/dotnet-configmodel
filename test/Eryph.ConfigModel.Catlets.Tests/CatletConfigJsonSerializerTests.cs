@@ -3,7 +3,6 @@ using System.Text.Json;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Json;
 using FluentAssertions;
-using Xunit;
 
 namespace Eryph.ConfigModel.Catlet.Tests;
 
@@ -136,7 +135,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
         AssertComplexConfig(result);
     }
 
-    [Fact]
+    [CulturedFact("en-US")]
     public void Deserialize_JsonRepresentsNull_ThrowsException()
     {
         var act = () => CatletConfigJsonSerializer.Deserialize("null");
@@ -147,7 +146,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
             .WithInnerException<JsonException>();
     }
 
-    [Fact]
+    [CulturedFact("en-US")]
     public void Deserialize_JsonElementRepresentsNull_ThrowsException()
     {
         var element = JsonDocument.Parse("null").RootElement;
@@ -163,20 +162,37 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
             .WithInnerException<JsonException>();
     }
 
-    [Fact]
+    [CulturedFact("en-US")]
     public void Deserialize_InvalidJson_ThrowsException()
     {
         const string json = """
                             {
-                              "test": ]
+                              "fodder": ]
                             }
                             """;
 
         var act = () => CatletConfigJsonSerializer.Deserialize(json);
 
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The JSON is invalid (line 2, column 11):"
+            .WithMessage("The JSON is invalid (line 2, column 13):"
                          + $"{Environment.NewLine}']' is an invalid start of a value.*")
+            .WithInnerException<JsonException>();
+    }
+
+    [CulturedFact("en-US")]
+    public void Deserialize_UnmappedMember_ThrowsException()
+    {
+        const string json = """
+                            {
+                              "unknown_key": "test-value"
+                            }
+                            """;
+
+        var act = () => CatletConfigJsonSerializer.Deserialize(json);
+
+        act.Should().Throw<InvalidConfigException>()
+            .WithMessage("The JSON is invalid (line 2, column 17):"
+                         + $"{Environment.NewLine}The JSON property 'unknown_key' could not be mapped to any .NET member contained in type 'Eryph.ConfigModel.Catlets.CatletConfig'.")
             .WithInnerException<JsonException>();
     }
 
