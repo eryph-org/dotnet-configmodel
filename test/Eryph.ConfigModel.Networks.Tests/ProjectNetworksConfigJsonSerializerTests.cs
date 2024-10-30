@@ -21,25 +21,25 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
               "provider": {
                 "name": "default",
                 "subnet": "provider_subnet",
-                "ipPool": "other_pool"
+                "ip_pool": "other_pool"
               },
               "subnets": [
                 {
                   "name": "subnet_name",
                   "address": "192.168.2.0/23",
-                  "ipPools": [
+                  "ip_pools": [
                     {
                       "name": "pool_name",
-                      "firstIp": "192.168.2.10",
-                      "lastIp": "192.168.2.100",
-                      "nextIp": "192.168.2.20"
+                      "first_ip": "192.168.2.10",
+                      "last_ip": "192.168.2.100",
+                      "next_ip": "192.168.2.20"
                     }
                   ],
-                  "dnsServers": [
+                  "dns_servers": [
                     "1.2.3.4",
                     "5.6.7.8"
                   ],
-                  "dnsDomain": "acme.test",
+                  "dns_domain": "acme.test",
                   "mtu": 1300
                 }
               ]

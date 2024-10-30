@@ -12,7 +12,7 @@ public static class CatletConfigJsonSerializer
     private static readonly Lazy<JsonSerializerOptions> LazyOptions = new(() => 
         new JsonSerializerOptions
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
             Converters = { new JsonStringEnumConverter() },
         });

@@ -38,15 +38,15 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
               "type": "SharedVHD"
             }
           ],
-          "networkAdapters": [
+          "network_adapters": [
             {
               "name": "eth0",
-              "macAddress": "4711"
+              "mac_address": "4711"
             },
             {
               "name": "eth1",
               "mutation": "Remove",
-              "macAddress": "4712"
+              "mac_address": "4712"
             }
           ],
           "capabilities": [
@@ -65,18 +65,18 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
           "networks": [
             {
               "name": "default",
-              "adapterName": "eth0",
-              "subnetV4": {
+              "adapter_name": "eth0",
+              "subnet_v4": {
                 "name": "other",
-                "ipPool": "other_pool"
+                "ip_pool": "other_pool"
               },
-              "subnetV6": {
+              "subnet_v6": {
                 "name": "other_v6"
               }
             },
             {
               "name": "backup",
-              "adapterName": "eth1"
+              "adapter_name": "eth1"
             }
           ],
           "variables": [
@@ -100,7 +100,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
               "name": "admin-windows",
               "type": "cloud-config",
               "content": "users:\n  - name: Admin\n    groups: [ \u0022Administrators\u0022 ]\n    passwd: \u0022{{password}}\u0022\n",
-              "fileName": "filename",
+              "file_name": "filename",
               "secret": true,
               "variables": [
                 {
