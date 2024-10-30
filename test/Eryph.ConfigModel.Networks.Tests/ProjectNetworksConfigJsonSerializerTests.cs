@@ -83,8 +83,8 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
         var act = () => ProjectNetworksConfigJsonSerializer.Deserialize("null");
 
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The JSON is invalid (line 1, column 1):"
-                         + $"{Environment.NewLine}The config must not be null.")
+            .WithMessage("The JSON is invalid (line 1, column 1):\n"
+                         + "The config must not be null.")
             .WithInnerException<JsonException>();
     }
 
@@ -99,8 +99,8 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
         var act = () => ProjectNetworksConfigJsonSerializer.Deserialize(element);
 
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The JSON is invalid (line 1, column 1):"
-                         + $"{Environment.NewLine}The config must not be null.")
+            .WithMessage("The JSON is invalid (line 1, column 1):\n"
+                         + "The config must not be null.")
             .WithInnerException<JsonException>();
     }
 
@@ -116,8 +116,8 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
         var act = () => ProjectNetworksConfigJsonSerializer.Deserialize(json);
 
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The JSON is invalid (line 2, column 15):"
-                         + $"{Environment.NewLine}']' is an invalid start of a value.*")
+            .WithMessage("The JSON is invalid (line 2, column 15):\n"
+                         + "']' is an invalid start of a value.*")
             .WithInnerException<JsonException>();
     }
 
@@ -133,8 +133,8 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
         var act = () => ProjectNetworksConfigJsonSerializer.Deserialize(json);
 
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The JSON is invalid (line 2, column 17):"
-                         + $"{Environment.NewLine}The JSON property 'unknown_key' could not be mapped to any .NET member contained in type 'Eryph.ConfigModel.Networks.ProjectNetworksConfig'.")
+            .WithMessage("The JSON is invalid (line 2, column 17):\n"
+                         + "The JSON property 'unknown_key' could not be mapped to any .NET member contained in type 'Eryph.ConfigModel.Networks.ProjectNetworksConfig'.")
             .WithInnerException<JsonException>();
     }
 

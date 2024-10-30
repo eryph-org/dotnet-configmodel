@@ -10,12 +10,11 @@ public static class InvalidConfigExceptionFactory
     public static InvalidConfigException Create(Exception exception) =>
         exception is YamlException yamlException
             ? new InvalidConfigException(
-                $"The YAML is invalid (line {yamlException.Start.Line}, column {yamlException.Start.Column}):"
-                + $"{Environment.NewLine}{yamlException.Message}"
-                + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.",
+                $"The YAML is invalid (line {yamlException.Start.Line}, column {yamlException.Start.Column}):\n"
+                + $"{yamlException.Message}\n"
+                + $"Make sure to use snake case for names, e.g. 'network_adapters'.",
                 exception)
             : new InvalidConfigException(
-                "The YAML is invalid:"
-                + $"{Environment.NewLine}{exception.Message}",
+                $"The YAML is invalid:\n{exception.Message}",
                 exception);
 }

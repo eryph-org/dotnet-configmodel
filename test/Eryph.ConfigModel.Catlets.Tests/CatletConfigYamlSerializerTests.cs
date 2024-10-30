@@ -223,9 +223,9 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
 
         var act = () => CatletConfigYamlSerializer.Deserialize(yaml);
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The YAML is invalid (line 3, column 12):"
-                         + $"{Environment.NewLine}Only indentation style mappings are supported at this point."
-                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithMessage("The YAML is invalid (line 3, column 12):\n"
+                         + "Only indentation style mappings are supported at this point.\n"
+                         + "Make sure to use snake case for names, e.g. 'network_adapters'.")
             .WithInnerException<YamlException>();
     }
 
@@ -240,9 +240,9 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
 
         var act = () => CatletConfigYamlSerializer.Deserialize(yaml);
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The YAML is invalid (line 3, column 12):"
-                         + $"{Environment.NewLine}Only indentation style sequences are supported at this point."
-                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithMessage("The YAML is invalid (line 3, column 12):\n"
+                         + "Only indentation style sequences are supported at this point.\n"
+                         + "Make sure to use snake case for names, e.g. 'network_adapters'.")
             .WithInnerException<YamlException>();
     }
 
@@ -339,9 +339,9 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
         var act = () => CatletConfigYamlSerializer.Deserialize(yaml);
 
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The YAML is invalid (line 2, column 9):"
-                         + $"{Environment.NewLine}While parsing a node, did not find expected node content."
-                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithMessage("The YAML is invalid (line 2, column 9):\n"
+                         + "While parsing a node, did not find expected node content.\n"
+                         + "Make sure to use snake case for names, e.g. 'network_adapters'.")
             .WithInnerException<YamlException>();
     }
 
@@ -353,9 +353,9 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
         var act = () => CatletConfigYamlSerializer.Deserialize(yaml);
 
         act.Should().Throw<InvalidConfigException>()
-            .WithMessage("The YAML is invalid (line 1, column 1):"
-                         + $"{Environment.NewLine}Property 'unknown_key' not found on type 'Eryph.ConfigModel.Catlets.CatletConfig'."
-                         + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.")
+            .WithMessage("The YAML is invalid (line 1, column 1):\n"
+                         + "Property 'unknown_key' not found on type 'Eryph.ConfigModel.Catlets.CatletConfig'.\n"
+                         + "Make sure to use snake case for names, e.g. 'network_adapters'.")
             .WithInnerException<YamlException>();
     }
 
