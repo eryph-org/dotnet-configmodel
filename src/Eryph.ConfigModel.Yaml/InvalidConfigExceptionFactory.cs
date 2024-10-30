@@ -12,9 +12,10 @@ public static class InvalidConfigExceptionFactory
             ? new InvalidConfigException(
                 $"The YAML is invalid (line {yamlException.Start.Line}, column {yamlException.Start.Column}):"
                 + $"{Environment.NewLine}{yamlException.Message}"
-                + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'."
-                , exception)
+                + $"{Environment.NewLine}Make sure to use snake case for names, e.g. 'network_adapters'.",
+                exception)
             : new InvalidConfigException(
                 "The YAML is invalid:"
-                + $"{Environment.NewLine}{exception.Message}", exception);
+                + $"{Environment.NewLine}{exception.Message}",
+                exception);
 }

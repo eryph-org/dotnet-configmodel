@@ -12,6 +12,7 @@ public static class InvalidConfigExceptionFactory
             + $"{Environment.NewLine}{exception.Message}",
             exception)
         : new InvalidConfigException(
-            "The YAML is invalid:"
-            + $"{Environment.NewLine}{exception.Message}", exception);
+            "The JSON is invalid:"
+            + $"{Environment.NewLine}{exception.Message}",
+            exception);
 }
