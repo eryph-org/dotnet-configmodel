@@ -124,6 +124,18 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
         AssertComplexConfig(config);
     }
 
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_AfterRoundTripAsJsonElement_ReturnsSameConfig()
+    {
+        var config = CatletConfigJsonSerializer.Deserialize(ComplexConfigJson);
+        AssertComplexConfig(config);
+
+        var jsonElement = CatletConfigJsonSerializer.SerializeToElement(config);
+        var result = CatletConfigJsonSerializer.Deserialize(jsonElement);
+
+        AssertComplexConfig(result);
+    }
+
     [Fact]
     public void Deserialize_JsonRepresentsNull_ThrowsException()
     {

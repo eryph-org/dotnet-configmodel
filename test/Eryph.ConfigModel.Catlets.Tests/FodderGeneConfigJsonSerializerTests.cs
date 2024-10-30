@@ -51,6 +51,18 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
         AssertComplexConfig(config!);
     }
 
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_AfterRoundTripAsJsonElement_ReturnsSameConfig()
+    {
+        var config = FodderGeneConfigJsonSerializer.Deserialize(ComplexConfigJson);
+        AssertComplexConfig(config);
+
+        var jsonElement = FodderGeneConfigJsonSerializer.SerializeToElement(config);
+        var result = FodderGeneConfigJsonSerializer.Deserialize(jsonElement);
+
+        AssertComplexConfig(result);
+    }
+
     [Fact]
     public void Deserialize_JsonRepresentsNull_ThrowsException()
     {

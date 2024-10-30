@@ -4,7 +4,7 @@ namespace Eryph.ConfigModel.Networks.Tests;
 
 public abstract class ProjectNetworksConfigSerializerTestBase
 {
-    protected static void AssertSample1(ProjectNetworksConfig config)
+    protected static void AssertComplexConfig(ProjectNetworksConfig config)
     {
         config.Should().NotBeNull();
         config.Version.Should().Be("1.0");

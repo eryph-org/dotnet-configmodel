@@ -62,9 +62,21 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
         var config = ProjectNetworksConfigJsonSerializer.Deserialize(ComplexConfigJson);
         
         config.Should().NotBeNull();
-        AssertSample1(config!);
+        AssertComplexConfig(config);
     }
-    
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_AfterRoundTripAsJsonElement_ReturnsSameConfig()
+    {
+        var config = ProjectNetworksConfigJsonSerializer.Deserialize(ComplexConfigJson);
+        AssertComplexConfig(config);
+
+        var jsonElement = ProjectNetworksConfigJsonSerializer.SerializeToElement(config);
+        var result = ProjectNetworksConfigJsonSerializer.Deserialize(jsonElement);
+
+        AssertComplexConfig(result);
+    }
+
     [Fact]
     public void Deserialize_JsonRepresentsNull_ThrowsException()
     {
@@ -92,8 +104,6 @@ public class ProjectNetworksConfigJsonSerializerTests: ProjectNetworksConfigSeri
     public void Serialize_AfterRoundTrip_ReturnsSameConfig()
     {
         var config = ProjectNetworksConfigJsonSerializer.Deserialize(ComplexConfigJson);
-
-        config.Should().NotBeNull();
 
         var options = new JsonSerializerOptions(ProjectNetworksConfigJsonSerializer.Options)
         {

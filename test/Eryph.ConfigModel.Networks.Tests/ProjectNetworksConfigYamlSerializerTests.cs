@@ -43,7 +43,7 @@ public class ProjectNetworksConfigYamlSerializerTests : ProjectNetworksConfigSer
     {
         var config = ProjectNetworksConfigYamlSerializer.Deserialize(ComplexConfigYaml);
             
-        AssertSample1(config);
+        AssertComplexConfig(config);
     }
 
     [CulturedFact("en-US", "de-DE")]
