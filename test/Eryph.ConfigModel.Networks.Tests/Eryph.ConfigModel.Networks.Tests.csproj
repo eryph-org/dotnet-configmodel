@@ -6,6 +6,8 @@
     <RootNamespace>Eryph.ConfigModel.Networks.Tests</RootNamespace>
     <Nullable>enable</Nullable>
     <NoWarn>1701;1702;1705;1591</NoWarn>
+    <LangVersion>12</LangVersion>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Eryph.ConfigModel.Networks.Json\Eryph.ConfigModel.Networks.Json.csproj" />
     <ProjectReference Include="..\..\src\Eryph.ConfigModel.Networks.Yaml\Eryph.ConfigModel.Networks.Yaml.csproj" />
-    <ProjectReference Include="..\..\src\Eryph.ConfigModel.System.Json\Eryph.ConfigModel.System.Json.csproj" />
   </ItemGroup>
 
 </Project>

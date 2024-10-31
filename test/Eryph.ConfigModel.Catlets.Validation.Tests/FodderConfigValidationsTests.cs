@@ -17,7 +17,7 @@ public class FodderConfigValidationsTests
         {
             Name = "test-fodder",
             Content = "test content",
-            FileName = "test-file-sh",
+            Filename = "test-file-sh",
             Secret = true,
         };
 
@@ -35,7 +35,7 @@ public class FodderConfigValidationsTests
             Source = "gene:acme/acme-fodder/1.0:my-fodder",
             Type = "shellscript",
             Content = "test content",
-            FileName = "test-file-sh",
+            Filename = "test-file-sh",
             Secret = true
         };
 
@@ -54,7 +54,7 @@ public class FodderConfigValidationsTests
             },
             issue =>
             {
-                issue.Member.Should().Be("FileName");
+                issue.Member.Should().Be("Filename");
                 issue.Message.Should().Be("The file name must not be specified when the fodder is a reference.");
             },
             issue =>
@@ -73,7 +73,7 @@ public class FodderConfigValidationsTests
             Remove = true,
             Type = "shellscript",
             Content = "test content",
-            FileName = "test-file-sh",
+            Filename = "test-file-sh",
             Secret = true,
             Variables =
             [
@@ -99,7 +99,7 @@ public class FodderConfigValidationsTests
             },
             issue =>
             {
-                issue.Member.Should().Be("FileName");
+                issue.Member.Should().Be("Filename");
                 issue.Message.Should().Be("The file name must not be specified when the fodder is removed.");
             },
             issue =>

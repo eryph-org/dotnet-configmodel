@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Eryph.ConfigModel.Yaml</RootNamespace>
+    <RootNamespace>Eryph.ConfigModel.Json</RootNamespace>
+    <NoWarn>1591</NoWarn>
     <Nullable>enable</Nullable>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Eryph.ConfigModel.Catlets\Eryph.ConfigModel.Catlets.csproj" />
-    <ProjectReference Include="..\Eryph.ConfigModel.Yaml\Eryph.ConfigModel.Yaml.csproj" />
+    <ProjectReference Include="..\Eryph.ConfigModel.Json\Eryph.ConfigModel.Json.csproj" />
   </ItemGroup>
 
 </Project>
