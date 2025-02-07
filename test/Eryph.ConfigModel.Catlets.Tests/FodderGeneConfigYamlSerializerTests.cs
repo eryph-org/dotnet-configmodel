@@ -1,7 +1,11 @@
 using System;
 using CultureAwareTesting.xUnit;
+using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.FodderGenes;
+using Eryph.ConfigModel.Variables;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
+using Xunit;
 using YamlDotNet.Core;
 
 namespace Eryph.ConfigModel.Catlet.Tests;
@@ -255,5 +259,35 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
         var result = FodderGeneConfigYamlSerializer.Serialize(config);
 
         result.Should().BeEquivalentTo(ComplexConfigYaml);
+    }
+
+    [Fact]
+    public void Serialize_SameDataOccursMultipleTimes_ReturnsYamlWithoutAnchors()
+    {
+        var variableConfig = new VariableConfig
+        {
+            Name = "username",
+            Value = "jane",
+        };
+
+        var config = new FodderGeneConfig()
+        {
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "first",
+                    Variables = [variableConfig],
+                },
+                new FodderConfig
+                {
+                    Name = "second",
+                    Variables = [variableConfig],
+                },
+            ],
+        };
+
+        var result = FodderGeneConfigYamlSerializer.Serialize(config);
+        result.Should().NotContain("&").And.NotContain("*");
     }
 }

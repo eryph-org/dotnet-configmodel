@@ -28,6 +28,7 @@ public static class ProjectNetworksConfigYamlSerializer
         new SerializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
+            .DisableAliases()
             .Build());
 
     public static ProjectNetworksConfig Deserialize(string yaml)
