@@ -15,14 +15,9 @@ public static class CatletConfigYamlSerializer
         var builder = new DeserializerBuilder()
             .WithCaseInsensitivePropertyMatching()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .WithTypeInspector(
-                ti => new TypeConverterOverridesInspector(
-                    ti,
-                    new Dictionary<(Type Type, string PropertyName), Type>
-                    {
-                        [(typeof(FodderConfig), nameof(FodderConfig.Content))] = typeof(FodderContentYamlTypeConverter),
-                    }),
-                where => where.OnBottom());
+            .WithAttributeOverride<FodderConfig>(
+                c => c.Content!,
+                new YamlConverterAttribute(typeof(FodderContentYamlTypeConverter)));
 
         // Build the type inspector first as some of our type converters require it.
         // You must update YamlTypeConverterBase accordingly if you change the

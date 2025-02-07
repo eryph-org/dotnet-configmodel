@@ -16,14 +16,9 @@ public static class FodderGeneConfigYamlSerializer
             .WithCaseInsensitivePropertyMatching()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithTypeConverter(new FodderContentYamlTypeConverter())
-            .WithTypeInspector(
-                ti => new TypeConverterOverridesInspector(
-                    ti,
-                    new Dictionary<(Type Type, string PropertyName), Type>
-                    {
-                        [(typeof(FodderConfig), nameof(FodderConfig.Content))] = typeof(FodderContentYamlTypeConverter),
-                    }),
-                where => where.OnBottom())
+            .WithAttributeOverride<FodderConfig>(
+                c => c.Content!,
+                new YamlConverterAttribute(typeof(FodderContentYamlTypeConverter)))
             .Build());
 
     private static readonly Lazy<ISerializer> Serializer = new(() =>
