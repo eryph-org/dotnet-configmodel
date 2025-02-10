@@ -28,6 +28,7 @@ public static class FodderGeneConfigYamlSerializer
                 c => c.Content!,
                 new YamlMemberAttribute { ScalarStyle = ScalarStyle.Literal })
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
+            .DisableAliases()
             .Build());
 
     public static FodderGeneConfig Deserialize(string yaml)

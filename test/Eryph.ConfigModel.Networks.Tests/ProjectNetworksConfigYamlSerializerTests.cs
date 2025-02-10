@@ -2,6 +2,7 @@ using System;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Yaml;
 using FluentAssertions;
+using Xunit;
 using YamlDotNet.Core;
 
 namespace Eryph.ConfigModel.Networks.Tests;
@@ -115,5 +116,35 @@ public class ProjectNetworksConfigYamlSerializerTests : ProjectNetworksConfigSer
         var result = ProjectNetworksConfigYamlSerializer.Serialize(config);
 
         result.Should().Be(ComplexConfigYaml);
+    }
+
+    [Fact]
+    public void Serialize_SameDataOccursMultipleTimes_ReturnsYamlWithoutAnchors()
+    {
+        var subnetConfig = new NetworkSubnetConfig
+        {
+            Name = "subnet",
+            Address = "10.0.0.0/24",
+        };
+
+        var config = new ProjectNetworksConfig()
+        {
+            Networks =
+            [
+                new NetworkConfig
+                {
+                    Name = "first",
+                    Subnets = [subnetConfig],
+                },
+                new NetworkConfig
+                {
+                    Name = "second",
+                    Subnets = [subnetConfig],
+                },
+            ],
+        };
+
+        var result = ProjectNetworksConfigYamlSerializer.Serialize(config);
+        result.Should().NotContain("&").And.NotContain("*");
     }
 }

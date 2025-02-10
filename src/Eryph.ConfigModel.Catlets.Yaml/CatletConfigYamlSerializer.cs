@@ -39,6 +39,7 @@ public static class CatletConfigYamlSerializer
                 c => c.Content!,
                 new YamlMemberAttribute { ScalarStyle = ScalarStyle.Literal })
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
+            .DisableAliases()
             .Build());
 
     public static CatletConfig Deserialize(string yaml)
