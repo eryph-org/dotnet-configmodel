@@ -47,6 +47,8 @@ public class CatletConfigCloneableTests
                 Name = "eth0",
                 MacAddress = "02:04:06:08:10:12",
                 MacAddressSpoofing = true,
+                DhcpGuard = false,
+                RouterGuard = false,
             }
         ],
         Variables =
