@@ -12,10 +12,19 @@ public class CatletNetworkAdapterConfig : IMutateableConfig<CatletNetworkAdapter
         
     public string? MacAddress { get; set; }
 
+    public bool? MacAddressSpoofing { get; set; }
+
+    public bool? DhcpGuard { get; set; }
+
+    public bool? RouterGuard { get; set; }
+
     public CatletNetworkAdapterConfig Clone() => new()
     {
         Name = Name,
         Mutation = Mutation,
-        MacAddress = MacAddress
+        MacAddress = MacAddress,
+        MacAddressSpoofing = MacAddressSpoofing,
+        DhcpGuard = DhcpGuard,
+        RouterGuard = RouterGuard,
     };
 }

@@ -42,7 +42,14 @@ public class CatletConfigCloneableTests
         ],
         NetworkAdapters =
         [
-            new CatletNetworkAdapterConfig { Name = "eth0" }
+            new CatletNetworkAdapterConfig
+            {
+                Name = "eth0",
+                MacAddress = "02:04:06:08:10:12",
+                MacAddressSpoofing = true,
+                DhcpGuard = false,
+                RouterGuard = false,
+            }
         ],
         Variables =
         [
@@ -117,8 +124,12 @@ public class CatletConfigCloneableTests
             .Select(a => a.Clone())
             .ToArray();
 
-        cloned.Should().NotBeNull();
-        cloned.Should().HaveCount(1);
+        cloned.Should().SatisfyRespectively(
+            c =>
+            {
+                c.Should().NotBeSameAs(TestData.Capabilities![0]);
+                c.Should().BeEquivalentTo(TestData.Capabilities![0]);
+            });
     }
 
     [Fact]
@@ -128,8 +139,12 @@ public class CatletConfigCloneableTests
             .Select(a => a.Clone())
             .ToArray();
 
-        cloned.Should().NotBeNull();
-        cloned.Should().HaveCount(1);
+        cloned.Should().SatisfyRespectively(
+            c =>
+            {
+                c.Should().NotBeSameAs(TestData.NetworkAdapters![0]);
+                c.Should().BeEquivalentTo(TestData.NetworkAdapters![0]);
+            });
     }
 
     [Fact]
@@ -139,8 +154,12 @@ public class CatletConfigCloneableTests
             .Select(a => a.Clone())
             .ToArray();
 
-        cloned.Should().NotBeNull();
-        cloned.Should().HaveCount(1);
+        cloned.Should().SatisfyRespectively(
+            c =>
+            {
+                c.Should().NotBeSameAs(TestData.Drives![0]);
+                c.Should().BeEquivalentTo(TestData.Drives![0]);
+            });
     }
 
     [Fact]
@@ -150,8 +169,12 @@ public class CatletConfigCloneableTests
             .Select(a => a.Clone())
             .ToArray();
 
-        cloned.Should().NotBeNull();
-        cloned.Should().HaveCount(1);
+        cloned.Should().SatisfyRespectively(
+            c =>
+            {
+                c.Should().NotBeSameAs(TestData.Networks![0]);
+                c.Should().BeEquivalentTo(TestData.Networks![0]);
+            });
     }
 
     [Fact]
@@ -161,8 +184,12 @@ public class CatletConfigCloneableTests
             .Select(a => a.Clone())
             .ToArray();
 
-        cloned.Should().NotBeNull();
-        cloned.Should().HaveCount(1);
+        cloned.Should().SatisfyRespectively(
+            c =>
+            {
+                c.Should().NotBeSameAs(TestData.Fodder![0]);
+                c.Should().BeEquivalentTo(TestData.Fodder![0]);
+            });
     }
 
     [Fact]
