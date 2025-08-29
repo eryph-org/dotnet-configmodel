@@ -21,6 +21,16 @@ namespace Eryph.ConfigModel;
 
 public static class VariableConfigValidations
 {
+    private static readonly Regex NumberRegex = new(
+        VariableValueRegex.Number,
+        RegexOptions.Compiled,
+        TimeSpan.FromSeconds(1));
+
+    private static readonly Regex BooleanRegex = new(
+        VariableValueRegex.Boolean,
+        RegexOptions.Compiled,
+        TimeSpan.FromSeconds(1));
+
     internal static Validation<ValidationIssue, Unit> ValidateVariableConfigs(
         IHasVariableConfig toValidate,
         string path = "") =>
@@ -54,13 +64,13 @@ public static class VariableConfigValidations
             VariableType.String => value,
             VariableType.Number =>
                 from _ in guard(
-                        Regex.IsMatch(value, VariableValueRegex.Number, RegexOptions.Compiled, TimeSpan.FromSeconds(1)),
+                        NumberRegex.IsMatch(value),
                         Error.New("The value is not a valid number. The number must be between -999999999.999 and 999999999.999."))
                     .ToValidation()
                 select value,
             VariableType.Boolean =>
                 from _ in  guard(
-                        Regex.IsMatch(value, VariableValueRegex.Boolean, RegexOptions.Compiled, TimeSpan.FromSeconds(1)),
+                        BooleanRegex.IsMatch(value),
                         Error.New("The value is not a valid boolean. Only 'true' and 'false' are allowed."))
                     .ToValidation()
                 select value,

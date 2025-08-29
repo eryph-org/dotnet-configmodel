@@ -14,7 +14,17 @@ namespace Eryph.ConfigModel;
 
 public static class Validations
 {
-    private static readonly Regex DriveRootRegex = new(@"^[a-zA-Z]:\\", RegexOptions.Compiled);
+    private static readonly Regex DriveRootRegex = new(
+        @"^[a-zA-Z]:\\",
+        RegexOptions.Compiled,
+        TimeSpan.FromSeconds(1));
+
+    private static readonly Regex MacAddressRegex = new(
+        "^([0-9a-fA-F]{2}[-:]?){5}[0-9a-fA-F]{2}$",
+        RegexOptions.Compiled,
+        TimeSpan.FromSeconds(1));
+
+    internal static readonly Regex UpperCaseRegex = new("[A-Z]", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     /// <summary>
     /// Validates that the given <paramref name="items"/> are distinct by
@@ -153,6 +163,14 @@ public static class Validations
                       .ToValidation()
         select value;
 
+    public static Validation<Error, string> ValidateMacAddress(
+        string? value,
+        string valueName) =>
+        from nonEmptyValue in ValidateNotEmpty(value, valueName)
+        from _ in guard(MacAddressRegex.IsMatch(nonEmptyValue),
+            Error.New($"The {valueName} is not a valid MAC address."))
+        select nonEmptyValue;
+
     private static string JoinItems(
         string lastSeparator,
         Seq<Option<string>> names) =>
@@ -166,9 +184,7 @@ public static class Validations
 
 public static class Validations<T>
 {
-    private static readonly Regex UpperCaseRegex = new("[A-Z]", RegexOptions.Compiled);
-
-    internal static string Name => UpperCaseRegex.Replace(
+    internal static string Name => Validations.UpperCaseRegex.Replace(
         typeof(T).Name, match => $" {match.Value.ToLowerInvariant()}").Trim();
 
     public static Validation<Error, string> ValidateNotEmpty(string? value) =>
@@ -186,6 +202,9 @@ public static class Validations<T>
 
     public static Validation<Error, string> ValidateFileName(string? value) =>
         Validations.ValidateFileName(value, Name);
+
+    public static Validation<Error, string> ValidateMacAddress(string? value) =>
+        Validations.ValidateMacAddress(value, Name);
 }
 
 #nullable restore

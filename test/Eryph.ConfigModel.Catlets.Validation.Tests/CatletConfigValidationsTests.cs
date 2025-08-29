@@ -57,6 +57,11 @@ public class CatletConfigValidationsTests
                 {
                     Name = "default",
                     AdapterName = "eth0",
+                    SubnetV4 = new CatletSubnetConfig()
+                    {
+                        Name = "default",
+                        IpPool = "default",
+                    }
                 },
             ],
             NetworkAdapters =
@@ -64,6 +69,7 @@ public class CatletConfigValidationsTests
                 new CatletNetworkAdapterConfig()
                 {
                     Name = "eth0",
+                    MacAddress = "02:04:06:08:0a:0c"
                 },
             ],
             Fodder =
@@ -139,6 +145,16 @@ public class CatletConfigValidationsTests
                 {
                     Name = "invalid|network",
                     AdapterName = "invalid|adapter",
+                    SubnetV4 = new CatletSubnetConfig()
+                    {
+                        Name = "invalid|subnet",
+                        IpPool = "invalid|pool",
+                    },
+                    SubnetV6 = new CatletSubnetConfig()
+                    {
+                        Name = "invalid|subnet",
+                        IpPool = "invalid|pool",
+                    }
                 },
             ],
             NetworkAdapters =
@@ -146,6 +162,7 @@ public class CatletConfigValidationsTests
                 new CatletNetworkAdapterConfig()
                 {
                     Name = "invalid|adapter",
+                    MacAddress = "invalid|mac address"
                 },
             ],
             Fodder =
@@ -217,9 +234,39 @@ public class CatletConfigValidationsTests
             },
             issue =>
             {
+                issue.Member.Should().Be("Networks[0].SubnetV4.Name");
+                issue.Message.Should()
+                    .Be("The eryph subnet name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Networks[0].SubnetV4.IpPool");
+                issue.Message.Should()
+                    .Be("The eryph ip pool name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Networks[0].SubnetV6.Name");
+                issue.Message.Should()
+                    .Be("The eryph subnet name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Networks[0].SubnetV6.IpPool");
+                issue.Message.Should()
+                    .Be("The eryph ip pool name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
+            },
+            issue =>
+            {
                 issue.Member.Should().Be("NetworkAdapters[0].Name");
                 issue.Message.Should()
                     .Be("The catlet network adapter name contains invalid characters. Only latin characters, numbers and hyphens are permitted.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("NetworkAdapters[0].MacAddress");
+                issue.Message.Should()
+                    .Be("The eryph mac address is not a valid MAC address.");
             },
             issue =>
             {

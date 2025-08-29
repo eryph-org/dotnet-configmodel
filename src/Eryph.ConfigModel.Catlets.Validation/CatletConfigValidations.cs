@@ -150,7 +150,10 @@ public static  class CatletConfigValidations
     private static Validation<ValidationIssue, Unit> ValidateCatletNetworkConfigs(
         CatletConfig toValidate,
         string path = "") =>
-        from _ in ValidateList(toValidate, c => c.Networks, ValidateCatletNetworkConfig, path)
+        from _ in ValidateList(toValidate, c => c.Networks,
+            // The number of network adapters is limited to 8, and we need an
+            // adapter for each network.
+            ValidateCatletNetworkConfig, path, minCount: 0, maxCount: 8)
         from __ in ValidateProperty(toValidate, c => c.Networks,
             drive => Validations.ValidateDistinct(
                 drive, d => EryphNetworkName.NewValidation(d.Name), "network name"),
@@ -161,7 +164,15 @@ public static  class CatletConfigValidations
         CatletNetworkConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, EryphNetworkName.NewValidation, path, required: true)
-        | ValidateProperty(toValidate, c => c.AdapterName, CatletNetworkAdapterName.NewValidation, path);
+        | ValidateProperty(toValidate, c => c.AdapterName, CatletNetworkAdapterName.NewValidation, path)
+        | ValidateProperty(toValidate, c => c.SubnetV4, ValidateCatletSubnetConfig, path)
+        | ValidateProperty(toValidate, c => c.SubnetV6, ValidateCatletSubnetConfig, path);
+
+    private static Validation<ValidationIssue, Unit> ValidateCatletSubnetConfig(
+        CatletSubnetConfig toValidate,
+        string path = "") =>
+        ValidateProperty(toValidate, c => c.Name, EryphSubnetName.NewValidation, path)
+        | ValidateProperty(toValidate, c => c.IpPool, EryphIpPoolName.NewValidation, path);
 
     private static Validation<ValidationIssue, Unit> ValidateCatletNetworkAdapterConfigs(
         CatletConfig toValidate,
@@ -178,5 +189,6 @@ public static  class CatletConfigValidations
     private static Validation<ValidationIssue, Unit> ValidateCatletNetworkAdapterConfig(
         CatletNetworkAdapterConfig toValidate,
         string path = "") =>
-        ValidateProperty(toValidate, c => c.Name, CatletNetworkAdapterName.NewValidation, path, required: true);
+        ValidateProperty(toValidate, c => c.Name, CatletNetworkAdapterName.NewValidation, path, required: true)
+        | ValidateProperty(toValidate, c => c.MacAddress, EryphMacAddress.NewValidation, path);
 }
