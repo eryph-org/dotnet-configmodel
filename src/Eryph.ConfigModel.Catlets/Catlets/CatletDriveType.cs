@@ -6,11 +6,11 @@ namespace Eryph.ConfigModel.Catlets
     public enum CatletDriveType
     {
         // ReSharper disable InconsistentNaming
-        VHD = 0,
-        SharedVHD = 1,
-        PHD = 2,
-        DVD = 3,
-        VHDSet = 4,
+        Vhd = 0,
+        SharedVhd = 1,
+        Phd = 2,
+        Dvd = 3,
+        VhdSet = 4,
         // ReSharper restore InconsistentNaming
     }
 }

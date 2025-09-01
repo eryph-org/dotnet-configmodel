@@ -12,6 +12,7 @@ public static class ProjectNetworksConfigYamlSerializer
     {
         var builder = new DeserializerBuilder()
             .WithCaseInsensitivePropertyMatching()
+            .WithEnumNamingConvention(UnderscoredNamingConvention.Instance)
             .WithNamingConvention(UnderscoredNamingConvention.Instance);
 
         // Build the type inspector first as some of our type converters require it.
@@ -26,6 +27,7 @@ public static class ProjectNetworksConfigYamlSerializer
 
     private static readonly Lazy<ISerializer> Serializer = new(() =>
         new SerializerBuilder()
+            .WithEnumNamingConvention(UnderscoredNamingConvention.Instance)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
             .DisableAliases()

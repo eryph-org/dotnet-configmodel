@@ -14,6 +14,7 @@ public static class FodderGeneConfigYamlSerializer
     private static readonly Lazy<IDeserializer> Deserializer = new(() => 
         new DeserializerBuilder()
             .WithCaseInsensitivePropertyMatching()
+            .WithEnumNamingConvention(UnderscoredNamingConvention.Instance)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithTypeConverter(new FodderContentYamlTypeConverter())
             .WithAttributeOverride<FodderConfig>(
@@ -23,6 +24,7 @@ public static class FodderGeneConfigYamlSerializer
 
     private static readonly Lazy<ISerializer> Serializer = new(() =>
         new SerializerBuilder()
+            .WithEnumNamingConvention(UnderscoredNamingConvention.Instance)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithAttributeOverride<FodderConfig>(
                 c => c.Content!,

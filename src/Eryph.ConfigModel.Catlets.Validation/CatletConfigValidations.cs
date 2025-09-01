@@ -57,7 +57,7 @@ public static  class CatletConfigValidations
         string source,
         CatletDriveType? driveType) =>
         source.StartsWith("gene:")
-            ? from _ in guard((driveType ?? CatletDriveType.VHD) == CatletDriveType.VHD,
+            ? from _ in guard((driveType ?? CatletDriveType.Vhd) == CatletDriveType.Vhd,
                   Error.New("The drive must be plain VHD when using a gene pool source."))
               from __ in GeneIdentifier.NewValidation(source)
               select unit

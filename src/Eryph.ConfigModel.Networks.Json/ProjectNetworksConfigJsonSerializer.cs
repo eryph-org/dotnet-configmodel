@@ -15,7 +15,7 @@ public static class ProjectNetworksConfigJsonSerializer
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
             UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
-            Converters = { new JsonStringEnumConverter() },
+            Converters = { new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.SnakeCaseLower) },
         });
 
     public static JsonSerializerOptions Options => LazyOptions.Value;

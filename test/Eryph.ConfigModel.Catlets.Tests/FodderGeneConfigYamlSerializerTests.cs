@@ -1,4 +1,3 @@
-using System;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.FodderGenes;
@@ -45,6 +44,23 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
         var config = FodderGeneConfigYamlSerializer.Deserialize(ComplexConfigYaml);
 
         AssertComplexConfig(config);
+    }
+
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_ConfigWithDeprecatedValues_ReturnsConfig()
+    {
+        const string yaml = """
+                            variables:
+                            - type: Number
+                            fodder:
+                            - variables:
+                              - type: Boolean
+                            """;
+
+        var config = FodderGeneConfigYamlSerializer.Deserialize(yaml);
+
+        AssertConfigWithDeprecatedValues(config);
     }
 
     [CulturedFact("en-US", "de-DE")]

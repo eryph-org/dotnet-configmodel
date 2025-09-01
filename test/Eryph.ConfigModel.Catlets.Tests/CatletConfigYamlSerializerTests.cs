@@ -1,4 +1,3 @@
-using System;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
@@ -28,22 +27,22 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
           maximum: 4096
         drives:
         - name: data
-          mutation: Overwrite
+          mutation: overwrite
           location: cinc-shared
           store: ds2
           source: some_template
           size: 1
-          type: SharedVHD
+          type: shared_vhd
         network_adapters:
         - name: eth0
           mac_address: 4711
         - name: eth1
-          mutation: Remove
+          mutation: remove
           mac_address: 4712
         capabilities:
         - name: nested_virtualization
         - name: secure_boot
-          mutation: Remove
+          mutation: remove
           details:
           - tpm
           - shielded
@@ -61,7 +60,7 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
         - name: first
           value: first value
         - name: second
-          type: Number
+          type: number
           value: -4.2
           secret: true
           required: true
@@ -78,7 +77,7 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
           secret: true
           variables:
           - name: password
-            type: String
+            type: string
             value: InitialPassw0rd
             secret: true
             required: true
@@ -91,6 +90,25 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
         var config = CatletConfigYamlSerializer.Deserialize(ComplexConfigYaml);
         
         AssertComplexConfig(config);
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_ConfigWithDeprecatedValues_ReturnsConfig()
+    {
+        const string yaml = """
+                            drives:
+                            - mutation: Overwrite
+                              type: SharedVHD
+                            variables:
+                            - type: Number
+                            fodder:
+                            - variables:
+                              - type: Boolean
+                            """;
+
+        var config = CatletConfigYamlSerializer.Deserialize(yaml);
+
+        AssertConfigWithDeprecatedValues(config);
     }
 
     [CulturedFact("en-US", "de-DE")]
