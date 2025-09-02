@@ -173,4 +173,38 @@ public class ValidationsTests
             error => error.Message.Should()
                 .Be("The path must only contain Windows directory separators."));
     }
+
+    [Theory]
+    [InlineData("1a2b3c4d5e6f")]
+    [InlineData("1A2B3C4D5E6F")]
+    [InlineData("1a:2b:3c:4d:5e:6f")]
+    [InlineData("1A:2B:3C:4D:5E:6F")]
+    [InlineData("1a-2b-3c-4d-5e-6f")]
+    [InlineData("1A-2B-3C-4D-5E-6F")]
+    public void ValidateMacAddress_ValidMacAddress_ReturnsSuccess(string macAddress)
+    {
+        var result = Validations.ValidateMacAddress(macAddress, "mac address");
+
+        result.Should().BeSuccess().Which.Should().Be(macAddress);
+    }
+
+    [Fact]
+    public void ValidateMacAddress_EmptyMacAddress_ReturnsFail()
+    {
+        var result = Validations.ValidateMacAddress("", "mac address");
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            error => error.Message.Should()
+                .Be("The mac address cannot be empty."));
+    }
+
+    [Fact]
+    public void ValidateMacAddress_InvalidMacAddress_ReturnsFail()
+    {
+        var result = Validations.ValidateMacAddress("invalid mac address", "mac address");
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            error => error.Message.Should()
+                .Be("The mac address is not a valid MAC address."));
+    }
 }
