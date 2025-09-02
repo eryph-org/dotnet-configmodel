@@ -14,6 +14,7 @@ public static class CatletConfigYamlSerializer
     {
         var builder = new DeserializerBuilder()
             .WithCaseInsensitivePropertyMatching()
+            .WithEnumNamingConvention(UnderscoredNamingConvention.Instance)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithAttributeOverride<FodderConfig>(
                 c => c.Content!,
@@ -34,6 +35,7 @@ public static class CatletConfigYamlSerializer
 
     private static readonly Lazy<ISerializer> Serializer = new(() =>
         new SerializerBuilder()
+            .WithEnumNamingConvention(UnderscoredNamingConvention.Instance)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithAttributeOverride<FodderConfig>(
                 c => c.Content!,

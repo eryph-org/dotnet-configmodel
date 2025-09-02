@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Json;
@@ -19,7 +18,7 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
             },
             {
               "name": "second",
-              "type": "Boolean",
+              "type": "boolean",
               "value": "true",
               "secret": true,
               "required": true
@@ -49,6 +48,33 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
 
         config.Should().NotBeNull();
         AssertComplexConfig(config);
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_ConfigWithDeprecatedValues_ReturnsConfig()
+    {
+        const string json = """
+                            {
+                              "variables": [
+                                {
+                                  "type": "Number"
+                                }
+                              ],
+                              "fodder": [
+                                {
+                                  "variables": [
+                                    {
+                                      "type": "Boolean"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                            """;
+
+        var config = FodderGeneConfigJsonSerializer.Deserialize(json);
+
+        AssertConfigWithDeprecatedValues(config);
     }
 
     [CulturedFact("en-US", "de-DE")]

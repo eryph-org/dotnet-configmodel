@@ -47,7 +47,7 @@ public abstract class CatletConfigSerializerTestBase
                 drive.Store.Should().Be("ds2");
                 drive.Location.Should().Be("cinc-shared");
                 drive.Source.Should().Be("some_template");
-                drive.Type.Should().Be(CatletDriveType.SharedVHD);
+                drive.Type.Should().Be(CatletDriveType.SharedVhd);
                 drive.Mutation.Should().Be(MutationType.Overwrite);
             });
 
@@ -140,5 +140,27 @@ public abstract class CatletConfigSerializerTestBase
                 variable.Required.Should().BeTrue();
                 variable.Secret.Should().BeTrue();
             });
+    }
+
+    protected static void AssertConfigWithDeprecatedValues(CatletConfig config)
+    {
+        config.Drives.Should().SatisfyRespectively(drive =>
+        {
+            drive.Mutation.Should().Be(MutationType.Overwrite);
+            drive.Type.Should().Be(CatletDriveType.SharedVhd);
+        });
+
+        config.Variables.Should().SatisfyRespectively(variable =>
+        {
+            variable.Type.Should().Be(VariableType.Number);
+        });
+
+        config.Fodder.Should().SatisfyRespectively(fodder =>
+        {
+            fodder.Variables.Should().SatisfyRespectively(variable =>
+            {
+                variable.Type.Should().Be(VariableType.Boolean);
+            });
+        });
     }
 }

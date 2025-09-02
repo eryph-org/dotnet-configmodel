@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 using CultureAwareTesting.xUnit;
 using Eryph.ConfigModel.Json;
@@ -29,12 +28,12 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
           "drives": [
             {
               "name": "data",
-              "mutation": "Overwrite",
+              "mutation": "overwrite",
               "location": "cinc-shared",
               "store": "ds2",
               "source": "some_template",
               "size": 1,
-              "type": "SharedVHD"
+              "type": "shared_vhd"
             }
           ],
           "network_adapters": [
@@ -44,7 +43,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
             },
             {
               "name": "eth1",
-              "mutation": "Remove",
+              "mutation": "remove",
               "mac_address": "4712"
             }
           ],
@@ -54,7 +53,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
             },
             {
               "name": "secure_boot",
-              "mutation": "Remove",
+              "mutation": "remove",
               "details": [
                 "tpm",
                 "shielded"
@@ -85,7 +84,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
             },
             {
               "name": "second",
-              "type": "Number",
+              "type": "number",
               "value": "-4.2",
               "secret": true,
               "required": true
@@ -104,7 +103,7 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
               "variables": [
                 {
                   "name": "password",
-                  "type": "String",
+                  "type": "string",
                   "value": "InitialPassw0rd",
                   "secret": true,
                   "required": true
@@ -121,6 +120,39 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
         var config = CatletConfigJsonSerializer.Deserialize(ComplexConfigJson);
         
         AssertComplexConfig(config);
+    }
+
+    [CulturedFact("en-US", "de-DE")]
+    public void Deserialize_ConfigWithDeprecatedValues_ReturnsConfig()
+    {
+        const string json = """
+                            {
+                              "drives": [
+                                {
+                                  "mutation": "Overwrite",
+                                  "type": "SharedVHD"
+                                }
+                              ],
+                              "variables": [
+                                {
+                                  "type": "Number"
+                                }
+                              ],
+                              "fodder": [
+                                {
+                                  "variables": [
+                                    {
+                                      "type": "Boolean"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                            """;
+
+        var config = CatletConfigJsonSerializer.Deserialize(json);
+
+        AssertConfigWithDeprecatedValues(config);
     }
 
     [CulturedFact("en-US", "de-DE")]

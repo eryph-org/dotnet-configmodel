@@ -51,4 +51,20 @@ public abstract class FodderGeneConfigSerializerTestBase
                 variable.Secret.Should().BeTrue();
             });
     }
+
+    protected static void AssertConfigWithDeprecatedValues(FodderGeneConfig config)
+    {
+        config.Variables.Should().SatisfyRespectively(variable =>
+        {
+            variable.Type.Should().Be(VariableType.Number);
+        });
+
+        config.Fodder.Should().SatisfyRespectively(fodder =>
+        {
+            fodder.Variables.Should().SatisfyRespectively(variable =>
+            {
+                variable.Type.Should().Be(VariableType.Boolean);
+            });
+        });
+    }
 }

@@ -320,7 +320,7 @@ public class CatletConfigValidationsTests
                 {
                     Name = "sda",
                     Source = "gene:acme/acme-os/1.0:my-drive",
-                    Type = CatletDriveType.PHD,
+                    Type = CatletDriveType.Phd,
                 },
             ],
         };

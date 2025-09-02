@@ -16,7 +16,7 @@ public static class FodderGeneConfigJsonSerializer
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
             UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
-            Converters = { new JsonStringEnumConverter() },
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower) },
         });
 
     public static JsonSerializerOptions Options => LazyOptions.Value;
