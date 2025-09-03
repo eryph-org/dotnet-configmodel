@@ -49,6 +49,7 @@ public class CatletConfig : ICloneableConfig<CatletConfig>, IHasFodderConfig, IH
     public CatletConfig Clone() => new()
     {
         Version = Version,
+        ConfigType = ConfigType,
         Project = Project,
         Name = Name,
         Location = Location,
