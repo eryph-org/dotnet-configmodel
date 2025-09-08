@@ -3,9 +3,9 @@
 public enum CatletConfigType
 {
     /// <summary>
-    /// This configuration is a normal catlet configuration.
-    /// It can contain unresolved genes.
-    /// User-provided configurations have this type by default.
+    /// This configuration is a normal catlet configuration. It can
+    /// contain unresolved genes. User-provided configurations have
+    /// this type by default.
     /// </summary>
     Configuration = 0,
 
@@ -17,8 +17,8 @@ public enum CatletConfigType
     
     /// <summary>
     /// This configuration describes a concrete instance of a catlet.
-    /// It contains information specific to the instance:
-    /// MAC addresses, storage locations, etc.
+    /// It contains information specific to the instance: MAC addresses,
+    /// storage locations, etc.
     /// </summary>
     Instance = 2,
 }
