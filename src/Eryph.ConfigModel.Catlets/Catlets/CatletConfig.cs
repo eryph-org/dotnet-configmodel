@@ -9,12 +9,25 @@ namespace Eryph.ConfigModel.Catlets;
 public class CatletConfig : ICloneableConfig<CatletConfig>, IHasFodderConfig, IHasVariableConfig
 {
     public string? Version { get; set; }
+
+    /// <summary>
+    /// Indicates the type of configuration. Configurations written by users
+    /// should not specify a type.
+    /// </summary>
+    public CatletConfigType? ConfigType { get; set; }
+
     public string? Project { get; set; }
+
     public string? Name { get; set; }
+    
     public string? Location { get; set; }
+    
     public string? Hostname { get; set; }
+    
     public string? Environment { get; set; }
+    
     public string? Store { get; set; }
+    
     public string? Parent { get; set; }
         
     public CatletCpuConfig? Cpu { get; set; }
@@ -36,6 +49,7 @@ public class CatletConfig : ICloneableConfig<CatletConfig>, IHasFodderConfig, IH
     public CatletConfig Clone() => new()
     {
         Version = Version,
+        ConfigType = ConfigType,
         Project = Project,
         Name = Name,
         Location = Location,
