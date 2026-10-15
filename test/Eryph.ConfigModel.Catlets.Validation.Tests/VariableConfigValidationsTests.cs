@@ -24,7 +24,7 @@ public class VariableConfigValidationsTests
             },
         };
 
-        var result = VariableConfigValidations.ValidateVariableConfigs(config);
+        var result = VariableConfigValidations.ValidateVariableConfigs(config, "", allowRemove: false);
 
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             issue =>
@@ -55,7 +55,7 @@ public class VariableConfigValidationsTests
             }
         };
 
-        var result = VariableConfigValidations.ValidateVariableConfigs(config);
+        var result = VariableConfigValidations.ValidateVariableConfigs(config, "", allowRemove: false);
 
         result.Should().BeFail().Which.Should().SatisfyRespectively(
             issue =>
@@ -132,6 +132,118 @@ public class VariableConfigValidationsTests
         var result = VariableConfigValidations.ValidateVariableValue(value, VariableType.String);
 
         result.Should().BeSuccess().Which.Should().Be(value);
+    }
+
+    [Fact]
+    public void ValidateVariableConfigs_RemovedVariableWhenAllowed_ReturnsSuccess()
+    {
+        var config = new HasVariableConfig
+        {
+            Variables = [new VariableConfig { Name = "first", Remove = true }],
+        };
+
+        var result = VariableConfigValidations.ValidateVariableConfigs(config, "", allowRemove: true);
+
+        result.Should().BeSuccess();
+    }
+
+    [Fact]
+    public void ValidateVariableConfigs_RemovedVariableWhenNotAllowed_ReturnsError()
+    {
+        var config = new HasVariableConfig
+        {
+            Variables = [new VariableConfig { Name = "first", Remove = true }],
+        };
+
+        var result = VariableConfigValidations.ValidateVariableConfigs(config, "", allowRemove: false);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Variables[0].Remove");
+                issue.Message.Should().Be("Removing variables is not supported here.");
+            });
+    }
+
+    [Fact]
+    public void ValidateVariableConfigs_RemovedVariableWithOtherValues_ReturnsError()
+    {
+        var config = new HasVariableConfig
+        {
+            Variables =
+            [
+                new VariableConfig
+                {
+                    Name = "first",
+                    Remove = true,
+                    Type = VariableType.Number,
+                    Value = "not a number",
+                    Secret = false,
+                    Required = false,
+                },
+            ],
+        };
+
+        var result = VariableConfigValidations.ValidateVariableConfigs(config, "", allowRemove: true);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Variables[0].Type");
+                issue.Message.Should().Be("The variable type must not be specified when the variable is removed.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Variables[0].Value");
+                issue.Message.Should().Be("The value must not be specified when the variable is removed.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Variables[0].Secret");
+                issue.Message.Should().Be("The secret flag must not be specified when the variable is removed.");
+            },
+            issue =>
+            {
+                issue.Member.Should().Be("Variables[0].Required");
+                issue.Message.Should().Be("The required flag must not be specified when the variable is removed.");
+            });
+    }
+
+    [Fact]
+    public void ValidateVariableConfigs_RemovedVariableWithEmptyValue_ReturnsSuccess()
+    {
+        var config = new HasVariableConfig
+        {
+            Variables = [new VariableConfig { Name = "first", Remove = true, Value = "" }],
+        };
+
+        var result = VariableConfigValidations.ValidateVariableConfigs(config, "", allowRemove: true);
+
+        result.Should().BeSuccess();
+    }
+
+    [Fact]
+    public void ValidateVariableConfigs_NotRemovedVariableWhenNotAllowed_ReturnsSuccess()
+    {
+        var config = new HasVariableConfig
+        {
+            Variables =
+            [
+                new VariableConfig
+                {
+                    Name = "first",
+                    Remove = false,
+                    Type = VariableType.Number,
+                    Value = "42",
+                    Secret = true,
+                    Required = true,
+                },
+            ],
+        };
+
+        var result = VariableConfigValidations.ValidateVariableConfigs(config, "", allowRemove: false);
+
+        result.Should().BeSuccess();
     }
 
     private sealed class HasVariableConfig : IHasVariableConfig

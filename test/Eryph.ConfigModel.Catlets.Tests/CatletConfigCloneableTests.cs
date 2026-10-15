@@ -200,4 +200,23 @@ public class CatletConfigCloneableTests
         cloned.Variables.Should().NotBeNull();
         cloned.Variables.Should().NotBeSameAs(TestData.Fodder![0].Variables);
     }
+
+    [Fact]
+    public void VariableConfig_is_cloned()
+    {
+        var config = new VariableConfig
+        {
+            Name = "catletVariable",
+            Remove = true,
+            Type = VariableType.Number,
+            Value = "42",
+            Secret = true,
+            Required = true,
+        };
+
+        var clonedConfig = config.Clone();
+
+        clonedConfig.Should().BeEquivalentTo(config);
+        clonedConfig.Should().NotBeSameAs(config);
+    }
 }

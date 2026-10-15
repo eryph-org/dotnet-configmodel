@@ -69,7 +69,7 @@ public static class FodderConfigValidations
         string path) =>
         from _ in ValidateProperty(toValidate, c => c.Variables,
             v => ValidateVariablesNotForbidden(v, toValidate), path)
-        from __ in VariableConfigValidations.ValidateVariableConfigs(toValidate, path)
+        from __ in VariableConfigValidations.ValidateVariableConfigs(toValidate, path, allowRemove: false)
             | ValidateList(toValidate, c => c.Variables,
                 (v, p) => ValidateFodderReferenceVariableConfig(v, toValidate, p), path)
         select unit;

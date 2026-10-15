@@ -64,6 +64,8 @@ public class CatletConfigYamlSerializerTests : CatletConfigSerializerTestBase
           value: -4.2
           secret: true
           required: true
+        - name: third
+          remove: true
         fodder:
         - name: first
         - name: admin-windows
