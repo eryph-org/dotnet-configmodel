@@ -1,5 +1,7 @@
 using System.Text.Json;
 using CultureAwareTesting.xUnit;
+using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Json;
 using FluentAssertions;
 
@@ -11,6 +13,10 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
         """
         {
           "name": "fodder1",
+          "requires": [
+            "acme/acme-tools",
+            "acme/acme-shell:pwsh"
+          ],
           "variables": [
             {
               "name": "first",
@@ -148,6 +154,20 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
             .WithMessage("The JSON is invalid (line 2, column 17):\n"
                          + "The JSON property 'unknown_key' could not be mapped to any .NET member contained in type 'Eryph.ConfigModel.FodderGenes.FodderGeneConfig'.")
             .WithInnerException<JsonException>();
+    }
+
+    [CulturedFact("en-US")]
+    public void Serialize_WithoutRequires_OmitsRequires()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "fodder1",
+            Fodder = [new FodderConfig { Name = "food", Content = "content" }],
+        };
+
+        var result = FodderGeneConfigJsonSerializer.Serialize(config);
+
+        result.Should().NotContain("requires");
     }
 
     [CulturedFact("en-US", "de-DE")]

@@ -14,6 +14,9 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
     private const string ComplexConfigYaml =
         """
         name: fodder1
+        requires:
+        - acme/acme-tools
+        - acme/acme-shell:pwsh
         variables:
         - name: first
           value: first value
@@ -266,6 +269,20 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
                          + "Property 'unknown_key' not found on type 'Eryph.ConfigModel.FodderGenes.FodderGeneConfig'.\n"
                          + "Make sure to use snake case for names, e.g. 'network_adapters'.")
             .WithInnerException<YamlException>();
+    }
+
+    [Fact]
+    public void Serialize_WithoutRequires_OmitsRequires()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "fodder1",
+            Fodder = [new FodderConfig { Name = "food", Content = "content" }],
+        };
+
+        var result = FodderGeneConfigYamlSerializer.Serialize(config);
+
+        result.Should().NotContain("requires");
     }
 
     [CulturedFact("en-US", "de-DE")]

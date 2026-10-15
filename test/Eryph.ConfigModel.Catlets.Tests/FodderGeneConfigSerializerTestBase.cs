@@ -10,6 +10,7 @@ public abstract class FodderGeneConfigSerializerTestBase
     {
         config.Should().NotBeNull();
         config.Name.Should().Be("fodder1");
+        config.Requires.Should().Equal("acme/acme-tools", "acme/acme-shell:pwsh");
 
         config.Fodder.Should().SatisfyRespectively(
             fodder =>

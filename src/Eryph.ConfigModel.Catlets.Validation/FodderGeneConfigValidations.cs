@@ -22,6 +22,7 @@ public static class FodderGeneConfigValidations
         FodderGeneConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, ValidateFodderGeneName, path, required: true)
+        | ValidateProperty(toValidate, c => c.Requires, ValidateRequires, path)
         | ValidateFodderConfigs(toValidate, path)
         | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
 
@@ -30,6 +31,18 @@ public static class FodderGeneConfigValidations
         from _ in guardnot(validName == GeneName.New("catlet"),
             Error.New("The gene name 'catlet' is reserved."))
         select validName;
+
+    // An empty list must be rejected as the JSON serializer would write it
+    // and older eryph versions reject the unknown property.
+    private static Validation<Error, string[]> ValidateRequires(string[] requires) =>
+        from _ in guard(requires.Length > 0,
+                Error.New("The list of required genes must not be empty. Omit it instead."))
+            .ToValidation()
+        from __ in requires.ToSeq()
+            .Map(GeneRequirement.NewValidation)
+            .Sequence()
+        from ___ in ValidateDistinct(requires, GeneRequirement.NewValidation, "gene requirement")
+        select requires;
 
     private static Validation<ValidationIssue, Unit> ValidateFodderConfigs(
         FodderGeneConfig toValidate,
