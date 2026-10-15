@@ -14,6 +14,9 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
     private const string ComplexConfigYaml =
         """
         name: fodder1
+        requires:
+        - acme/acme-tools
+        - acme/acme-shell:pwsh
         variables:
         - name: first
           value: first value

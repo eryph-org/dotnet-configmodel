@@ -13,6 +13,8 @@ public class FodderGeneConfig : ICloneableConfig<FodderGeneConfig>, IHasFodderCo
 
     public string? Name { get; set; }
 
+    public string[]? Requires { get; set; }
+
     public VariableConfig[]? Variables { get; set; }
 
     public FodderConfig[]? Fodder { get; set; }
@@ -23,6 +25,7 @@ public class FodderGeneConfig : ICloneableConfig<FodderGeneConfig>, IHasFodderCo
         {
             Version = Version,
             Name = Name,
+            Requires = Requires?.ToArray(),
             Variables = Variables?.Select(x => x.Clone()).ToArray(),
             Fodder = Fodder?.Select(x => x.Clone()).ToArray(),
         };

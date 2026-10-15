@@ -11,6 +11,10 @@ public class FodderGeneConfigJsonSerializerTests : FodderGeneConfigSerializerTes
         """
         {
           "name": "fodder1",
+          "requires": [
+            "acme/acme-tools",
+            "acme/acme-shell:pwsh"
+          ],
           "variables": [
             {
               "name": "first",

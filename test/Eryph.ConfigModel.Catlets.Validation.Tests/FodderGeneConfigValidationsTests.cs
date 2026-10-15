@@ -199,4 +199,80 @@ public class FodderGeneConfigValidationsTests
                 issue.Message.Should().Be("Variables are not supported here.");
             });
     }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_ValidRequires_ReturnsSuccess()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Requires = ["acme/acme-tools", "acme/acme-shell:pwsh"],
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "test-fodder",
+                    Content = "test-content",
+                },
+            ],
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeSuccess();
+    }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_RequiresWithTag_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Requires = ["acme/acme-tools/1.0"],
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "test-fodder",
+                    Content = "test-content",
+                },
+            ],
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Requires");
+                issue.Message.Should().Be("The gene requirement is invalid.");
+            });
+    }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_DuplicateRequires_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Requires = ["acme/acme-tools", "ACME/ACME-Tools"],
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "test-fodder",
+                    Content = "test-content",
+                },
+            ],
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Requires");
+                issue.Message.Should().Be("The gene requirement 'acme/acme-tools' is not unique.");
+            });
+    }
 }

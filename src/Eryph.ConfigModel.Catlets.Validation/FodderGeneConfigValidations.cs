@@ -22,6 +22,7 @@ public static class FodderGeneConfigValidations
         FodderGeneConfig toValidate,
         string path = "") =>
         ValidateProperty(toValidate, c => c.Name, ValidateFodderGeneName, path, required: true)
+        | ValidateProperty(toValidate, c => c.Requires, ValidateRequires, path)
         | ValidateFodderConfigs(toValidate, path)
         | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
 
@@ -30,6 +31,10 @@ public static class FodderGeneConfigValidations
         from _ in guardnot(validName == GeneName.New("catlet"),
             Error.New("The gene name 'catlet' is reserved."))
         select validName;
+
+    private static Validation<Error, string[]> ValidateRequires(string[] requires) =>
+        from _ in ValidateDistinct(requires, GeneRequirement.NewValidation, "gene requirement")
+        select requires;
 
     private static Validation<ValidationIssue, Unit> ValidateFodderConfigs(
         FodderGeneConfig toValidate,
