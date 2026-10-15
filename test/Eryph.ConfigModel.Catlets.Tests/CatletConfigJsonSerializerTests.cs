@@ -88,6 +88,10 @@ public class CatletConfigJsonSerializerTests : CatletConfigSerializerTestBase
               "value": "-4.2",
               "secret": true,
               "required": true
+            },
+            {
+              "name": "third",
+              "remove": true
             }
           ],
           "fodder": [

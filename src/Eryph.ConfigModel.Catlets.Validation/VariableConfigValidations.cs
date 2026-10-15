@@ -33,8 +33,10 @@ public static class VariableConfigValidations
 
     internal static Validation<ValidationIssue, Unit> ValidateVariableConfigs(
         IHasVariableConfig toValidate,
-        string path = "") =>
-        from _  in ValidateList(toValidate, c => c.Variables, ValidateVariableConfig, path)
+        string path,
+        bool allowRemove) =>
+        from _  in ValidateList(toValidate, c => c.Variables,
+            (v, p) => ValidateVariableConfig(v, p, allowRemove), path)
         from __ in ValidateProperty(toValidate, c => c.Variables,
             variables => ValidateDistinct(variables, v => VariableName.NewValidation(v.Name), "variable name"),
             path)
@@ -42,9 +44,34 @@ public static class VariableConfigValidations
 
     private static Validation<ValidationIssue, Unit> ValidateVariableConfig(
         VariableConfig toValidate,
-        string path = "") =>
+        string path,
+        bool allowRemove) =>
         ValidateProperty(toValidate, c => c.Name, ValidateVariableName, path, required: true)
-        | ValidateProperty(toValidate, c => c.Value, v => ValidateVariableValue(v, toValidate.Type), path);
+        | ValidateProperty(toValidate, c => c.Remove,
+            r => guardnot(r && !allowRemove, Error.New("Removing variables is not supported here."))
+                .ToValidation()
+                .Map(_ => r),
+            path)
+        | ValidateProperty(toValidate, c => c.Type,
+            (VariableType t) => ValidateNotSpecifiedWhenRemoved(t, toValidate, "variable type"), path)
+        | ValidateProperty(toValidate, c => c.Value,
+            v => from _ in ValidateNotSpecifiedWhenRemoved(v, toValidate, "value")
+                 from __ in ValidateVariableValue(v, toValidate.Type)
+                 select v,
+            path)
+        | ValidateProperty(toValidate, c => c.Secret,
+            (bool s) => ValidateNotSpecifiedWhenRemoved(s, toValidate, "secret flag"), path)
+        | ValidateProperty(toValidate, c => c.Required,
+            (bool r) => ValidateNotSpecifiedWhenRemoved(r, toValidate, "required flag"), path);
+
+    private static Validation<Error, T> ValidateNotSpecifiedWhenRemoved<T>(
+        T value,
+        VariableConfig config,
+        string valueName) =>
+        from _ in guardnot(config.Remove.GetValueOrDefault(),
+                Error.New($"The {valueName} must not be specified when the variable is removed."))
+            .ToValidation()
+        select value;
 
     private static Validation<Error, string> ValidateVariableName(string value) =>
         from validName in VariableName.NewValidation(value)

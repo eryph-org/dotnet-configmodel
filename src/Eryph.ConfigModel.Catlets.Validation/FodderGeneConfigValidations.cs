@@ -24,7 +24,7 @@ public static class FodderGeneConfigValidations
         ValidateProperty(toValidate, c => c.Name, ValidateFodderGeneName, path, required: true)
         | ValidateProperty(toValidate, c => c.Requires, ValidateRequires, path)
         | ValidateFodderConfigs(toValidate, path)
-        | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
+        | VariableConfigValidations.ValidateVariableConfigs(toValidate, path, allowRemove: false);
 
     private static Validation<Error, GeneName> ValidateFodderGeneName(string name) =>
         from validName in GeneName.NewValidation(name)

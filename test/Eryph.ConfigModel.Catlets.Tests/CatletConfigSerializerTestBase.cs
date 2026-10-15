@@ -135,10 +135,20 @@ public abstract class CatletConfigSerializerTestBase
             variable =>
             {
                 variable.Name.Should().Be("second");
+                variable.Remove.Should().BeNull();
                 variable.Type.Should().Be(VariableType.Number);
                 variable.Value.Should().Be("-4.2");
                 variable.Required.Should().BeTrue();
                 variable.Secret.Should().BeTrue();
+            },
+            variable =>
+            {
+                variable.Name.Should().Be("third");
+                variable.Remove.Should().BeTrue();
+                variable.Type.Should().BeNull();
+                variable.Value.Should().BeNull();
+                variable.Required.Should().BeNull();
+                variable.Secret.Should().BeNull();
             });
     }
 

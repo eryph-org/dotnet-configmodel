@@ -27,7 +27,7 @@ public static  class CatletConfigValidations
         | ValidateCatletNetworkConfigs(toValidate, path)
         | ValidateCatletNetworkAdapterConfigs(toValidate, path)
         | ValidateCatletFodderConfigs(toValidate, path)
-        | VariableConfigValidations.ValidateVariableConfigs(toValidate, path);
+        | VariableConfigValidations.ValidateVariableConfigs(toValidate, path, allowRemove: true);
 
     private static Validation<ValidationIssue, Unit> ValidateCatletDriveConfigs(
         CatletConfig toValidate,

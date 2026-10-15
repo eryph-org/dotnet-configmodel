@@ -9,6 +9,8 @@ public class VariableConfig : ICloneableConfig<VariableConfig>
 {
     public string? Name { get; set; }
 
+    public bool? Remove { get; set; }
+
     public VariableType? Type { get; set; }
 
     [PrivateIdentifier(Critical = true)]
@@ -21,6 +23,7 @@ public class VariableConfig : ICloneableConfig<VariableConfig>
     public VariableConfig Clone() => new()
     {
         Name = Name,
+        Remove = Remove,
         Type = Type,
         Value = Value,
         Secret = Secret,

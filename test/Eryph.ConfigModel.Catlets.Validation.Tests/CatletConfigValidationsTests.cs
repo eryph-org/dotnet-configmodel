@@ -700,4 +700,56 @@ public class CatletConfigValidationsTests
                 issue.Message.Should().Be("The minimum memory must be less than or equal to the maximum memory.");
             });
     }
+
+    [Fact]
+    public void ValidateCatletConfig_RemovedVariable_ReturnsSuccess()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Variables =
+            [
+                new VariableConfig()
+                {
+                    Name = "testVariable",
+                    Remove = true,
+                }
+            ],
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeSuccess();
+    }
+
+    [Fact]
+    public void ValidateCatletConfig_FodderWithRemovedVariable_ReturnsFail()
+    {
+        var catletConfig = new CatletConfig()
+        {
+            Fodder =
+            [
+                new FodderConfig()
+                {
+                    Source = "gene:acme/acme-fodder/1.0:my-fodder",
+                    Variables =
+                    [
+                        new VariableConfig()
+                        {
+                            Name = "testVariable",
+                            Remove = true,
+                        }
+                    ],
+                }
+            ],
+        };
+
+        var result = CatletConfigValidations.ValidateCatletConfig(catletConfig);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Fodder[0].Variables[0].Remove");
+                issue.Message.Should().Be("Removing variables is not supported here.");
+            });
+    }
 }

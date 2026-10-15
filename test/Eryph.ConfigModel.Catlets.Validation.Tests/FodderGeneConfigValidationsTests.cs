@@ -330,4 +330,31 @@ public class FodderGeneConfigValidationsTests
                 issue.Message.Should().Be("The gene requirement 'acme/acme-tools' is not unique.");
             });
     }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_RemovedVariable_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Variables = [new VariableConfig { Name = "testVariable", Remove = true }],
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "test-fodder",
+                    Content = "test-content",
+                },
+            ],
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Variables[0].Remove");
+                issue.Message.Should().Be("Removing variables is not supported here.");
+            });
+    }
 }
