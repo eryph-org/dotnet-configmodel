@@ -271,6 +271,20 @@ public class FodderGeneConfigYamlSerializerTests : FodderGeneConfigSerializerTes
             .WithInnerException<YamlException>();
     }
 
+    [Fact]
+    public void Serialize_WithoutRequires_OmitsRequires()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "fodder1",
+            Fodder = [new FodderConfig { Name = "food", Content = "content" }],
+        };
+
+        var result = FodderGeneConfigYamlSerializer.Serialize(config);
+
+        result.Should().NotContain("requires");
+    }
+
     [CulturedFact("en-US", "de-DE")]
     public void Serialize_AfterRoundtrip_ReturnsSameConfig()
     {

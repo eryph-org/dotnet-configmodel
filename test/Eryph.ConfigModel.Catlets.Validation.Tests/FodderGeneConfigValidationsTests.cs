@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Eryph.ConfigModel.FodderGenes;
 using Eryph.ConfigModel.Variables;
@@ -245,7 +246,61 @@ public class FodderGeneConfigValidationsTests
             issue =>
             {
                 issue.Member.Should().Be("Requires");
-                issue.Message.Should().Be("The gene requirement is invalid.");
+                issue.Message.Should().Be("The gene requirement must not contain a tag. The tag is chosen by the catlet.");
+            });
+    }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_MultipleInvalidRequires_ReturnsAllIssues()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            // Deserialize to get the null entry like it would be in a deserialized gene
+            Requires = JsonSerializer.Deserialize<string[]>(
+                """["acme/acme-tools/1.0", "gene:acme/acme-tools:pwsh", null]"""),
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "test-fodder",
+                    Content = "test-content",
+                },
+            ],
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue => issue.Message.Should().Be("The gene requirement must not contain a tag. The tag is chosen by the catlet."),
+            issue => issue.Message.Should().Be("The gene requirement must not start with 'gene:'. It must be org/geneset or org/geneset:genename."),
+            issue => issue.Member.Should().Be("Requires"));
+    }
+
+    [Fact]
+    public void ValidateFodderGeneConfig_EmptyRequires_ReturnsFail()
+    {
+        var config = new FodderGeneConfig
+        {
+            Name = "test",
+            Requires = [],
+            Fodder =
+            [
+                new FodderConfig
+                {
+                    Name = "test-fodder",
+                    Content = "test-content",
+                },
+            ],
+        };
+
+        var result = ValidateFodderGeneConfig(config);
+
+        result.Should().BeFail().Which.Should().SatisfyRespectively(
+            issue =>
+            {
+                issue.Member.Should().Be("Requires");
+                issue.Message.Should().Be("The list of required genes must not be empty. Omit it instead.");
             });
     }
 

@@ -7,7 +7,7 @@ namespace Eryph.ConfigModel;
 
 /// <summary>
 /// Represents a gene which must be present when a fodder gene is used.
-/// The format is <c>org/geneset</c> (any fodder gene of the gene set)
+/// The format is <c>org/geneset</c> (any gene of the gene set)
 /// or <c>org/geneset:genename</c>. A tag is not allowed as the tag is
 /// chosen by the catlet which references the required gene.
 /// </summary>
@@ -47,7 +47,8 @@ public class GeneRequirement : EryphName<GeneRequirement>
 
     /// <summary>
     /// Checks if the given gene satisfies this requirement. The tag of
-    /// the gene is ignored.
+    /// the gene is ignored. The gene type is not known here, hence the
+    /// caller must only pass genes of the expected type.
     /// </summary>
     public bool IsSatisfiedBy(GeneIdentifier geneId) =>
         geneId.GeneSet.Organization == Organization
