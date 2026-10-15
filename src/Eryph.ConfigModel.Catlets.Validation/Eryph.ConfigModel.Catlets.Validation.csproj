@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dbosoft.Functional" Version="3.1.0" />
+    <PackageReference Include="Dbosoft.Functional" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
